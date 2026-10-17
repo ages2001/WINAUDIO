@@ -1,0 +1,53 @@
+WINDRV 1.0 - firmware files for the Intel audio DSPs and SoundWire codecs
+==========================================================================
+
+These files do not belong to WINDRV; they are distributed unchanged under the licences of
+their makers, which allow redistribution (LICSOF.TXT, LICSST.TXT, LICCIRR.TXT).
+WINAUDIO.SYS reads them from the WINDRVFW subdirectory of the driver's directory (else
+from the directory itself), the Windows 95/98/ME driver from WINDOWS\SYSTEM\WINDRVFW.
+For every platform the Intel-signed file is tried first; when the DSP rejects it, the
+"community" signed file (name ending in C: Chromebooks) is tried.
+
+File          Source                                         Platform
+------------  ---------------------------------------------  -------------------------------
+DSPSKL.BIN    linux-firmware intel/avs/skl/dsp_basefw.bin    Skylake, Kaby Lake (AVS, IPC4)
+              (9.21.00.5020)
+SOFAPL.RI     SOF v2.2 intel-signed/sof-apl.ri               Apollo Lake, Gemini Lake
+SOFAPLC.RI    SOF v2.2 community/sof-apl.ri
+SOFCNL.RI     SOF v2.2 intel-signed/sof-cnl.ri               Cannon / Coffee / Comet Lake
+SOFCNLC.RI    SOF v2.2 community/sof-cnl.ri
+SOFICL.RI     SOF v2.2 intel-signed/sof-icl.ri               Ice Lake
+SOFICLC.RI    SOF v2.2 community/sof-icl.ri
+SOFJSL.RI     SOF v2.2 intel-signed/sof-jsl.ri               Jasper Lake
+SOFJSLC.RI    SOF v2.2 community/sof-jsl.ri
+SOFEHL.RI     SOF v2.2 intel-signed/sof-ehl.ri               Elkhart Lake
+SOFEHLC.RI    SOF v2.2 community/sof-ehl.ri
+SOFBYT.RI     SOF v2.2 sof-byt.ri                            Bay Trail
+SOFCHT.RI     SOF v2.2 sof-cht.ri                            Cherry Trail, Braswell
+SOFBDW.RI     SOF v2.2 sof-bdw.ri                            Broadwell
+S4TGL.RI      SOF IPC4 v2.12 tgl/intel-signed/sof-tgl.ri     Tiger Lake
+S4TGLH.RI     SOF IPC4 v2.12 tgl-h/intel-signed/sof-tgl-h.ri Tiger Lake-H
+S4ADL.RI      SOF IPC4 v2.12 adl/intel-signed/sof-adl.ri     Alder Lake, Raptor Lake
+S4ADLN.RI     SOF IPC4 v2.12 adl-n/intel-signed/sof-adl-n.ri Alder Lake-N
+S4ADLS.RI     SOF IPC4 v2.12 adl-s/intel-signed/sof-adl-s.ri Alder / Raptor Lake-S
+S4TGLC.RI     SOF IPC4 v2.12 tgl/community/sof-tgl.ri        TGL, ADL, ADL-N, RPL (community)
+S4TGLHC.RI    SOF IPC4 v2.12 tgl-h/community/sof-tgl-h.ri    TGL-H, ADL-S, RPL-S (community)
+S4MTL.RI      SOF IPC4 v2.15 mtl/intel-signed/sof-mtl.ri     Meteor Lake, Arrow Lake
+S4ARLS.RI     SOF IPC4 v2.15 arl-s/intel-signed/sof-arl-s.ri Arrow Lake-S
+S4MTLC.RI     SOF IPC4 v2.15 mtl/community/sof-mtl.ri        MTL, ARL, ARL-S (community)
+S4LNL.RI      SOF IPC4 v2.15 lnl/intel-signed/sof-lnl.ri     Lunar Lake
+S4LNLC.RI     SOF IPC4 v2.15 lnl/community/sof-lnl.ri
+S4PTL.RI      SOF IPC4 v2.15 ptl/intel-signed/sof-ptl.ri     Panther Lake
+S4PTLC.RI     SOF IPC4 v2.15 ptl/community/sof-ptl.ri
+S4WCL.RI      SOF IPC4 v2.15 wcl/intel-signed/sof-wcl.ri     Wildcat Lake
+S4WCLC.RI     SOF IPC4 v2.15 wcl/community/sof-wcl.ri
+S4NVL.RI      SOF IPC4 v2.15 nvl/intel-signed/sof-nvl.ri     Nova Lake
+S4NVLC.RI     SOF IPC4 v2.15 nvl/community/sof-nvl.ri
+S4NVLS.RI     SOF IPC4 v2.15 nvl-s/intel-signed/sof-nvl-s.ri Nova Lake-S
+S4NVLSC.RI    SOF IPC4 v2.15 nvl-s/community/sof-nvl-s.ri
+CS42L43.BIN   linux-firmware cs42l43.bin                     Cirrus CS42L43 (SoundWire) patch
+
+SOF: https://github.com/thesofproject/sof-bin  (licence: LICSOF.TXT)
+AVS: https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
+     (licence: LICSST.TXT)
+Cirrus: linux-firmware (licence: LICCIRR.TXT)

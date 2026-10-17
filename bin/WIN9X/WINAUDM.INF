@@ -1,0 +1,83 @@
+; WINAUDM.INF - WINDRV 1.0 WINAUDIO for Windows 95, 98 and ME: Sound, video and game controllers
+; AC'97 controllers, and the codecs and DSP devices on the buses of WINAUDIO.INF. WINSOUND.DRV
+; is the wave and MIDI driver (SYSTEM.INI [drivers]), WINMIX the mixer.
+
+[Version]
+Signature="$CHICAGO$"
+Class=MEDIA
+Provider=%Provider%
+
+[DestinationDirs]
+DefaultDestDir=11
+
+[SourceDisksNames]
+1=%DiskName%,,0
+
+[SourceDisksFiles]
+WINAUDIO.VXD=1
+WIN4G.VXD=1
+WINSOUND.DRV=1
+WINMIX.EXE=1
+AUDTEST.EXE=1
+
+[Manufacturer]
+%Provider%=WINDRV
+
+[WINDRV]
+%AC97.Desc%=WINAUDM.AC97,PCI\CC_040100
+%AC97.Desc%=WINAUDM.AC97,PCI\CC_0401
+%Codec.Desc%=WINAUDM.Func,WINAUDIO\HDA_AUDIO
+%HDMI.Desc%=WINAUDM.Func,WINAUDIO\HDA_HDMI
+%Modem.Desc%=WINAUDM.Func,WINAUDIO\HDA_MODEM
+%Other.Desc%=WINAUDM.Func,WINAUDIO\HDA_OTHER
+%DMIC.Desc%=WINAUDM.Func,WINAUDIO\DSP_DMIC
+%I2S.Desc%=WINAUDM.Func,WINAUDIO\DSP_I2S
+%SDW.Desc%=WINAUDM.Func,WINAUDIO\DSP_SDW
+%DSPHDA.Desc%=WINAUDM.Func,WINAUDIO\DSP_HDA
+
+; ---- AC'97: the controller is the sound device, WINAUDIO.VXD its DevLoader ----
+[WINAUDM.AC97]
+CopyFiles=WINAUDM.Copy
+AddReg=WINAUDM.AC97.AddReg
+UpdateInis=WINAUDM.Inis,WINAUDM.Inis4G
+
+[WINAUDM.AC97.AddReg]
+HKR,,DevLoader,,WINAUDIO.VXD
+HKR,,Options,,""
+HKR,,DriverDesc,,"%Provider% WINAUDIO 1.0"
+
+; ---- codecs and DSP devices: served by WINAUDIO.VXD, the bus driver ----
+[WINAUDM.Func]
+CopyFiles=WINAUDM.Copy
+AddReg=WINAUDM.Func.AddReg
+UpdateInis=WINAUDM.Inis
+
+[WINAUDM.Func.AddReg]
+HKR,,DevLoader,,WINAUDIO.VXD
+
+[WINAUDM.Inis]
+system.ini,drivers,,"wave=winsound.drv"
+system.ini,drivers,,"midi=winsound.drv"
+
+[WINAUDM.Inis4G]
+system.ini,386Enh,,"device=win4g.vxd"
+
+[WINAUDM.Copy]
+WINAUDIO.VXD
+WIN4G.VXD
+WINSOUND.DRV
+WINMIX.EXE
+AUDTEST.EXE
+
+[Strings]
+Provider="WINDRV"
+DiskName="WINDRV WINAUDIO 1.0 disk"
+AC97.Desc="WINAUDIO AC'97 Audio Controller"
+Codec.Desc="WINAUDIO High Definition Audio Codec"
+HDMI.Desc="WINAUDIO HDMI / DisplayPort Audio Codec"
+Modem.Desc="WINAUDIO HD Audio Modem Codec"
+Other.Desc="WINAUDIO HD Audio Function"
+DMIC.Desc="WINAUDIO Intel DSP Digital Microphones"
+I2S.Desc="WINAUDIO Intel DSP I2S Audio Codec"
+SDW.Desc="WINAUDIO Intel DSP SoundWire Audio Codec"
+DSPHDA.Desc="WINAUDIO Intel DSP HD Audio Codec"

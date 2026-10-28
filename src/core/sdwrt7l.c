@@ -124,9 +124,10 @@ static u32 vget(struct sdwdev *s, int i, u32 def)
 }
 
 /* MX_* level to HD Audio amplifier gain steps, level 0 = mute */
-static u32 hda_lvl(u32 lr, u32 steps)
+static u32 hda_lvl(u32 lr, u32 steps, int vol)
 {
-    u32 l = cdc_step(CDC_L(lr), steps), r = cdc_step(CDC_R(lr), steps);
+    u32 l = vol ? cdc_vstep(CDC_L(lr), steps, 750) : cdc_step(CDC_L(lr), steps);
+    u32 r = vol ? cdc_vstep(CDC_R(lr), steps, 750) : cdc_step(CDC_R(lr), steps);
     return (l ? l : 0x80) | ((r ? r : 0x80) << 8) | VSET;
 }
 
@@ -330,9 +331,9 @@ static void hs_volume(struct sdwdev *s, int ctl, u32 lr)
     const struct rtcf *c = CF(s);
     int tmp = !s->priv[P_ACT];
     if (ctl == MX_MASTER)
-        s->priv[P_VOUT] = hda_lvl(lr, 0x57);
+        s->priv[P_VOUT] = hda_lvl(lr, 0x57, 1);
     else if (ctl == MX_INGAIN)
-        s->priv[P_VIN] = hda_lvl(lr, 0x3F);
+        s->priv[P_VIN] = hda_lvl(lr, 0x3F, 0);
     else
         return;
     /* amplifier writes need D0, as the Linux put handlers do */
@@ -456,7 +457,7 @@ static void r715_volume(struct sdwdev *s, int ctl, u32 lr)
 {
     if (ctl != MX_INGAIN)
         return;
-    s->priv[P_VIN] = hda_lvl(lr, 0x3F);
+    s->priv[P_VIN] = hda_lvl(lr, 0x3F, 0);
     if (!s->priv[P_ACT])
         afg(s, 1);
     r715_gain(s);

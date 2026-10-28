@@ -57,6 +57,7 @@ struct ac97 {
     u8 mbits;           /* master attenuation steps: 31 or 63 */
     u8 hbits;
     u8 vra;
+    u16 coff;           /* ICH: codec register block (0 primary, 80h secondary codec) */
 };
 
 static struct ac97 *ctrls[MAXAC];
@@ -95,7 +96,7 @@ static u16 crd(struct ac97 *c, int reg)
         return (u16)inl((u16)(c->nam + 0x80));
     }
     ich_cas(c);
-    return inw((u16)(c->nam + reg));
+    return inw((u16)(c->nam + c->coff + reg));
 }
 
 static void cwr(struct ac97 *c, int reg, u16 v)
@@ -107,15 +108,71 @@ static void cwr(struct ac97 *c, int reg, u16 v)
         return;
     }
     ich_cas(c);
-    outw((u16)(c->nam + reg), v);
+    outw((u16)(c->nam + c->coff + reg), v);
+}
+
+/* ---------------------------------------------------------------- ThinkPad
+   IBM ThinkPads have a volume level and mute switch in the embedded controller (register 30h:
+   level in bits 3:0, mute in bit 6) behind the codec, set with the volume buttons. A muted
+   or zero level keeps the speaker and headphones silent whatever the codec plays: the driver
+   unmutes it at the start, as IBM's own driver does. */
+static int ec_wait(u8 mask, u8 want)
+{
+    u32 t0 = plat_ms();
+    while ((inb(0x66) & mask) != want)
+        if (plat_ms() - t0 > 5) return -1;
+    return 0;
+}
+
+static int ec_read(u8 reg, u8 *v)
+{
+    if (ec_wait(2, 0)) return -1;
+    outb(0x66, 0x80);
+    if (ec_wait(2, 0)) return -1;
+    outb(0x62, reg);
+    if (ec_wait(1, 1)) return -1;
+    *v = inb(0x62);
+    return 0;
+}
+
+static int ec_write(u8 reg, u8 v)
+{
+    if (ec_wait(2, 0)) return -1;
+    outb(0x66, 0x81);
+    if (ec_wait(2, 0)) return -1;
+    outb(0x62, reg);
+    if (ec_wait(2, 0)) return -1;
+    outb(0x62, v);
+    return ec_wait(2, 0);
+}
+
+static void tp_unmute(void)
+{
+    u8 v = 0, n;
+    u32 f;
+    if (cb->opts2 & OPT2_NOTPVOL) return;
+    if (inb(0x66) == 0xFF) return;                          /* no embedded controller */
+    f = irq_save();
+    if (ec_read(0x30, &v) == 0 && ((v & 0x40) || !(v & 0x0F))) {
+        n = (u8)((v & ~0x40) | ((v & 0x0F) ? 0 : 0x07));
+        if (ec_write(0x30, n) == 0) {
+            irq_restore(f);
+            kprintf("ac97: ThinkPad volume %u%s -> %u (volume buttons)\n", v & 0x0F, (v & 0x40) ? " muted" : "",
+                    n & 0x0F);
+            return;
+        }
+    }
+    irq_restore(f);
 }
 
 /* ---------------------------------------------------------------- mixer */
 
+/* attenuation register value (1.5 dB steps from the top) of a volume, linear in amplitude */
 static u16 att(u32 v, int steps)
 {
-    u32 a = (u32)steps - (v * (u32)steps + 32767) / 65535;
-    return (u16)a;
+    u32 a = aeng_att_cdb(v);
+    a = a == 0xFFFFFFFFUL ? (u32)steps : (a + 75) / 150;
+    return (u16)(a > (u32)steps ? (u32)steps : a);
 }
 
 static u16 stereo_att(u32 lr, int steps)
@@ -175,11 +232,17 @@ static int codec_init(struct ac97 *c)
         if (plat_ms() - t0 > 1000) break;
     v1 = crd(c, AC_VID1);
     v2 = crd(c, AC_VID2);
-    if (v1 == 0xFFFF && v2 == 0xFFFF) return -1;
+    if ((v1 == 0xFFFF && v2 == 0xFFFF) || (!v1 && !v2)) return -1;
+    cwr(c, AC_MASTER, 0x8808);
+    if (!(crd(c, AC_MASTER) & 0x8000)) return -1;            /* a modem codec has no mixer */
     c->a.vid = v1;
     c->a.pid = v2;
     /* external amplifier on (EAPD = 0), everything powered */
     cwr(c, AC_POWER, (u16)((cb->opts & OPT_INVEAPD) ? 0x8000 : 0));
+    t0 = plat_ms();
+    while ((crd(c, AC_POWER) & 0x0F) != 0x0F && plat_ms() - t0 < 500) ;
+    if (v1 == 0x4352 && (v2 & 0xFF00) == 0x5900)
+        cwr(c, 0x5E, 0x0080);       /* Cirrus Logic CS4297A..CS4299, CS420x: AC mode (as Linux) */
     ext = crd(c, AC_EXTID);
     c->vra = (u8)(ext & 1);
     if (c->vra) {
@@ -381,18 +444,46 @@ static int kind_of(struct pcidev *p)
     return -1;
 }
 
+/* AC-link cold reset (as the Linux driver does: a codec the firmware powered down may look
+   ready and still not answer), then the primary codec or, on boards that wire the audio
+   codec as the secondary one, the secondary codec. The ThinkPad R32 takes a warm reset. */
 static int ich_link(struct ac97 *c)
 {
-    u32 t0, cnt = inl((u16)(c->nabm + GLOB_CNT));
-    if (!(cnt & 2) || !(inl((u16)(c->nabm + GLOB_STA)) & 0x100)) {
-        outl((u16)(c->nabm + GLOB_CNT), (cnt & ~0x00300000UL & ~4UL) | 2);     /* cold reset off, 2 ch */
-        t0 = plat_ms();
-        while (!(inl((u16)(c->nabm + GLOB_STA)) & 0x300) && plat_ms() - t0 < 1000) ;
+    u32 t0, cnt = inl((u16)(c->nabm + GLOB_CNT)), st;
+    int warm = c->pci.vendor == 0x8086 && pci_rd16(c->pci.bus, c->pci.dev, c->pci.fn, 0x2C) == 0x1014 &&
+               pci_rd16(c->pci.bus, c->pci.dev, c->pci.fn, 0x2E) == 0x051F;
+    /* bus masters still running from before a warm restart (DOS, Windows) stop first */
+    ich_reset_chan(c, PI);
+    ich_reset_chan(c, PO);
+    ich_reset_chan(c, 0x20);
+    outl((u16)(c->nabm + GLOB_STA), inl((u16)(c->nabm + GLOB_STA)) & 0x00000F00UL);    /* status bits */
+    cnt &= ~0x00300000UL & ~8UL;                        /* 2 channels, AC-link on */
+    if (c->kind == K_SIS || c->kind == K_NV || warm) {
+        if (!(cnt & 2)) outl((u16)(c->nabm + GLOB_CNT), cnt | 2);
+        else outl((u16)(c->nabm + GLOB_CNT), cnt | 4);  /* warm reset */
     } else {
-        outl((u16)(c->nabm + GLOB_CNT), cnt & ~0x00300000UL & ~4UL);
+        outl((u16)(c->nabm + GLOB_CNT), cnt & ~6UL);     /* cold reset asserted */
+        udelay(20);
+        outl((u16)(c->nabm + GLOB_CNT), (cnt & ~4UL) | 2);
+        mdelay(1);
     }
+    t0 = plat_ms();
+    while ((inl((u16)(c->nabm + GLOB_CNT)) & 4) && plat_ms() - t0 < 250) ;
+    t0 = plat_ms();
+    while (!(inl((u16)(c->nabm + GLOB_STA)) & 0x300) && plat_ms() - t0 < 1000) ;
+    t0 = plat_ms();
+    while ((inl((u16)(c->nabm + GLOB_STA)) & 0x300) != 0x300 && plat_ms() - t0 < 50) ;   /* the other one */
     if (c->kind == K_SIS) outw((u16)(c->nabm + 0x4C), (u16)(inw((u16)(c->nabm + 0x4C)) | 1));
-    return (inl((u16)(c->nabm + GLOB_STA)) & 0x300) ? 0 : -1;
+    st = inl((u16)(c->nabm + GLOB_STA));
+    c->coff = 0;
+    if (!(st & 0x100) && (st & 0x200) && c->kind == K_ICH) c->coff = 0x80;
+    if (!(st & 0x300) && c->kind == K_ICH) {
+        /* some codecs (Cirrus Logic CS4299 of the ThinkPad T23) answer although the ready bit
+           never comes: the vendor ID read decides */
+        kprintf("ac97: no codec ready bit (GLOB_STA %08lx), trying anyway\n", st);
+        return 0;
+    }
+    return (st & 0x300) ? 0 : -1;
 }
 
 static int via_link(struct ac97 *c)
@@ -465,9 +556,18 @@ int ac97_probe(struct pcidev *p)
         return -1;
     }
     if (codec_init(c)) {
-        kprintf("ac97: %02x:%02x.%u no codec\n", p->bus, p->dev, p->fn);
-        return -1;
+        if (c->coff || kind != K_ICH || !(inl((u16)(c->nabm + GLOB_STA)) & 0x200)) {
+            kprintf("ac97: %02x:%02x.%u no codec\n", p->bus, p->dev, p->fn);
+            return -1;
+        }
+        c->coff = 0x80;             /* the primary is a modem codec or absent */
+        if (codec_init(c)) {
+            kprintf("ac97: %02x:%02x.%u no audio codec\n", p->bus, p->dev, p->fn);
+            return -1;
+        }
     }
+    if (c->coff) kprintf("ac97: %02x:%02x.%u audio codec is the secondary codec\n", p->bus, p->dev, p->fn);
+    if (pci_rd16(p->bus, p->dev, p->fn, 0x2C) == 0x1014) tp_unmute();
     alloc_ring(&c->a.out, c->ringbuf[0]);
     alloc_ring(&c->a.in, c->ringbuf[1]);
     c->a.ops = kind >= K_VIA ? &via_ops : &ich_ops;
@@ -481,6 +581,10 @@ int ac97_probe(struct pcidev *p)
     kprintf("ac97: %02x:%02x.%u %s, codec %04x%04x, %s, master %d steps\n", p->bus, p->dev, p->fn, kn[kind],
             c->a.vid, c->a.pid, c->vra ? "VRA" : "48 kHz", c->mbits);
     ksnprintf(c->a.name, sizeof(c->a.name), "AC'97 %s", kn[kind]);
+    c->a.irq = c->pci.irq;
+    c->a.pcivid = c->pci.vendor;
+    c->a.pcidid = c->pci.device;
+    c->a.loc = (u16)((c->pci.bus << 8) | (c->pci.dev << 3) | c->pci.fn);
     adev_register(&c->a);
     return 0;
 }

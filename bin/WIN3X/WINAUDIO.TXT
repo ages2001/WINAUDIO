@@ -1,4 +1,6 @@
-# WINAUDIO 1.0 — HD Audio / AC'97 / Intel audio DSP sound driver for DOS, Windows 3.x and Windows 95 / 98 / ME
+# WINAUDIO 1.1 — HD Audio / AC'97 / Intel audio DSP sound driver for DOS, Windows 3.x and Windows 95 / 98 / ME
+
+The complete manual. **README.md** has the short overview and the installation.
 
 WINAUDIO is a driver written from scratch that brings built-in PC sound hardware to MS-DOS
 5 / 6, Windows 3.0 (Multimedia Extensions) / Windows 3.1 / WfW 3.11 and Windows 95 / 98 / ME:
@@ -32,7 +34,15 @@ WINAUDIO is a driver written from scratch that brings built-in PC sound hardware
   XG reset.
 * **Windows driver WINSOUND.DRV:** wave output / input, MIDI output, aux volume; Windows 3.1
   and Windows 3.0 + MME (MMSYSTEM driver interface), Standard and 386 Enhanced Mode, Windows
-  95 / 98 / ME.
+  95 / 98 / ME with a mixer driver (Volume Control, the volume icon of the taskbar). The
+  volumes are kept across restarts.
+* **Sound Blaster 16 emulation** for DOS programs and games (§3b): DSP 4.05 with 8-bit and
+  16-bit DMA sound, the CT1745 mixer, an **OPL3 FM synthesizer** (AdLib / Sound Blaster FM
+  music) and an **MPU-401** (UART) on the General MIDI synthesizer, the interrupt on IRQ 5 or
+  7 and DMA 1 / 5: in every MS-DOS box of Windows 3.x (386 Enhanced Mode) and Windows 95 /
+  98 / ME, and in plain DOS for real-mode and protected-mode games (DOS/4GW, DOS/32A,
+  PMODE/W, CauseWay, DJGPP) with **nothing else to load**: WINAUDIO.SYS brings its own V86
+  monitor, VCPI server and DPMI host (QEMM or JEMM + QPIEMU work too).
 * **WINMIX.EXE** (mixer) and **AUDTEST.EXE** (DOS test / diagnosis tool).
 
 USB Audio 1.0 / 2.0 devices and USB MIDI work through the same WINSOUND.DRV with the USB
@@ -45,7 +55,7 @@ together with the others:
 |---------|----------------|
 | **WINDISK**  | IDE, SATA AHCI and NVMe disks, IDE/AHCI CD/DVD drives, SD card readers and eMMC |
 | **WINUSB**   | USB host controllers and devices, PS/2 mouse and keyboard, touchpads, USB4 / Thunderbolt |
-| **WINAUDIO** | HD Audio, AC'97 and the Intel audio DSP (SST / SOF), General MIDI synthesizer |
+| **WINAUDIO** | HD Audio, AC'97 and the Intel audio DSP (SST / SOF), General MIDI synthesizer, Sound Blaster 16 emulation for DOS programs |
 | **WINUDF**   | the UDF file system (DVD, Blu-ray, packet-written CDs, UDF disks), read and write |
 
 ---
@@ -54,12 +64,12 @@ together with the others:
 
 | System | WINAUDIO |
 |--------|------|
-| MS-DOS 5.0 / 6.x | sound (`AUDTEST`) |
+| MS-DOS 5.0 / 6.x, 7.x, 8.0, FreeDOS | sound (`AUDTEST`), Sound Blaster 16 emulation for real-mode and protected-mode (DPMI) games, nothing else to load (§3b) |
 | Windows 1.0x, 2.x | — |
 | Windows 3.0 Real Mode | beeps and `PLAY` / `SOUND` music (`WINBEEP.DRV`) |
-| Windows 3.0 Standard / 386 Enhanced Mode | everything (with the Multimedia Extensions) |
-| Windows 3.1, WfW 3.11 | everything |
-| Windows 95 / 98 / ME | everything, as Plug and Play devices: `WINAUDIO.VXD` (HD Audio bus + codec devices, Intel DSP, AC'97) (§3a) |
+| Windows 3.0 Standard / 386 Enhanced Mode | everything (with the Multimedia Extensions); Sound Blaster emulation in MS-DOS boxes (Enhanced Mode) |
+| Windows 3.1, WfW 3.11 | everything; Sound Blaster emulation in MS-DOS boxes (Enhanced Mode) |
+| Windows 95 / 98 / ME | Sound Blaster emulation in MS-DOS boxes; everything, as Plug and Play devices: `WINAUDIO.VXD` (HD Audio bus + codec devices, Intel DSP, AC'97) (§3a) |
 
 ## Repository layout
 
@@ -78,13 +88,17 @@ Files used by several systems are in each of their folders. The installer is run
 
 | Folder | Files |
 |--------|-------|
-| `bin/DOS` | `AUDTEST.EXE`, `INSTAUD.EXE`, `README.TXT`, `UNINAUD.EXE`, `WINACORE.BIN`, `WINAUDIO.SYS` |
+| `bin/DOS` | `AUDTEST.EXE`, `INSTAUD.EXE`, `MANUAL.TXT`, `README.TXT`, `UNINAUD.EXE`, `WINACORE.BIN`, `WINAUDIO.SYS` |
 | `bin/WIN3X` | `WIN30FIX.COM`, `WINAUDIO.386`, `WINAUDIO.TXT`, `WINBEEP.DRV`, `WINGRP.EXE`, `WINMIX.EXE`, `WINSOUND.DRV` |
 | `bin/WIN9X` | `AUDTEST.EXE`, `WIN4G.VXD`, `WINAUDIO.INF`, `WINAUDIO.TXT`, `WINAUDIO.VXD`, `WINAUDM.INF`, `WINDRVFW\`, `WINGRP.EXE`, `WINMIX.EXE`, `WINSOUND.DRV` |
 
 ## 1. Requirements
 
-* Pentium or later processor (TSC), MS-DOS 5.0 / 6.x, **HIMEM.SYS**, PCI bus
+* Pentium or later processor with a time stamp counter (also SoCs that have one but do not
+  report it through CPUID, such as the Vortex86 DX / SX / EX), MS-DOS 5.0 / 6.x / 7.x / 8.0
+  or FreeDOS, **HIMEM.SYS** (or another XMS driver: JEMMEX, HIMEMX; with or without
+  EMM386 / JEMM386), PCI bus. The DOS driver can be loaded high (`DEVICEHIGH`) or with a
+  device loader such as DEVLOAD.
 * Windows 3.1 / WfW 3.11, Windows 3.0 + Multimedia Extensions (MMSYSTEM.DLL), or Windows 95 /
   98 / ME
 * An HD Audio or AC'97 controller on PCI, or an Intel audio DSP (§6a)
@@ -99,14 +113,15 @@ Files used by several systems are in each of their folders. The installer is run
 | `INSTAUD.EXE`  | DOS | installer |
 | `UNINAUD.EXE`  | DOS | uninstaller |
 | `WINDRVFW\`    | WIN9X | firmware of the Intel audio DSPs and SoundWire codecs (`FIRMWARE.TXT`, §6a); the installer copies it next to WINAUDIO.SYS too |
-| `README.TXT`   | DOS | this text (code page 437) |
+| `README.TXT`   | DOS | the short README (code page 437) |
+| `MANUAL.TXT`   | DOS | this manual (code page 437) |
 | `WINAUDIO.386` | WIN3X | 386 Enhanced Mode VxD, in the directory of WINAUDIO.SYS (loaded automatically) |
-| `WINSOUND.DRV` | WIN3X, WIN9X | MMSYSTEM driver (wave, midi, aux) — `WINDOWS\SYSTEM` |
+| `WINSOUND.DRV` | WIN3X, WIN9X | MMSYSTEM driver (wave, midi, aux, mixer) — `WINDOWS\SYSTEM` |
 | `WINMIX.EXE`   | WIN3X, WIN9X | volume levels and recording source |
 | `WINBEEP.DRV`  | WIN3X | Windows 3.0 SOUND driver: beeps and the `PLAY` / `SOUND` API in Real Mode too |
 | `WIN30FIX.COM` | WIN3X | XMS fix for Windows 3.0 Standard Mode with more than 16 MB of memory |
 | `WINGRP.EXE`   | WIN3X, WIN9X | creates the Program Manager / Start menu group at the next start of Windows |
-| `WINAUDIO.TXT` | WIN3X, WIN9X | this text for Notepad ("Read Me" item of the group) |
+| `WINAUDIO.TXT` | WIN3X, WIN9X | this manual for Notepad ("Read Me" item of the group) |
 | `WINAUDIO.VXD` | WIN9X | Windows 95/98/ME Plug and Play VxD (dynamic; HD Audio bus driver and enumerator of the codecs) |
 | `WINAUDIO.INF` | WIN9X | HD Audio controllers (bus), Intel audio DSPs (System devices) |
 | `WINAUDM.INF`  | WIN9X | HD Audio codec functions, DSP endpoints and AC'97 (Sound, video and game controllers) |
@@ -123,7 +138,8 @@ INSTAUD                      installs into the Windows directory
 INSTAUD D:\DRV\WIN /W:D:\WIN  another directory and Windows directory
 INSTAUD /NOWIN               the DOS driver only (WINSOUND.DRV is not set up)
 INSTAUD /O /WIN              with driver options (everything after /O goes to WINAUDIO.SYS)
-INSTAUD /DOS                 MS-DOS 7 (Windows 95/98): adds WINAUDIO.SYS to CONFIG.SYS too
+INSTAUD /DOS                 Windows 95/98 installed: adds WINAUDIO.SYS to CONFIG.SYS too
+INSTAUD /O /SB:A220,I7,D1,H5 the emulated Sound Blaster on IRQ 7 (and SET BLASTER to match)
 ```
 
 INSTAUD finds every Windows 3.1 / WfW 3.11, Windows 3.0 with the Multimedia Extensions and
@@ -144,6 +160,9 @@ Windows 95 / 98 / ME installation of the machine (`/W:dir` selects one). It
   kept): Windows 3.0's MMSYSTEM.DLL cannot load in Real Mode; WINBEEP plays the beeps and the
   `PLAY` / `SOUND` API (SetVoiceNote, StartSound …) on the synthesizer. In Standard /
   Enhanced Mode system sounds go to MMSYSTEM (`sndPlaySound`), as MMSOUND.DRV does it.
+* puts `SET BLASTER=A220 I5 D1 H5 P330 T6` at the top of AUTOEXEC.BAT (the settings of the
+  Sound Blaster emulation for DOS programs, also inherited by the MS-DOS boxes of Windows) when
+  no BLASTER line is there; `/O /NOSB` leaves it out, `/O /SB:...` changes the values;
 * adds the **WINAUDIO** group (Volume Control, Sound Test, Read Me) to Program Manager on
   Windows 3.x and to the Start menu on Windows 95/98/ME; installing again does not duplicate
   lines or group items.
@@ -169,6 +188,14 @@ Manual installation:
    ```
    (or Control Panel -> Drivers -> Add -> *Unlisted or Updated Driver*)
 3. Control Panel -> MIDI Mapper -> Edit: route the channels to the "WIN GM Synth" port.
+4. For DOS programs that use a Sound Blaster: `SET BLASTER=A220 I5 D1 H5 P330 T6` in
+   AUTOEXEC.BAT (§3b).
+
+Without WINAUDIO.SYS (no CONFIG.SYS line, or `/NOVXD`) Windows 3.x 386 Enhanced Mode can
+load the VxD by itself: copy `WINAUDIO.386` to `WINDOWS\SYSTEM` and add
+`device=winaudio.386` to the `[386Enh]` section of SYSTEM.INI; options then go to
+`Options=` in a `[WINAUDIO]` section of SYSTEM.INI (e.g. `Options=/SB:A220,I7`). The sound
+then works in Windows only (no DOS sound, no AUDTEST in DOS).
 
 ### 3a. Windows 95 / 98 / ME
 
@@ -176,8 +203,8 @@ On Windows 9x WINAUDIO is a Plug and Play driver (no CONFIG.SYS line). Run `INST
 `bin\DOS` in a DOS box: `WINAUDIO.VXD`, `WIN4G.VXD`, `WINSOUND.DRV`, `WINMIX.EXE` and
 `AUDTEST.EXE` go to `WINDOWS\SYSTEM`, the DSP firmware to `WINDOWS\SYSTEM\WINDRVFW`,
 `WINAUDIO.INF` and `WINAUDM.INF` to `WINDOWS\INF` (without their `CopyFiles` lines: the files
-are in place already), and `wave=winsound.drv`, `midi=winsound.drv` are written to the
-`[drivers]` section of SYSTEM.INI. Then select the sound controller in Device Manager: on
+are in place already), and `wave=winsound.drv`, `midi=winsound.drv`, `mixer=winsound.drv`
+are written to the `[drivers]` section of SYSTEM.INI. Then select the sound controller in Device Manager: on
 Windows 95 Remove the "PCI Multimedia Audio Device" (Other devices) and Refresh ("New Hardware
 Found", "Windows default driver"); on Windows 98 / ME, for the sound device with Microsoft's
 driver: Driver, Update Driver, Have Disk, `C:\WINDOWS\INF` (or `bin\WIN9X` of this package).
@@ -241,7 +268,154 @@ included) on Windows 95 RTM, Windows 98 FE and Windows ME.
 | `/DMIC`    | try the digital microphones with the IPC3 firmware on a machine without an NHLT table (Chromebooks) |
 | `/NORELOC` | do not move PCI resources from above 4 GB at boot |
 | `/ALL4G`   | move every device below 4 GB at boot, not only the WINDRV devices |
+| `/NOTPVOL` | ThinkPad (IBM / Lenovo): leave the volume / mute buttons' embedded controller setting alone (by default it is unmuted and turned up at start) |
+| `/USBSB`   | the Sound Blaster emulation and the synthesizer play on the USB Audio device of WINUSB even when WINAUDIO has a sound device of its own (§3b) |
+| `/NOSB`    | no Sound Blaster emulation (§3b) |
+| `/SB:A220,I5,D1,H5,P330` | Sound Blaster settings: port 220h–280h, IRQ 2 / 5 / 7 / 10, 8-bit DMA 0 / 1 / 3, 16-bit DMA 5 / 6 / 7 (0: the 8-bit one), MPU-401 300h–330h (P0: none); missing letters keep their default |
+| `/NOOPL`   | no FM synthesizer ports (388h–38Bh, base+0..3, base+8/9) |
+| `/NOMPU`   | no MPU-401 |
+| `/NOV86`   | plain DOS: do not start the built-in V86 monitor (no emulation in DOS then, §3b) |
+| `/NODPMI`  | the V86 monitor without its DPMI host (VCPI for every program then) |
+| `/NOVCPI`  | the V86 monitor without its VCPI server |
+| `/VCPI`    | VCPI for every program, not only for WINDRV drivers and Windows Standard Mode |
+| `/VME`     | use the virtual-8086 mode extensions of the processor (VME): software interrupts of real-mode programs go straight to their handlers, a little faster; off by default (some early Ryzen processors without a microcode update have a VME fault) |
 | `/V`, `/D`, `/COM1` | log options (`/D`: debug log to port E9h / COM1) |
+
+## 3b. Sound Blaster 16 emulation
+
+DOS games and programs that know only a Sound Blaster get one: the emulated card answers on
+its ports like a Creative Sound Blaster 16, and everything it plays goes through the sound
+engine to the HD Audio / AC'97 device (or a USB Audio device of WINUSB, see below), mixed
+with Windows' own sound.
+
+| Part | Ports | Emulated |
+|------|-------|----------|
+| DSP 4.05 | 220h–22Fh (`A`) | reset, version, identification, copyright, test register, speaker, direct DAC (10h), 8-bit DMA (14h, 1Ch, 90h, 91h, Cxh), 16-bit DMA (Bxh), high speed, auto-init, pause / continue / exit auto-init, time constant (40h) and sample rate (41h / 42h), silence (80h), forced interrupts (F2h / F3h), recording (returns silence), ADPCM transfers (timed, played as silence), MIDI out (38h, UART modes) |
+| Mixer CT1745 | 224h / 225h | master, voice, FM, CD, line, mic levels (SB Pro registers too), IRQ / DMA setting registers 80h / 81h, interrupt status 82h, SB Pro stereo bit |
+| OPL3 FM | 388h–38Bh, 220h–223h, 228h / 229h | YMF262 synthesizer of our own (2 and 4 operators, 8 waveforms, rhythm mode, tremolo, vibrato, key scale, feedback, stereo), OPL2 compatible; the timers, so the AdLib detection of games works |
+| MPU-401 UART | 330h / 331h (`P`) | reset / UART mode with acknowledge; the MIDI bytes play on the General MIDI synthesizer |
+| DMA | channel 1 (`D`), 5 (`H`) | address, count, page, mode, mask, flip-flop, status as the program programs them; the counters move with the playback |
+| IRQ | 5 (`I`) | raised at the end of each block, acknowledged by reading 22Eh / 22Fh |
+
+The defaults are `A220 I5 D1 H5 P330`, the usual BLASTER setting of a Sound Blaster 16:
+`SET BLASTER=A220 I5 D1 H5 P330 T6` (INSTAUD writes it to AUTOEXEC.BAT). `/SB:` changes them
+(e.g. `/SB:I7` for games that only know IRQ 7); keep BLASTER in step.
+
+**Windows 3.x (386 Enhanced Mode) and Windows 95 / 98 / ME:** the VxD traps the card's ports
+in every virtual machine, takes over the two DMA channels from VDMAD and the IRQ from VPICD.
+Every MS-DOS box has the card; the box that used it last owns it. Nothing has to be loaded
+in the box. Programs running in protected mode under Windows' DPMI (DOS/4GW, DOS32A, PMODE …)
+go through the same traps (verified with real-mode test programs only).
+
+**Plain DOS (MS-DOS 5 – 8, FreeDOS):** nothing else is needed. When DOS runs in real mode
+(HIMEM.SYS or HIMEMX only, no EMM386), WINAUDIO.SYS starts a small **V86 monitor** of its
+own: DOS goes on in virtual 8086 mode, and the ports of the card, of the FM synthesizer, of
+the MPU-401 and of the two DMA channels are trapped by the processor's I/O permission bitmap.
+
+```
+DEVICE=C:\DOS\HIMEM.SYS
+DEVICE=C:\WINDOWS\WINAUDIO.SYS
+```
+
+```
+WINAUDIO: Sound Blaster 16 emulation, SET BLASTER=A220 I5 D1 H5 P330 T6
+WINAUDIO: DOS programs: ports trapped by the built-in V86 monitor, VCPI and DPMI
+WINAUDIO:   available, RTC interrupt 1024 Hz
+```
+
+The monitor is there for every kind of DOS program:
+
+* **Real-mode programs** run in V86 mode with their ports trapped. HIMEM keeps working: the
+  monitor does the INT 15h AH=87h block moves and emulates the A20 gate (port 92h and the
+  keyboard controller) through the page tables, so "A20 off" wraps memory like a real PC.
+* **Protected-mode programs** get a **DPMI 0.9 host** (INT 2Fh AX=1687h): DOS/4GW, DOS/32A,
+  PMODE/W, CauseWay, DJGPP programs and Borland's 16-bit DPMI programs run as its clients in
+  ring 3, with the same ports trapped, so games like DOOM, Duke Nukem 3D, Descent or Warcraft
+  II have the card too. The host gives memory from XMS (functions 0501h–0503h), DOS memory
+  (0100h–0102h), descriptors, real-mode calls and callbacks, raw mode switches, exception
+  handlers, and routes hardware interrupts (the card's too) to the program's protected-mode
+  handlers in either mode. A DPMI program may start another one.
+* **VCPI** (INT 67h AX=DExxh, with the device EMMQXXX0 like EMM386 NOEMS) is served for
+  WINDISK.SYS / WINUSB.SYS and for Windows 3.x Standard Mode. DOS extenders that prefer VCPI
+  to DPMI (DOS/32A, PMODE/W, CauseWay) would run in ring 0 under it, where ports cannot be
+  trapped, so with the DPMI host VCPI is hidden from other programs; `/VCPI` shows it to all.
+* **Windows** 3.x 386 Enhanced Mode and Windows 95 / 98 / ME get the processor back in real
+  mode through the switch routine of INT 2Fh AX=1605h (as with EMM386); after Windows the
+  monitor runs again. Windows 3.x Standard Mode runs as a VCPI client.
+
+On Windows 95 / 98 / ME, whose IO.SYS loads HIMEM.SYS only after the CONFIG.SYS drivers,
+`DEVICE=C:\WINDOWS\HIMEM.SYS` must come before WINAUDIO.SYS (INSTAUD adds it); the monitor
+then runs in "Restart in MS-DOS mode" sessions too and hands the processor to Windows when
+it starts.
+
+The card is served between timer ticks from the RTC periodic interrupt (IRQ 8, 1024 Hz),
+and its interrupt reaches the program the way the PIC would deliver it: only while the
+program has interrupts enabled and the IRQ unmasked, with the program's EOI and in-service
+reads answered for it.
+
+The monitor needs no EMS: there is none (like EMM386 NOEMS) and no upper memory blocks. A
+memory manager in V86 mode loaded before WINAUDIO.SYS takes precedence: **QEMM** (386 or 97)
+or **JEMM386 / JEMMEX** with its QPIEMU module trap the ports for WINAUDIO.SYS instead
+(real-mode programs only); EMM386, which has no port trapping, leaves DOS without the
+emulation (WINAUDIO.SYS says so). With JEMM:
+
+```
+DEVICE=C:\JEMM\JEMMEX.EXE            (or HIMEM.SYS + JEMM386.EXE)
+DEVICE=C:\JEMM\JLOAD.EXE C:\JEMM\QPIEMU.DLL
+DEVICE=C:\WINDOWS\WINAUDIO.SYS
+```
+
+Programs that need real mode itself (switching to protected mode on their own without VCPI
+or DPMI, "unreal mode" programs such as Ultima VII) cannot run in V86 mode: the monitor
+stops them with a message; load WINAUDIO.SYS with `/NOV86` for them (they run without the
+emulation then, as under any memory manager). `AUDTEST` shows the settings and the state, `AUDTEST SB` tries the
+card the way a game does (DSP, interrupt, DMA sound, FM detection, MPU-401).
+
+**USB Audio (with WINUSB):** the emulation also plays on a USB Audio 1.0 / 2.0 device
+(headset, USB speakers, USB sound card) that WINUSB drives, in plain DOS, in the MS-DOS
+boxes of Windows 3.x and in Windows 95 / 98 / ME. WINAUDIO mixes the card (DSP, FM, MPU-401
+on the synthesizer) into a ring in its memory, WINUSB plays that ring on its first USB Audio
+output like any other sound; the card keeps the USB device's pace. It is used when WINAUDIO
+has no HD Audio / AC'97 / DSP device of its own, or always with `/USBSB`.
+
+* DOS: WINUSB.SYS (with `/USB`, USB in DOS) is loaded **before** WINAUDIO.SYS (the
+  installers put the lines in this order). WINAUDIO.SYS waits up to 3 s for WINUSB to find
+  a USB Audio output (devices behind hubs come late) and stays resident even without sound
+  hardware of its own; a USB Audio device plugged in later is taken too. `/USB` belongs to
+  WINUSB.SYS; on WINAUDIO.SYS the switch that sends the emulation to USB while there is an
+  HD Audio / AC'97 device is `/USBSB`. When the bridge is not there, the start message of
+  WINAUDIO.SYS says why (WINUSB.SYS not loaded before it, without `/USB`, no USB Audio
+  output):
+  ```
+  DEVICE=C:\DOS\HIMEM.SYS
+  DEVICE=C:\WINDRV\WINUSB.SYS /USB
+  DEVICE=C:\WINDRV\WINAUDIO.SYS
+  ```
+* Windows 3.x: with both DOS drivers loaded, their VxDs find each other the same way.
+* Windows 95 / 98 / ME: WINAUDIO.VXD and WINUSB.VXD find each other by themselves.
+  WINAUDIO.VXD is loaded for an HD Audio / AC'97 / DSP device only, so a machine whose only
+  sound is USB has the emulation in plain DOS and in Windows 3.x, not in Windows 9x.
+* The sound runs about 0.3–0.5 s behind the program in DOS (WINUSB schedules the USB
+  transfers 150 ms ahead) and about 0.2 s in Windows; the interrupts come at the right rate.
+
+Notes:
+
+* `AUDTEST SB` measures the RTC interrupt that drives the emulation in DOS (1024 per
+  second). When it does not arrive (HPET legacy replacement mode, a firmware that routes
+  IRQ 8 elsewhere) the emulation runs from the timer tick only and its interrupts come late.
+* The sound of the DSP and of the FM synthesizer runs about 50–100 ms behind the program
+  (the device plays ahead of it); the interrupts come at the right rate.
+* The DMA terminal count bit of the 8237 status register is emulated everywhere: in plain
+  DOS by the monitor, in Windows 95 / 98 / ME by the VxD answering the status ports 08h /
+  D0h, in Windows 3.x by the VxD's fault hooks in front of VDMAD's trap of those ports (the
+  other channels' bits come from VDMAD in both).
+* With the emulation active under QEMM / JEMM, the 8237 registers of the other DMA channels
+  are written directly, past the memory manager: floppy disk DMA into memory that QEMM / JEMM
+  maps elsewhere (UMBs) would go wrong. `/NOSB` turns the emulation off. The built-in
+  monitor maps memory 1:1 and has no such problem.
+* Creative ADPCM transfers keep their timing but play as silence; recording returns silence.
+* The mixer starts at full level (a real card starts lower), so games that never touch the
+  mixer are not quiet.
 
 ## 4. How it works
 
@@ -275,9 +449,35 @@ included) on Windows 95 RTM, Windows 98 FE and Windows ME.
 | Wave out | `WIN HD Audio vvvv:pppp` / `WIN AC'97 ...` / `WIN <USB product name>` | one per sound device |
 | Wave in  | the same names | for devices that can record |
 | MIDI out | `WIN GM Synth` (`WIN USB GM Synth` with WINUSB), USB MIDI devices | the synthesizer plays on the first sound device |
-| Aux      | `WIN Master Volume`, on AC'97 `WIN CD Audio`, `WIN Line In` | through `auxSetVolume` |
+| Aux      | `WIN Master Volume`, on AC'97 `WIN CD Audio`, `WIN Line In` | through `auxSetVolume` (Windows 3.x) |
+| Mixer    | the wave out name | Windows 95 / 98 / ME (`mixer=winsound.drv`) |
 
 `waveOutSetVolume` sets the device's wave level, `midiOutSetVolume` the synthesizer level.
+
+**Mixer (Windows 95 / 98 / ME).** One mixer per sound device, for Volume Control (SNDVOL32),
+the volume icon of the taskbar (SYSTRAY; Control Panel -> Multimedia -> "Show volume control
+on the taskbar") and every program that uses the mixer API:
+
+| Line | Controls |
+|------|----------|
+| Volume Control (speakers) | master volume, mute |
+| Wave | the wave level (the same value as `waveOutSetVolume`) |
+| SW Synth | the synthesizer level (`midiOutSetVolume`) |
+| CD Audio, Line In (AC'97) | the analog inputs' levels |
+| Recording Control | recording source (microphone, line in, CD, aux, stereo mix as the device has them); each source shows the recording level (one level for all) |
+
+Changes made through any of these (or WINMIX) are told to the open mixers, so Volume Control
+and the taskbar icon follow other programs.
+
+**Volume scale.** Windows volumes are linear in amplitude (half the value is half the
+amplitude, -6 dB). The hardware amplifiers (HD Audio, AC'97, USB Audio, the codecs of the
+Intel DSP) work in dB steps: the value is converted to dB, so a slider moves the loudness
+evenly and the same value gives the same loudness as in the software mix.
+
+**Saved volumes.** WINSOUND.DRV writes the volumes of each device (master, wave, synthesizer,
+recording, CD, line, recording source, mute) to `Volume<core>.<device>=` in the
+`[winsound.drv]` section of SYSTEM.INI when they change, and sets them again when Windows
+starts. WINMIX writes the same keys.
 
 ### Synthesizer
 
@@ -285,12 +485,18 @@ included) on Windows 95 RTM, Windows 98 FE and Windows ME.
 and modulation depths for the 128 General MIDI instruments, noise for winds and effects; a
 47-note drum kit on channel 10 (bass drum, snares, toms, cymbals and hi-hats, hand drums
 …). When the voices run out the quietest finishing voice, else the oldest, is taken. To save
-processor time it is generated at half the rate (24 kHz) and converted up.
+processor time it is generated at half the rate (24 kHz) and converted up. The level
+follows the pitch (low notes a little louder, high notes 1.5 dB per octave softer, like the
+key scaling of an OPL), the instruments go through a gentle low pass (about 6 kHz, the drum
+kit not), and the envelopes change sample by sample, so notes start without a tick. The instruments
+are built into the driver (no SoundFont or sample set; there is nothing to configure). It is
+not the OPL3 of the Sound Blaster emulation (§3b): that one plays the FM registers DOS games
+write, this one plays General MIDI (Windows MIDI, the MPU-401 of the emulation).
 
 ## 5. Tools
 
 ```
-AUDTEST                      sound devices
+AUDTEST                      sound devices and the Sound Blaster emulation settings
 AUDTEST TONE [hz] [device]   2-second test tone (left channel, then both)
 AUDTEST PLAY file.wav        play a WAV (PCM 8..32 bit, float, any rate)
 AUDTEST REC file.wav [s]     record (16-bit stereo, default 5 s at 44100 Hz)
@@ -298,12 +504,14 @@ AUDTEST MIDI                 synthesizer test (8 instruments, chords, drums)
 AUDTEST MIX [device]         mixer values
 AUDTEST MIX 0 MASTER 80      volume (MASTER WAVE SYNTH INPUT CD LINE, 0..100)
 AUDTEST MIX 0 SRC LINE       recording source (MIC LINE CD AUX MIX)
+AUDTEST SB                   test the Sound Blaster emulation (DSP, IRQ, DMA, FM, MPU-401)
 AUDTEST LOG                  driver log (codec, paths, errors)
 AUDTEST /USB ...             the USB sound devices of WINUSB.SYS
 ```
 
 WINMIX (Windows): device selection, Master / Wave / Synth / Rec level / CD / Line sliders,
-left-right lock, recording source. The settings last while Windows runs.
+left-right lock, recording source. The settings are kept in SYSTEM.INI like those of the
+mixer (Windows sets them again at its start).
 
 ## 6. Hardware notes
 
@@ -312,7 +520,10 @@ left-right lock, recording source. The settings last while Windows runs.
   position from LPIB (from the position buffer on VIA). Cache coherency is set up as in the
   Linux driver: Intel TCSEL and no-snoop off on PCHs, ATI / AMD ENABLE_SNOOP, nVidia snoop
   bits; on controllers that do not snoop the DMA areas are written back with CLFLUSH /
-  WBINVD. A function in D3 is brought to D0, MSI / MSI-X are turned off.
+  WBINVD. A function in D3 is brought to D0, MSI / MSI-X are turned off. AMD FCH
+  controllers (Ryzen / AM4 / AM5 boards: 1022:1457, 1487, 157A, 15E3 and the older ATI SB
+  ids) get the ATI snoop register, a 1-second codec answer time and repeated link resets
+  until a codec answers; every HD Audio function of the machine is probed (up to 8).
 * **Codec:** with several codecs the first with an analog output is used (HDMI / DisplayPort
   codecs are skipped). Paths from the line-out, speaker and headphone pins to a DAC (through
   mixers / selectors) are set up, the amplifiers on the way are opened and the volume is
@@ -327,7 +538,11 @@ left-right lock, recording source. The settings last while Windows runs.
   registers and byte counts of SiS 7012, the CIV / PICB read race of nVidia, the AC-link start
   and SGD channels of VIA (686: type register, 8233+: SDX format / rate register). With VRA
   the DAC / ADC are set to 48 kHz; the master volume's 5 / 6-bit step count is measured; EAPD
-  is turned on (`/EAPD` for amplifiers wired the other way).
+  is turned on (`/EAPD` for amplifiers wired the other way). A secondary codec (at
+  register offset 80h) is used when the primary one is a modem; Cirrus codecs (CS4297A /
+  CS4299 of the IBM ThinkPad T2x / X2x / A2x) are switched to their normal mode first. On
+  IBM / Lenovo ThinkPads the embedded controller's volume and mute (the volume buttons) are
+  set to full and unmuted at start (`/NOTPVOL` leaves them).
 * **Realtek codecs:** the start-up the Linux `snd-hda-codec-realtek` driver does for each
   codec is applied: moving EAPD control from COEF to the EAPD verb (ALC2xx / 6xx / 8xx / 1220
   …), PLL gating off (ALC662 and ALC883 families, ALC269VA), the ALC269VB settings, headphone
@@ -549,8 +764,9 @@ measured); the Windows 95 / 98 / ME cases of §3a.
 * **Windows/386 2.x** switches the processor to V86 mode without offering VCPI; while it runs
   the 32-bit core cannot be entered and the driver serves no requests. The real-mode
   Windows 2.x (`WIN86.COM` / `WIN.COM`) works.
-* **DOS file systems:** DOS 5 / 6 read only FAT12 / FAT16 (2 GB per partition at most);
-  FAT32, NTFS, exFAT ... partitions get no drive letter.
+* **DOS file systems:** MS-DOS 5 / 6 read only FAT12 / FAT16 (2 GB per partition at most);
+  MS-DOS 7.10 / 8.0 and FreeDOS read FAT32 too; NTFS, exFAT ... partitions get no drive
+  letter.
 * **SeaBIOS (QEMU only):** when SeaBIOS uses a USB keyboard or mouse at boot, its USB polling
   in SMM can stop the machine while Windows 2.x starts, and DOS boxes of Windows 95/98/ME
   close. Real BIOSes hand the controllers over properly (BIOS / OS semaphore, SMIs off).
@@ -578,10 +794,45 @@ measured); the Windows 95 / 98 / ME cases of §3a.
 * In Windows 3.0 Real Mode MMSYSTEM does not run, so there is no wave or MIDI; only WINBEEP's
   beeps and `PLAY` / `SOUND` music play.
 * No MIDI input. The synthesizer is an FM approximation, not sample based (wavetable).
-* Latency is high in DOS and Standard Mode (~0.4 s).
+* Latency is high in DOS and Standard Mode (~0.4 s; 50–100 ms while the Sound Blaster
+  emulation runs from the RTC).
 * Windows 95 / 98 / ME: sound through WINSOUND.DRV (MMSYSTEM); no DirectSound driver.
 
 ## Version history
+
+**1.1 (26 October 2026)**
+
+Changelog:
+
+- Fixed "CPU without time stamp counter" on CPUs that have one but do not report it through CPUID (Vortex86 DX / SX / EX …): the TSC is tried directly.
+- The TSC rate is measured with a time limit and with the PIT counter when the timer interrupt does not come.
+- WINAUDIO.SYS loaded with DEVLOAD or another device loader finds WINACORE.BIN in its own directory; it can be loaded high (`DEVICEHIGH`).
+- The installer tells Windows 98, 98 Second Edition and ME apart by the version of USER.EXE (Windows 98 was shown as Windows 95).
+- Added Sound Blaster 16 emulation (DSP 4.05, mixer, OPL3 FM, MPU-401, 8/16-bit DMA, IRQ 5 or 7) for DOS programs in the MS-DOS boxes of Windows 3.x and Windows 95/98/ME, and in plain DOS with QEMM or JEMM386 / JEMMEX + QPIEMU.
+- Added a built-in V86 monitor to WINAUDIO.SYS: in plain DOS (HIMEM only, no EMM386 or JEMM needed) it traps the Sound Blaster ports itself, emulates A20 and the INT 15h block move for HIMEM, and gives Windows 3.x / 9x real mode back at their start (INT 2Fh 1605h) and takes over again when they end.
+- Added a DPMI 0.9 host to the V86 monitor, so protected-mode games (DOS/4GW, DOS/32A, PMODE/W, CauseWay, DJGPP) get the Sound Blaster emulation in plain DOS too: XMS memory, DOS memory, descriptors, real-mode calls and callbacks, raw mode switches, exception handlers, hardware interrupts to protected-mode handlers, nested DPMI programs.
+- Added a VCPI server to the V86 monitor (with the EMMQXXX0 device) for WINDISK.SYS / WINUSB.SYS and Windows 3.x Standard Mode; hidden from other programs so that DOS extenders pick DPMI (/VCPI shows it to all).
+- Added the WINAUDIO.SYS options /NOV86, /NODPMI, /NOVCPI, /VCPI and /VME.
+- Fixed Windows 3.1 hanging at its start (and no sound) after a protected-mode game (DOS/4GW, Quake …) had run in DOS: the DPMI host put back the INT 15h / 1Bh vectors the program had already restored itself, pointing into freed memory.
+- HD Audio and AC'97: DMA streams and the position buffer still running from before a warm restart are stopped before the controller is reset.
+- Sound Blaster emulation in Windows 3.x and 95/98/ME: the DMA terminal count bit of the 8237 status registers is set for the emulated channels (ports 08h / D0h answered by the VxD).
+- Added the Sound Blaster 16 emulation (and the synthesizer) on USB Audio 1.0 / 2.0 devices of WINUSB, in DOS, in Windows 3.x MS-DOS boxes and in Windows 95/98/ME: when there is no other sound device, or always with the new option /USBSB. INSTAUD puts WINAUDIO.SYS after WINUSB.SYS in CONFIG.SYS; WINAUDIO.SYS waits for WINUSB's USB Audio device, stays resident with WINUSB.SYS /USB even without sound hardware of its own, and says at the start why the bridge is not there. AUDTEST SB measures the RTC interrupt that drives the emulation in DOS.
+- AC'97: the codec is tried even when the controller never reports it ready (Cirrus Logic CS4299 of the ThinkPad T23).
+- Added a mixer driver to WINSOUND.DRV for Windows 95/98/ME (`mixer=winsound.drv`): Volume Control (SNDVOL32), the volume icon of the taskbar and programs using the mixer API work; master volume and mute, wave, synthesizer, CD / line (AC'97), recording level and source; changes from any program are reflected in the open mixers.
+- The volumes and the recording source are kept in SYSTEM.INI `[winsound.drv]` and set again when Windows starts (they no longer go back to full after a restart).
+- Volume values follow the Windows scale (linear in amplitude) on the hardware amplifiers of HD Audio, AC'97, USB Audio and the Intel DSP codecs: half volume is -6 dB, the lower half of a slider is no longer almost silent, and the mixer, programs such as Winamp and WINMIX give the same loudness for the same value.
+- Fixed a short skip at the start of playback in Windows 95/98/ME (the first refill of the controller's buffer came too late).
+- Fixed removed (USB) wave devices accepting format queries (DirectSound or Media Player could choose one and then fail).
+- Synthesizer: fixed the harsh, noisy sound of the instruments with strong modulator feedback (organs, accordion, harmonica, overdrive / distortion guitar, strings, brass, synth leads and pads, bagpipe …), timpani played an octave low, very short woodblock, muted guitar and fret noise, breath noise not sustained, quiet hi-hats, cuica too short to be heard; basses louder and fuller, with more upper overtones (heard on small speakers too), high notes softer (key scaling, a gentle low pass like the OPL's), no tick at the start of notes (smooth envelopes, longer fade-in); MIDI real-time bytes sent as short messages no longer play notes.
+- Added SET BLASTER to the installer (AUTOEXEC.BAT), the Sound Blaster settings to the WINAUDIO.SYS start message and AUDTEST, and AUDTEST SB to test the emulated card.
+- WINAUDIO.SYS lists the sound devices it found with their controller, PCI location and IRQ.
+- Fixed HD Audio on AMD Ryzen boards (AM4 / AM5 FCH controllers): snoop setting, codec answer time, link reset retries; every HD Audio controller is probed.
+- Fixed no sound on AC'97 notebooks such as the IBM ThinkPad T23 (cold reset, secondary codec, Cirrus CS4299, ThinkPad volume / mute).
+- Fixed sounds longer than 64 KB (the Windows startup sound) looping their beginning.
+- Fixed old sound being played again when the driver is serviced late; loud mixes are limited softly instead of clipping.
+- Added the system sounds of WIN.INI [sounds] (WAV, start and exit included) in Windows 3.0 Real Mode through WINBEEP.DRV.
+- Added MS-DOS 7.0, 7.1, 8.0 and FreeDOS support; the installer adds the CONFIG.SYS lines there too.
+- The documentation is split into README.md (overview, installation) and MANUAL.md (all details).
 
 **1.0 (5 October 2026)** — first release.
 

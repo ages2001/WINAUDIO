@@ -291,7 +291,7 @@ static int stream_change(struct cdc *c, int dir, int on)
 /* DAC digital volume as 0.5 dB steps below 0 dB at reg0db, the upper 64 dB; 0 mutes */
 static u32 dac_vol(u32 level, u32 reg0db)
 {
-    u32 s = cdc_step(level, 128);
+    u32 s = cdc_vstep(level, 128, 500);
     return s ? reg0db - (128 - s) : 0;
 }
 

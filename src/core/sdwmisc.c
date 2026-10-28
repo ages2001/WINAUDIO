@@ -120,7 +120,7 @@ static void m73_volume(struct sdwdev *s, int ctl, u32 lr)
 {
     u32 v;
     if (ctl != MX_MASTER) return;
-    v = 127 - cdc_step((s->namps > 1 && (s->chan & 1)) ? CDC_R(lr) : CDC_L(lr), 127);
+    v = 127 - cdc_vstep((s->namps > 1 && (s->chan & 1)) ? CDC_R(lr) : CDC_L(lr), 127, 500);
     s->priv[P73_VOL] = v + 1;
     sdw_wr(s, M73_DIG_VOL, (u8)v);
 }
@@ -534,8 +534,8 @@ static void r82_volume(struct sdwdev *s, int ctl, u32 lr)
     u32 l, r, v;
     if (ctl == MX_MASTER) {
         /* DAC1: 0.75 dB steps -65.25 .. 0 dB; level 0 mutes DAC1 into the DAC mixer */
-        l = cdc_step(CDC_L(lr), 87);
-        r = cdc_step(CDC_R(lr), 87);
+        l = cdc_vstep(CDC_L(lr), 87, 750);
+        r = cdc_vstep(CDC_R(lr), 87, 750);
         v = (l << 9) | (r << 1);
         s->priv[P82_DVOL] = v + 1;
         r82_wr(s, DAC1_DIG_VOL, v);

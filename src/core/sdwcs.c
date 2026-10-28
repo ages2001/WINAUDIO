@@ -504,7 +504,7 @@ static void l43_stream(struct sdwdev *s, int func, int on)
 static void l43_volume(struct sdwdev *s, int ctl, u32 lr)
 {
     if (ctl == MX_MASTER) {
-        s->priv[P_SPKV] = 0x10000UL | cdc_step(CDC_L(lr), 128) | (cdc_step(CDC_R(lr), 128) << 8);
+        s->priv[P_SPKV] = 0x10000UL | cdc_vstep(CDC_L(lr), 128, 500) | (cdc_vstep(CDC_R(lr), 128, 500) << 8);
         l43_outvol(s, 1);
     } else if (ctl == MX_INGAIN) {
         s->priv[P_GAIN] = 0x10000UL | CDC_L(lr);
@@ -885,7 +885,7 @@ static void l56_volume(struct sdwdev *s, int ctl, u32 lr)
 {
     u32 st;
     if (ctl != MX_MASTER) return;
-    st = cdc_step((s->namps > 1 && (s->chan & 1)) ? CDC_R(lr) : CDC_L(lr), 256);
+    st = cdc_vstep((s->namps > 1 && (s->chan & 1)) ? CDC_R(lr) : CDC_L(lr), 256, 125);
     s->priv[P56_VOL] = st + 1;
     l56_wr(s, l56_fwreg(s, R_VOL), ((u32)((s32)st - 256) & 0x3FF) << 6);
     l56_wr(s, l56_fwreg(s, R_MUTE), st ? 0 : 1);

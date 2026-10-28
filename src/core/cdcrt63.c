@@ -543,8 +543,8 @@ static void rt63_volume(struct cdc *c, int ctl, u32 lr)
     u32 l, r, g;
     if (ctl == MX_MASTER) {
         /* DAC: 0.75 dB steps in bits 7:1, up to 0 dB */
-        l = cdc_step(CDC_L(lr), 87) << 1;
-        r = cdc_step(CDC_R(lr), 87) << 1;
+        l = cdc_vstep(CDC_L(lr), 87, 750) << 1;
+        r = cdc_vstep(CDC_R(lr), 87, 750) << 1;
         cdc_wr(c, DAC_VOL, (l << 8) | r);
         c->priv[P_MUTE] = (CDC_L(lr) ? 0 : 1) | (CDC_R(lr) ? 0 : 2);
         rt63_dac(c);

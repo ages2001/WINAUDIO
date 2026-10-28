@@ -1,4 +1,4 @@
-; WINAUDIO.INF - WINDRV 1.0 WINAUDIO for Windows 95, 98 and ME: System devices
+; WINAUDIO.INF - WINDRV 1.1 WINAUDIO for Windows 95, 98 and ME: System devices
 ; High Definition Audio controllers and Intel audio DSPs (SST / SOF firmware in WINDRVFW) are
 ; buses: WINAUDIO.VXD drives them and gives every codec and DSP device a child devnode of its
 ; own (Sound, video and game controllers, WINAUDM.INF), named after the chip. AC'97
@@ -129,7 +129,7 @@ UpdateInis=WINAUDIO.Inis
 [WINAUDIO.AddReg]
 HKR,,DevLoader,,WINAUDIO.VXD
 HKR,,Options,,""
-HKR,,DriverDesc,,"%Provider% WINAUDIO 1.0"
+HKR,,DriverDesc,,"%Provider% WINAUDIO 1.1"
 
 ; WIN4G.VXD moves PCI resources above 4G below 4G before the PCI bus is enumerated
 [WINAUDIO.Inis]
@@ -188,7 +188,7 @@ SOFJSL.RI
 SOFJSLC.RI
 [Strings]
 Provider="WINDRV"
-DiskName="WINDRV WINAUDIO 1.0 disk"
+DiskName="WINDRV WINAUDIO 1.1 disk"
 HDA.Desc="WINAUDIO High Definition Audio Bus Controller"
 DSP.Desc="WINAUDIO Intel Smart Sound Technology Audio DSP (HD Audio Bus)"
 SST.Desc="WINAUDIO Intel SST Audio DSP (I2S Audio Bus)"

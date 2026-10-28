@@ -59,6 +59,7 @@ int cdc_ngpio(struct cdc *c);                               /* GpioIo resources 
 /* MX_* level (0..65535) to a gain step 0..steps, linear in steps as with the HD Audio
    amplifiers (steps of equal dB), 0 only for level 0 */
 u32 cdc_step(u32 v, u32 steps);
+u32 cdc_vstep(u32 v, u32 steps, u32 mdb);
 #define CDC_L(lr)   ((lr) & 0xFFFF)
 #define CDC_R(lr)   ((lr) >> 16)
 #define CDC_RATE    48000UL             /* the rate of every I2S endpoint */

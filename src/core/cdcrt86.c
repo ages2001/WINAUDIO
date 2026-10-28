@@ -258,8 +258,8 @@ static void rt_volume(struct cdc *c, int ctl, u32 lr)
     u32 l, r;
     if (ctl == MX_MASTER) {
         /* DAC 0: 0.5 dB steps, 7Fh = 0 dB; 0 mutes */
-        l = cdc_step(CDC_L(lr), 0x7F);
-        r = cdc_step(CDC_R(lr), 0x7F);
+        l = cdc_vstep(CDC_L(lr), 0x7F, 500);
+        r = cdc_vstep(CDC_R(lr), 0x7F, 500);
         wr(c, AMP(DAC_OUT1, 0xA000), l ? l : 0x80);
         wr(c, AMP(DAC_OUT1, 0x9000), r ? r : 0x80);
     } else if (ctl == MX_INGAIN) {

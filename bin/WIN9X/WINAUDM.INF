@@ -1,6 +1,7 @@
-; WINAUDM.INF - WINDRV 1.0 WINAUDIO for Windows 95, 98 and ME: Sound, video and game controllers
+; WINAUDM.INF - WINDRV 1.1 WINAUDIO for Windows 95, 98 and ME: Sound, video and game controllers
 ; AC'97 controllers, and the codecs and DSP devices on the buses of WINAUDIO.INF. WINSOUND.DRV
-; is the wave and MIDI driver (SYSTEM.INI [drivers]), WINMIX the mixer.
+; is the wave, MIDI and mixer driver (SYSTEM.INI [drivers]), SYSTRAY the volume icon of the
+; taskbar, WINMIX a volume control of its own.
 
 [Version]
 Signature="$CHICAGO$"
@@ -44,7 +45,8 @@ UpdateInis=WINAUDM.Inis,WINAUDM.Inis4G
 [WINAUDM.AC97.AddReg]
 HKR,,DevLoader,,WINAUDIO.VXD
 HKR,,Options,,""
-HKR,,DriverDesc,,"%Provider% WINAUDIO 1.0"
+HKR,,DriverDesc,,"%Provider% WINAUDIO 1.1"
+HKLM,Software\Microsoft\Windows\CurrentVersion\Run,SystemTray,,"SysTray.Exe"
 
 ; ---- codecs and DSP devices: served by WINAUDIO.VXD, the bus driver ----
 [WINAUDM.Func]
@@ -54,10 +56,12 @@ UpdateInis=WINAUDM.Inis
 
 [WINAUDM.Func.AddReg]
 HKR,,DevLoader,,WINAUDIO.VXD
+HKLM,Software\Microsoft\Windows\CurrentVersion\Run,SystemTray,,"SysTray.Exe"
 
 [WINAUDM.Inis]
 system.ini,drivers,,"wave=winsound.drv"
 system.ini,drivers,,"midi=winsound.drv"
+system.ini,drivers,,"mixer=winsound.drv"
 
 [WINAUDM.Inis4G]
 system.ini,386Enh,,"device=win4g.vxd"
@@ -71,7 +75,7 @@ AUDTEST.EXE
 
 [Strings]
 Provider="WINDRV"
-DiskName="WINDRV WINAUDIO 1.0 disk"
+DiskName="WINDRV WINAUDIO 1.1 disk"
 AC97.Desc="WINAUDIO AC'97 Audio Controller"
 Codec.Desc="WINAUDIO High Definition Audio Codec"
 HDMI.Desc="WINAUDIO HDMI / DisplayPort Audio Codec"

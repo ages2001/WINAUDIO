@@ -118,6 +118,16 @@ u32 cdc_step(u32 v, u32 steps)
     return !s && v ? 1 : s;
 }
 
+/* volume (linear in amplitude) to the steps of a dB amplifier: steps is 0 dB, mdb the step
+   in 1/1000 dB; 0 only for volume 0 */
+u32 cdc_vstep(u32 v, u32 steps, u32 mdb)
+{
+    u32 a = aeng_att_cdb(v), n;
+    if (a == 0xFFFFFFFFUL) return 0;
+    n = (a * 10 + mdb / 2) / mdb;
+    return n >= steps ? 1 : steps - n;
+}
+
 int cdc_ngpio(struct cdc *c)
 {
     int i, n = 0;

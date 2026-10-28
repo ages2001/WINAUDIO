@@ -6,7 +6,7 @@
 #include "audio.h"
 #include "dsp.h"
 
-#define MAXHDA      4
+#define MAXHDA      8
 #define MAXNID      128
 
 #define GCAP        0x00
@@ -79,11 +79,13 @@ struct hda {
     u32 *corb, *rirb;
     u16 corbn, rirbn, rp;
     u8 imm;
+    u8 probing;                 /* codec discovery: a missing response is not a CORB failure */
+    u32 tmo;                    /* command timeout (ms) */
     u8 cad, afg, nstart, nend;
     struct hwid w[MAXNID];
     u8 dac[4], ndac;
     u8 opin[8], otype[8], nopin;
-    u8 volnid[4], nvol, volsteps[4];
+    u8 volnid[4], nvol, volsteps[4], volstep[4];
     u8 adc;
     u8 srcpath[5][6], srclen[5];
     u8 mixin;                   /* stereo mix: input of the mixer with the playback */
@@ -142,12 +144,13 @@ static void corb_stop(struct hda *h)
     W8(h, RIRBCTL, R8(h, RIRBCTL) & ~3);
 }
 
-static u32 cmd(struct hda *h, u32 v)
+static void corb_setup(struct hda *h);
+
+static u32 cmd_corb(struct hda *h, u32 v, u32 tmo)
 {
     u32 t0, resp;
     u16 wp;
-    if (h->imm) return cmd_imm(h, v);
-    wp = (u16)((R16(h, CORBWP) + 1) % h->corbn);
+    wp = (u16)(((R16(h, CORBWP) & 0xFF) + 1) % h->corbn);
     h->corb[wp] = v;
     if (!h->a.out.noflush) aeng_flush_dma(&h->corb[wp], 4);
     W16(h, CORBWP, wp);
@@ -161,12 +164,35 @@ static u32 cmd(struct hda *h, u32 v)
             W8(h, RIRBSTS, 5);
             return resp;
         }
-        if (plat_ms() - t0 > 50) break;
+        if (plat_ms() - t0 > tmo) break;
     }
-    kprintf("hda: no response on CORB/RIRB, using immediate commands\n");
+    W8(h, RIRBSTS, 5);
+    return 0xFFFFFFFFUL;
+}
+
+/* A verb through CORB/RIRB. Some controllers answer the first verbs after the link reset
+   only late (AMD: up to a second, as the Linux driver allows); a codec address that does not
+   answer during discovery is just absent. When CORB/RIRB stops working later, the immediate
+   command interface is used if it works (AMD controllers do not have it). */
+static u32 cmd(struct hda *h, u32 v)
+{
+    u32 resp;
+    if (h->imm) return cmd_imm(h, v);
+    resp = cmd_corb(h, v, h->tmo ? h->tmo : 50);
+    if (resp != 0xFFFFFFFFUL || h->probing) return resp;
+    /* the rings again (the read pointer may have been lost), then immediate commands */
+    corb_setup(h);
+    resp = cmd_corb(h, v, 200);
+    if (resp != 0xFFFFFFFFUL) return resp;
     corb_stop(h);
-    h->imm = 1;
-    return cmd_imm(h, v);
+    resp = cmd_imm(h, v);
+    if (resp != 0xFFFFFFFFUL) {
+        kprintf("hda: no response on CORB/RIRB, using immediate commands\n");
+        h->imm = 1;
+        return resp;
+    }
+    corb_setup(h);
+    return 0xFFFFFFFFUL;
 }
 
 #define VERB(h, nid, v, p)  (((u32)(h)->cad << 28) | ((u32)(nid) << 20) | ((u32)(v) << 8) | (u32)(p))
@@ -513,6 +539,12 @@ static int parse_codec(struct hda *h, int cad)
     if (!h->afg) return -1;
     cmd(h, VERB(h, h->afg, 0x705, 0));                              /* AFG power D0 */
     mdelay(10);
+    {
+        /* the actual power state (bits 7:4) reaches D0 later on some codecs */
+        u32 t0 = plat_ms(), ps;
+        while (((ps = cmd(h, VERB(h, h->afg, 0xF05, 0))) & 0xF0) && ps != 0xFFFFFFFFUL && plat_ms() - t0 < 200)
+            mdelay(5);
+    }
     v = param(h, h->afg, 0x04);
     h->nstart = (u8)((v >> 16) & 0xFF);
     h->nend = (u8)MIN(h->nstart + (v & 0xFF), MAXNID);
@@ -582,7 +614,8 @@ static int parse_codec(struct hda *h, int cad)
                 for (j = 0; j < h->nvol && h->volnid[j] != vn; j++) ;
                 if (j == h->nvol) {
                     h->volnid[h->nvol] = (u8)vn;
-                    h->volsteps[h->nvol++] = (u8)((ampcaps(h, vn, 1) >> 8) & 0x7F);
+                    h->volsteps[h->nvol] = (u8)((ampcaps(h, vn, 1) >> 8) & 0x7F);
+                    h->volstep[h->nvol++] = (u8)(((ampcaps(h, vn, 1) >> 16) & 0x7F) + 1);
                 }
             }
         }
@@ -670,9 +703,12 @@ static void set_vol(struct adev *a, int ctl, u32 lr)
     int i;
     if (ctl == MX_MASTER) {
         for (i = 0; i < h->nvol; i++) {
-            u32 st = h->volsteps[i];
-            u32 l = ((lr & 0xFFFF) * st + 32767) / 65535, r = ((lr >> 16) * st + 32767) / 65535;
-            u32 base = 0x8000 | 0x0000;
+            u32 st = h->volsteps[i], sc = (u32)h->volstep[i] * 25, l, r, base = 0x8000;
+            /* the volume is linear in amplitude: dB below the top, in the amplifier's steps */
+            l = aeng_att_cdb(lr & 0xFFFF);
+            r = aeng_att_cdb(lr >> 16);
+            l = l == 0xFFFFFFFFUL ? 0 : (l + sc / 2) / sc >= st ? 1 : st - (l + sc / 2) / sc;
+            r = r == 0xFFFFFFFFUL ? 0 : (r + sc / 2) / sc >= st ? 1 : st - (r + sc / 2) / sc;
             cmd(h, VERB4(h, h->volnid[i], 0x3, base | 0x2000 | (l ? l : 0x80)));
             cmd(h, VERB4(h, h->volnid[i], 0x3, base | 0x1000 | (r ? r : 0x80)));
         }
@@ -842,9 +878,16 @@ static int snoop_setup(struct pcidev *p)
         return 1;
     case 0x1002:
     case 0x1022:
-        v = pci_rd8(p->bus, p->dev, p->fn, 0x42);
-        pci_wr8(p->bus, p->dev, p->fn, 0x42, (u8)((v & ~7) | 2));   /* ENABLE_SNOOP */
-        return 1;
+        /* only the south bridge / FCH controllers have the snoop register (as in Linux): ATI
+           SB450-SB900, Hudson, X370, X570, Stoney, Raven and later (AM4, AM5); the HDMI / DP
+           controllers of the graphics have no such register: their buffers are written back */
+        if (p->device == 0x437B || p->device == 0x4383 || p->device == 0x780D || p->device == 0x1457 ||
+            p->device == 0x1487 || (p->vendor == 0x1022 && p->device == 0x157A) || p->device == 0x15E3) {
+            v = pci_rd8(p->bus, p->dev, p->fn, 0x42);
+            pci_wr8(p->bus, p->dev, p->fn, 0x42, (u8)((v & ~7) | 2));   /* ENABLE_SNOOP */
+            return 1;
+        }
+        return 0;
     case 0x10DE:
         v = pci_rd8(p->bus, p->dev, p->fn, 0x4E);
         pci_wr8(p->bus, p->dev, p->fn, 0x4E, (u8)((v & ~0x0F) | 0x0F));
@@ -864,6 +907,19 @@ static int link_reset(struct hda *h)
         pci_wr32(h->pci.bus, h->pci.dev, h->pci.fn, 0x48, cg & ~0x40UL);     /* MISCBDCGE off */
     }
     corb_stop(h);
+    {
+        /* streams and the position buffer still running from before a warm restart (DOS,
+           Windows) stop before the reset: their DMA would go on writing into memory */
+        u16 gcap = R16(h, GCAP);
+        int n = ((gcap >> 8) & 15) + ((gcap >> 12) & 15) + ((gcap >> 3) & 31), i;
+        u32 t0;
+        W32(h, INTCTL, 0);
+        for (i = 0; i < n && i < 30; i++) W8(h, SD(i), (u8)(R8(h, SD(i)) & ~0x1E));
+        t0 = plat_ms();
+        for (i = 0; i < n && i < 30; i++)
+            while ((R8(h, SD(i)) & 2) && plat_ms() - t0 < 5) ;
+        W32(h, DPLBASE, 0);
+    }
     W16(h, STATESTS, 0x7FFF);
     W32(h, GCTL, R32(h, GCTL) & ~1UL);
     {
@@ -877,6 +933,12 @@ static int link_reset(struct hda *h)
         while (!(R32(h, GCTL) & 1) && plat_ms() - t0 < 100) ;
     }
     mdelay(2);                      /* codecs announce themselves within 521 us */
+    {
+        /* slower codecs (and AMD controllers) report later */
+        u32 t0 = plat_ms();
+        while (!R16(h, STATESTS) && plat_ms() - t0 < 100) ;
+        if (R16(h, STATESTS)) mdelay(2);
+    }
     if (skl) pci_wr32(h->pci.bus, h->pci.dev, h->pci.fn, 0x48, cg);
     return (R32(h, GCTL) & 1) ? 0 : -1;
 }
@@ -924,6 +986,55 @@ static void alloc_ring(struct ahw *hw, u8 *buf, u32 rate)
     hw->noflush = nf;
 }
 
+/* The codecs that answer. STATESTS shows the codecs after the link reset; when none of
+   them answers (some AMD controllers after the firmware: the Linux driver retries for up to
+   a minute), the link is reset again, and immediate commands are tried. A controller whose
+   STATESTS stays empty is asked at the usual addresses 0-3. */
+static u16 find_codecs(struct hda *h)
+{
+    int tries, cad, ntry = (h->pci.vendor == 0x8086 && h->pci.sub != 3) ? 1 : 4;
+    for (tries = 0; tries < ntry; tries++) {
+        u16 st = R16(h, STATESTS), ans = 0;
+        int guess = 0, pass;
+        if (!st && tries == ntry - 1 && ntry > 1) {
+            st = 0x000F;
+            guess = 1;
+        }
+        for (pass = 0; pass < 2 && st; pass++) {
+            h->probing = 1;
+            for (cad = 0; cad < 15; cad++) {
+                u32 vid;
+                if (!(st & (1 << cad))) continue;
+                h->cad = (u8)cad;
+                h->tmo = guess ? 20 : ans ? 50 : 1000;
+                vid = param(h, 0, 0x00);
+                if (vid != 0xFFFFFFFFUL && vid) ans |= (u16)(1 << cad);
+            }
+            h->probing = 0;
+            h->tmo = 0;
+            if (ans) {
+                if (tries || guess || pass)
+                    kprintf("hda: %02x:%02x.%u codecs %04x answer%s%s\n", h->pci.bus, h->pci.dev, h->pci.fn, ans,
+                            tries ? " after another link reset" : "", h->imm ? " (immediate commands)" : "");
+                return ans;
+            }
+            if (h->imm) break;
+            /* no answer on CORB/RIRB: immediate commands */
+            corb_stop(h);
+            h->imm = 1;
+        }
+        if (h->imm && !(cb->opts & OPT_HDAIMM)) h->imm = 0;
+        if (tries + 1 >= ntry || (!st && tries)) break;
+        if (st) kprintf("hda: %02x:%02x.%u codecs %04x do not answer, link reset again\n", h->pci.bus,
+                        h->pci.dev, h->pci.fn, st);
+        mdelay(st ? 100 : 20);
+        if (link_reset(h)) break;
+        W32(h, INTCTL, 0);
+        if (!h->imm) corb_setup(h);
+    }
+    return 0;
+}
+
 int hda_probe(struct pcidev *p)
 {
     struct hda *h;
@@ -948,27 +1059,31 @@ int hda_probe(struct pcidev *p)
         if (nctrl >= MAXHDA) return -1;
         h = kmalloc(sizeof(*h));
         memset(h, 0, sizeof(*h));
-        h->ringbuf[0] = kmalloc_align(RINGSIZE, 4096);
-        h->ringbuf[1] = kmalloc_align(RINGSIZE, 4096);
         h->corb = kmalloc_align(1024, 1024);
         h->rirb = kmalloc_align(2048, 2048);
         h->posbuf = kmalloc_align(256, 128);
         h->bdl[0] = kmalloc_align(16 * 64, 128);
         h->bdl[1] = kmalloc_align(16 * 64, 128);
-        if (!h->ringbuf[1] || !h->bdl[1]) return -1;
+        if (!h->bdl[1]) return -1;
         ctrls[nctrl++] = h;
     }
     h->pci = *p;
     cad = 0;
     h->r = r;
-    h->a.out.noflush = h->a.in.noflush = (u8)snoop_setup(p);
+    /* snooping set up, and with CLFLUSH the buffers are written back anyway: AMD SB600-SB900
+       and Ryzen controllers loop old data now and then despite snooping (as WDMHDA found) */
+    h->a.out.noflush = h->a.in.noflush = (u8)(snoop_setup(p) && !(cpu_features() & (1UL << 19)));
     if (link_reset(h)) {
         kprintf("hda: %02x:%02x.%u link reset failed\n", p->bus, p->dev, p->fn);
         return -1;
     }
     W32(h, INTCTL, 0);
     corb_setup(h);
-    st = R16(h, STATESTS);
+    if (cb->opts & OPT_HDAIMM) {
+        corb_stop(h);
+        h->imm = 1;
+    }
+    st = find_codecs(h);
     {
         u16 gcap = R16(h, GCAP);
         int iss = (gcap >> 8) & 0xF, oss = (gcap >> 12) & 0xF;
@@ -981,10 +1096,6 @@ int hda_probe(struct pcidev *p)
     W32(h, DPLBASE, vphys(h->posbuf) | 1);
     W32(h, DPUBASE, 0);
     h->useposbuf = p->vendor == 0x1106 || (cb->opts & OPT_POSBUF);
-    if (cb->opts & OPT_HDAIMM) {
-        corb_stop(h);
-        h->imm = 1;
-    }
     h->ncodec = 0;
     h->started = 0;
     for (cad = 0; cad < 15; cad++) {
@@ -1049,6 +1160,11 @@ int hda_probe(struct pcidev *p)
                     "hda: offers it, or put the firmware files next to the driver\n", p->bus, p->dev, p->fn);
         return h->dsp ? 0 : -1;
     }
+    /* the sound buffers only for a controller with an analog codec (graphics cards' HDMI
+       controllers come first in bus order and must not use up memory) */
+    if (!h->ringbuf[0]) h->ringbuf[0] = kmalloc_align(RINGSIZE, 4096);
+    if (!h->ringbuf[1]) h->ringbuf[1] = kmalloc_align(RINGSIZE, 4096);
+    if (!h->ringbuf[0] || !h->ringbuf[1]) return -1;
     rates = param(h, h->dac[0], 0x0A);
     if (!rates) rates = param(h, h->afg, 0x0A);
     if ((rates & 0x40) || !(rates & 0x20)) {
@@ -1069,6 +1185,10 @@ int hda_probe(struct pcidev *p)
     h->a.type = AT_HDA;
     h->a.hwvol = (u8)(h->nvol != 0);
     codec_name(((u32)h->a.vid << 16) | h->a.pid, h->a.name, sizeof(h->a.name));
+    h->a.irq = h->pci.irq;
+    h->a.pcivid = h->pci.vendor;
+    h->a.pcidid = h->pci.device;
+    h->a.loc = (u16)((h->pci.bus << 8) | (h->pci.dev << 3) | h->pci.fn);
     if (h->a.insrcs) {
         int s;
         for (s = 0; s < 5 && !(h->a.insrcs & (1 << s)); s++) ;

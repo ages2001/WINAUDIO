@@ -250,7 +250,7 @@ static void m90_volume(struct cdc *c, int ctl, u32 lr)
         v[0] = CDC_L(lr);
         v[1] = CDC_R(lr);
         for (i = 0; i < 2; i++) {
-            u32 s = cdc_step(v[i], 60);
+            u32 s = cdc_vstep(v[i], 60, 1000);
             s32 cdb = -((s32)(60 - s) * 100);
             cdc_wr(c, LEFT_HP_VOLUME + i, s ? m90_vreg(hp, 5, cdb) : VOL_MUTE | 0x1A);
             cdc_wr(c, LEFT_SPK_VOLUME + i, s ? 24 + m90_vreg(spk, 5, cdb) : VOL_MUTE | 0x2C);

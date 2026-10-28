@@ -679,8 +679,8 @@ static void r20_setvol(struct sdwdev *s)
     u32 lr = s->priv[P20_VOL], l = CDC_L(lr), r = CDC_R(lr), sl, sr;
     if (amp_side(s) == 1) r = l;
     else if (amp_side(s) == 2) l = r;
-    sl = cdc_step(l, R20_VOL_STEPS);
-    sr = cdc_step(r, R20_VOL_STEPS);
+    sl = cdc_vstep(l, R20_VOL_STEPS, 750);
+    sr = cdc_vstep(r, R20_VOL_STEPS, 750);
     sdw_wr16(s, AMP(ENT_FU21, CTL_VOL, 1), (u16)(0 - (R20_VOL_STEPS - sl) * 0xC0));
     sdw_wr16(s, AMP(ENT_FU21, CTL_VOL, 2), (u16)(0 - (R20_VOL_STEPS - sr) * 0xC0));
     /* level 0 mutes the channel */

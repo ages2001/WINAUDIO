@@ -304,7 +304,7 @@ static void d19_volume(struct cdc *c, int ctl, u32 lr)
 {
     if (ctl == MX_MASTER) {
         /* headphone amplifier: 1 dB steps, -56 .. 0 dB */
-        u32 l = cdc_step(CDC_L(lr), 0x39), r = cdc_step(CDC_R(lr), 0x39);
+        u32 l = cdc_vstep(CDC_L(lr), 0x39, 1000), r = cdc_vstep(CDC_R(lr), 0x39, 1000);
         cdc_wr(c, D19_HP_L_GAIN, l);
         cdc_wr(c, D19_HP_R_GAIN, r);
         cdc_upd(c, D19_HP_L_CTRL, MUTE_EN, l ? 0 : MUTE_EN);
@@ -535,7 +535,7 @@ static void d13_volume(struct cdc *c, int ctl, u32 lr)
 {
     if (ctl == MX_MASTER) {
         /* DAC digital gain (headphones and line out): 0.75 dB steps, -77.25 .. 0 dB, 0 mute */
-        u32 l = cdc_step(CDC_L(lr), 104), r = cdc_step(CDC_R(lr), 104);
+        u32 l = cdc_vstep(CDC_L(lr), 104, 750), r = cdc_vstep(CDC_R(lr), 104, 750);
         cdc_wr(c, D13_DAC_L_GAIN, l ? l + 7 : 0);
         cdc_wr(c, D13_DAC_R_GAIN, r ? r + 7 : 0);
     } else if (ctl == MX_INGAIN) {

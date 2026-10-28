@@ -774,11 +774,11 @@ static void rt_volume(struct cdc *c, int ctl, u32 lr)
     if (ctl == MX_MASTER) {
         /* DAC1: 0.375 dB steps up to 0 dB (RT5645: 0.75 dB in bits 7:1) */
         if (t45) {
-            l = cdc_step(CDC_L(lr), 87) << 1;
-            r = cdc_step(CDC_R(lr), 87) << 1;
+            l = cdc_vstep(CDC_L(lr), 87, 750) << 1;
+            r = cdc_vstep(CDC_R(lr), 87, 750) << 1;
         } else {
-            l = cdc_step(CDC_L(lr), 175);
-            r = cdc_step(CDC_R(lr), 175);
+            l = cdc_vstep(CDC_L(lr), 175, 375);
+            r = cdc_vstep(CDC_R(lr), 175, 375);
         }
         cdc_wr(c, DAC1_VOL, (l << 8) | r);
         c->priv[P_MUTE] = (CDC_L(lr) ? 0 : 1) | (CDC_R(lr) ? 0 : 2);

@@ -147,7 +147,7 @@ static void es_volume(struct cdc *c, int ctl, u32 lr)
 {
     if (ctl == MX_MASTER) {
         /* DAC: 0.5 dB steps from 0 down, the upper 64 dB of it */
-        u32 l = cdc_step(CDC_L(lr), 128), r = cdc_step(CDC_R(lr), 128);
+        u32 l = cdc_vstep(CDC_L(lr), 128, 500), r = cdc_vstep(CDC_R(lr), 128, 500);
         cdc_wr(c, DAC_VOLL, l ? 128 - l : 0xC0);
         cdc_wr(c, DAC_VOLR, r ? 128 - r : 0xC0);
     } else if (ctl == MX_INGAIN) {

@@ -807,8 +807,8 @@ static void r82_volume(struct cdc *c, int ctl, u32 lr)
         /* DAC1: 0.75 dB steps up to 0 dB (RT5682 from -65.25 dB, RT5682S from -95.625 dB);
            level 0 mutes DAC1 into the DAC mixer */
         max = IS_S(c) ? 127 : 87;
-        l = cdc_step(CDC_L(lr), max);
-        r = cdc_step(CDC_R(lr), max);
+        l = cdc_vstep(CDC_L(lr), max, 750);
+        r = cdc_vstep(CDC_R(lr), max, 750);
         cdc_wr(c, DAC1_DIG_VOL, (l << 9) | (r << 1));
         cdc_upd(c, AD_DA_MIXER, 0x4040, (l ? 0 : 0x4000) | (r ? 0 : 0x0040));
     } else if (ctl == MX_INGAIN) {

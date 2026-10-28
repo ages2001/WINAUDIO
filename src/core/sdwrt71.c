@@ -162,7 +162,7 @@ static const struct rtpath *rt_path(struct sdwdev *s, int func)
 /* FU volume (Q7.8 dB): playback -65.25 .. 0 dB, capture -17.25 .. +30 dB, 0.75 dB steps */
 static u16 rt_vol(u32 lvl, int out)
 {
-    if (out) return (u16)((0UL - (87UL - cdc_step(lvl, 87)) * 0xC0UL) & 0xFFFF);
+    if (out) return (u16)((0UL - (87UL - cdc_vstep(lvl, 87, 750)) * 0xC0UL) & 0xFFFF);
     return (u16)((0x1E00UL - (63UL - cdc_step(lvl, 63)) * 0xC0UL) & 0xFFFF);
 }
 

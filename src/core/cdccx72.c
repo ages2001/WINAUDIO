@@ -320,7 +320,7 @@ static void cx_stream(struct cdc *c, int dir, int on)
 static void cx_volume(struct cdc *c, int ctl, u32 lr)
 {
     if (ctl == MX_MASTER) {
-        u32 l = cdc_step(CDC_L(lr), GAIN_0DB), r = cdc_step(CDC_R(lr), GAIN_0DB);
+        u32 l = cdc_vstep(CDC_L(lr), GAIN_0DB, 1000), r = cdc_vstep(CDC_R(lr), GAIN_0DB, 1000);
         cx_wr(c, DAC1_AMP_GAIN_LEFT, l ? l : GAIN_MUTE);
         cx_wr(c, DAC1_AMP_GAIN_RIGHT, r ? r : GAIN_MUTE);
     } else if (ctl == MX_INGAIN) {

@@ -505,8 +505,8 @@ static void cs_volume(struct cdc *c, int ctl, u32 lr)
 {
     if (ctl == MX_MASTER) {
         /* mixer: 0 .. -63 dB in 1 dB steps, 0x3F mutes */
-        cs_upd(c, MIXER_CHA_VOL, 0x3F, 63 - cdc_step(CDC_L(lr), 63));
-        cs_upd(c, MIXER_CHB_VOL, 0x3F, 63 - cdc_step(CDC_R(lr), 63));
+        cs_upd(c, MIXER_CHA_VOL, 0x3F, 63 - cdc_vstep(CDC_L(lr), 63, 1000));
+        cs_upd(c, MIXER_CHB_VOL, 0x3F, 63 - cdc_vstep(CDC_R(lr), 63, 1000));
     } else if (ctl == MX_INGAIN) {
         /* ADC: signed dB, the -48 .. +12 dB part of it; -97 dB mutes */
         u32 g = cdc_step(CDC_L(lr), 60);

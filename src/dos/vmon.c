@@ -88,6 +88,16 @@ static void phys_copy(u32 dst, u32 src, u32 n)
     }
 }
 
+void vm_phys_copy(u32 dst, u32 src, u32 n)
+{
+    phys_copy(dst, src, n);
+}
+
+u8 *vm_phys_ptr(u32 phys, u32 len)
+{
+    return pmap(phys, len, 0);
+}
+
 u64 mkdesc(u32 base, u32 limit, u32 access, u32 flags)
 {
     if (limit > 0xFFFFF) {
@@ -850,6 +860,10 @@ static void v86_swint(struct vmregs *f, int v)
             vcpi(f);
             return;
         }
+        if (ah >= 0x40 && ah <= 0x5D && ems_frame()) {
+            ems_call(f);                        /* the expanded memory of the monitor */
+            return;
+        }
         if (lin_rd32(0x67 * 4) == (((u32)vmc->drvseg << 16) | vmc->o_iret)) {
             setah(f, 0x84);                     /* no EMS driver */
             return;
@@ -1037,6 +1051,8 @@ static void vm_stop(struct vmregs *f)
 {
     u32 l = (f->ss & 0xFFFF) << 4, sp = (u16)(f->esp - 46), a = l + sp;
     u8 *drv = (u8 *)drv_lin;
+    /* expanded memory ends here: Windows gives its MS-DOS boxes its own */
+    ems_drop(f);
     lin_wr32(a + 0, f->edi);
     lin_wr32(a + 4, f->esi);
     lin_wr32(a + 8, f->ebp);
@@ -1192,6 +1208,8 @@ static int vm_setup(void)
     sb_irq = sbc->irq == 2 ? 9 : sbc->irq;
     sb_vec = (u8)irq_vec(sb_irq);
     ports();
+    /* expanded memory for the programs that need it (EMM386 cannot stay with the monitor) */
+    if (!(vmc->flags & VMF_NOEMS) && ems_init(pt0, vmc->ems_mb) == 0) vmc->flags |= VMF_EMS;
     return 0;
 }
 

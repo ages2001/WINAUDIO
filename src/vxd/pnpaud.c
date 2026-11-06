@@ -72,6 +72,18 @@ const char *pkg_desc(u32 bdf)
         ksnprintf(buf, sizeof(buf), "WINAUDIO %s High Definition Audio Bus Controller", v);
         return buf;
     }
+    if (vid == 0x1274 && dev == 0x5000) {
+        strlcpy(buf, "WINAUDIO Ensoniq AudioPCI ES1370", sizeof(buf));
+        return buf;
+    }
+    if ((vid == 0x1274 && (dev == 0x1371 || dev == 0x5880)) || (vid == 0x1102 && dev == 0x8938)) {
+        ksnprintf(buf, sizeof(buf), "WINAUDIO %s AudioPCI (ES1371 / ES1373 / CT5880)", vid == 0x1102 ? "Ectiva" : v);
+        return buf;
+    }
+    if (vid == 0x1102 && dev == 0x0002) {
+        strlcpy(buf, "WINAUDIO Creative Sound Blaster Live! (EMU10K1)", sizeof(buf));
+        return buf;
+    }
     if ((cls >> 8) == 0x0401) {
         ksnprintf(buf, sizeof(buf), "WINAUDIO %s AC'97 Audio Controller", v);
         return buf;

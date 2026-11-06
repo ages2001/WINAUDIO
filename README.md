@@ -1,7 +1,8 @@
-# WINAUDIO 1.1 — sound driver for DOS, Windows 3.x and Windows 95 / 98 / ME
+# WINAUDIO 1.2 — sound driver for DOS, Windows 3.x / 95 / 98 / ME
 
 WINAUDIO plays sound through **Intel High Definition Audio** (any vendor's HD Audio
-controller and codec), **AC'97** and the **Intel audio DSP** of newer notebooks, on DOS,
+controller and codec), **AC'97**, the **Intel audio DSP** of newer notebooks, the **Ensoniq
+AudioPCI** (ES1370 / ES1371 / ES1373, CT5880) and the **Sound Blaster Live!** (EMU10K1), on DOS,
 Windows 3.0 (with the Multimedia Extensions), 3.1 / WfW 3.11 and Windows 95 / 98 / ME: wave
 playback and recording, a **General MIDI synthesizer**, a mixer, and a **Sound Blaster 16
 emulation** (with OPL3 FM and MPU-401) for DOS games.
@@ -13,7 +14,7 @@ together with the others:
 |---------|----------------|
 | **WINDISK**  | IDE, SATA AHCI and NVMe disks, IDE/AHCI CD/DVD drives, SD card readers and eMMC |
 | **WINUSB**   | USB host controllers and devices, PS/2 mouse and keyboard, touchpads, USB4 / Thunderbolt |
-| **WINAUDIO** | HD Audio, AC'97 and the Intel audio DSP (SST / SOF), General MIDI synthesizer, Sound Blaster 16 emulation for DOS programs |
+| **WINAUDIO** | HD Audio, AC'97, the Intel audio DSP (SST / SOF), Ensoniq AudioPCI, Sound Blaster Live!, General MIDI synthesizer, Sound Blaster 16 emulation for DOS programs |
 | **WINUDF**   | the UDF file system (DVD, Blu-ray, packet-written CDs, UDF disks), read and write |
 
 ---
@@ -27,7 +28,7 @@ together with the others:
 | Windows 3.0 Real Mode | beeps and `PLAY` / `SOUND` music (`WINBEEP.DRV`) |
 | Windows 3.0 Standard / 386 Enhanced Mode | everything (with the Multimedia Extensions); Sound Blaster emulation in MS-DOS boxes (Enhanced Mode) |
 | Windows 3.1, WfW 3.11 | everything; Sound Blaster emulation in MS-DOS boxes (Enhanced Mode) |
-| Windows 95 / 98 / ME | Sound Blaster emulation in MS-DOS boxes; everything, as Plug and Play devices: `WINAUDIO.VXD` (HD Audio bus + codec devices, Intel DSP, AC'97) (§3a) |
+| Windows 95 / 98 / ME | Sound Blaster emulation in MS-DOS boxes; everything, as Plug and Play devices: `WINAUDIO.VXD` (HD Audio bus + codec devices, Intel DSP, AC'97, AudioPCI, Live!; DirectSound with hardware buffers) (§3a) |
 
 ## Installation
 
@@ -124,6 +125,40 @@ else: all options, how the driver works, hardware and chipset notes, the program
 interface, building from source, tests and known limitations.
 
 ## Version history
+
+**1.2 (2 November 2026)**
+
+Changelog:
+
+- **Sound Blaster emulation under QEMM 7.5:** QEMM's own trap callback was taken for another emulator (SBEMU) and the emulation stayed off; WINAUDIO.SYS now chains to it. QEMM traps the DMA mode and mask registers for its DMA translation: trapping them too broke floppy disk transfers (crash), so they stay with QEMM and the card's channel counts as auto-init. QEMM before 7.03, whose QPI cannot trap ports, gets its own message (`AUDTEST` likewise names QEMM 7.03+), and AUDTEST names AudioPCI / EMU10K1 devices.
+- Program Manager (Windows 3.x): an **Uninstall WINAUDIO** item with a red cross on the speaker icon (Windows closes, `UNINAUD /REBOOT` runs and restarts the computer); Windows 95/98/ME: the programs as desktop shortcuts too, removed by the uninstaller. The banner lists the systems (DOS, Windows 3.x/95/98/ME).
+- **DirectSound hardware secondary buffers:** the DirectSound driver now also offers up to 16 secondary buffers per device in hardware (`DSBCAPS_LOCHARDWARE`; 8 / 16 bit, mono / stereo, 100 Hz–100 kHz): the sound engine mixes them like the wave streams, each with its own rate (SetFrequency), volume and pan (SetVolumePan), position (SetPosition), playing once or looping, and duplicates (DuplicateSoundBuffer) share the memory of their original. DirectSound mixes in software only 3D buffers and what does not fit. Verified in Windows 98 on AC'97, the Ensoniq ES1370 and a USB Audio device.
+- DirectSound primary buffer: the write cursor stands 40 ms after what the sound engine has taken, and what it has taken becomes silence. The engine takes the buffer in steps of its service; DirectSound's mixer (and programs writing the primary buffer, such as the farbrausch music disk fr-028 "Brullwurfel") wrote only a few ms ahead of the old write cursor, and a late step played the sound of one turn of the buffer ago (crackling).
+- **Ensoniq AudioPCI:** ES1370 (AK4531 codec, 44.1 kHz) and ES1371 / ES1373, Creative CT5880, Ectiva EV1938 (AC'97 codec, 48 kHz through the rate converter): playback, recording, mixer, Sound Blaster emulation, DirectSound. The ES1370 was tried in QEMU (DOS, WfW 3.11, Windows 98 with DirectSound); the ES1371 family, which QEMU lacks, against an emulation of the chip written from the Linux driver (`src/tests/host/es1371`).
+- **Creative Sound Blaster Live! (EMU10K1):** playback through a stereo voice pair and a small DSP program (front, headphone and rear outputs), recording through the ADC channel, the AC'97 mixer. Written from the Linux and FreeBSD drivers and not tried on a real card yet (QEMU has none); the Audigy (EMU10K2) is not supported.
+- `INSTAUD /DOSONLY`: only the DOS driver, with `/NOVXD`. WINAUDIO.SYS lets go of the card when Windows starts and loads nothing into it, so Windows keeps its own driver for the card (the AudioPCI and Sound Blaster Live! drivers of Windows 95/98, say), and the Sound Blaster emulation is there again in DOS and MS-DOS mode.
+- Uninstalling WINUSB or WINAUDIO on Windows 95/98/ME leaves SYSTEM.INI `[drivers] wave= / midi= / mixer=winsound.drv` alone while the other package is installed (the sound devices of WINAUDIO had no wave driver after UNINUSB).
+- The mixer settings are kept across restarts on every system: Windows 95/98/ME in the registry (set before the sound devices start, WINMIX and Volume Control alike), Windows 3.x in SYSTEM.INI as before, DOS in `WINAUDIO.VOL` next to WINAUDIO.SYS (written by `AUDTEST MIX ...`, set again when WINAUDIO.SYS starts). Volumes were back at maximum after every restart in Windows 98.
+- The built-in V86 monitor gives expanded memory (LIM EMS 4.0, device `EMMXXXX0`, 64 KB page frame in a free part of the upper memory area, pages from XMS when a program asks): programs that need EMS no longer need EMM386, which leaves no Sound Blaster emulation in DOS. `/EMS:n` sets the most it gives (MB, default 16), `/NOEMS` turns it off.
+- Sound Blaster emulation: the emulated card is reset when the program that used it ends (DOS and Windows MS-DOS boxes): no loud buzzing after a game exits with its sound still running.
+- USB Audio through WINUSB: devices such as C-Media 0D8C:0008 whose streaming descriptors were not accepted (see WINUSB 1.2).
+- WINSOUND.DRV: 64 buffers per stream and sample-accurate positions for DirectSound in emulation mode and players that queue many small buffers.
+- **DirectSound driver (Windows 95/98/ME with DirectX):** every sound device registers a DirectSound driver with DSOUND.VXD. Its primary buffer is played by the sound engine as a card plays its DMA buffer, and DirectSound's kernel mixer mixes the programs' sound buffers into it: DirectSound runs on the hardware abstraction layer instead of emulation through the wave driver (lower latency, exact positions). The driver is also the one of the default device: WINAUDM.INF makes MMDEVLDR.VXD the DevLoader of the sound devices and lists WINSOUND.DRV in their devnodes, so MMSYSTEM knows which wave device belongs to which devnode. After updating, choose Update Driver for the sound device in Device Manager once (Have Disk, `WINDOWS\INF`).
+- DPMI host of the V86 monitor: 16-bit clients get the MS-DOS extensions of Windows (INT 21h calls with protected-mode pointers are copied through a buffer in conventional memory; PSP, DTA, vectors, DOS memory as selectors). Borland's RTM (Borland Pascal / C++ programs in protected mode, e.g. Jazz Jackrabbit, Tyrian 2000) refused to start ("Loader error (0025)") or hung.
+- DPMI host: segment bases of 16-bit clients have all 32 bits (their memory is at 40000000h; the high byte was cut off and the client wrote over the interrupt vectors); the processor type is given as Windows gives it (486 at most: older clients look it up in a table).
+- DPMI host: an interrupt that came while a handler on the locked stack had called the host's default handler (PUSHF / CALL FAR) overwrote that handler's return address (crash when leaving Tyrian's setup).
+- Sound Blaster emulation: the silence transfer (DSP command 80h) ends with its interrupt like other transfers (Tyrian: "ERROR 253: Sound Effects disabled").
+- Sound Blaster emulation: the time between a single-cycle block and the next one the program starts is not played as silence but made up by the next block (crackling in Epic Pinball and other games that play block by block).
+- The sound engine mixes further ahead when a controller fetches more than it plays (the AC'97 / HD Audio of virtual machines take tens of ms at once): no more periodic gaps there.
+- The hint about EMM386 in WINAUDIO.SYS and AUDTEST fits the screen and names the EMS of the V86 monitor.
+- The installer lists the Windows installations it finds, numbered, and asks which of them to set up (`1`, `1,3`, `A` for all, `0` for none: the DOS driver only); `/ALL` sets up all of them without asking, `/W:dir` only that one.
+- The DOS driver takes its extended memory above 16 MB when there is room there: Windows 3.x Standard Mode (and other 286 DOS extenders) can use only the memory below 16 MB ("Insufficient extended memory" with all WINDRV drivers loaded).
+- `/Q`: only error messages on the screen while the DOS driver loads.
+- Fixed "CPU without CPUID / time stamp counter" on Vortex86 DX / MX / EX processors, whose CPUID instruction works although the ID flag of EFLAGS cannot be changed: the time stamp counter is tried directly.
+- WININFO finds the driver also when it was loaded with DEVLOAD and a program (the command shell) later put back an INT 2Fh vector it had saved before: the driver hooks INT 2Fh again within a few seconds, and WININFO waits for that when the driver's device header is there.
+- Fixed a crash at boot ("CORE EXCEPTION 0000000E") with `DEVICEHIGH=` under JEMM386 / JEMMEX: the driver used the memory after its image as a buffer while it started, and a small upper memory block ends right there; the buffer now fits in the block DOS gave.
+- The texts of the DOS drivers, the VxDs and the documentation name everything the drivers support now.
+
 
 **1.1 (26 October 2026)**
 

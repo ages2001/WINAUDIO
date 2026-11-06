@@ -33,6 +33,9 @@ struct dpmicl {
     u16 exsel[32];
     struct { u8 vec; u32 old, cur; } rmv[32];      /* real-mode vectors set by 0201h */
     int nrmv;
+    u16 psel;                           /* its PSP */
+    u16 xseg;                           /* DOS extensions: transfer buffer (conventional memory) */
+    u16 dtasel, dtaoff;                 /* DOS extensions: the disk transfer address */
 };
 
 static struct dpmicl cls[MAXCL];
@@ -282,6 +285,19 @@ static int xms_prep(struct vmregs *t, struct vmregs *f)
         rm_setup(t, (f && (f->eflags & EFL_VM)) ? f : NULL);
     }
     return 0;
+}
+
+static int xms_alloc(struct vmregs *f, u32 kb, u16 *h, u32 *phys);
+static void xms_free(struct vmregs *f, u16 h);
+
+int vm_xms_alloc(struct vmregs *f, u32 kb, u16 *h, u32 *phys)
+{
+    return xms_alloc(f, kb, h, phys);
+}
+
+void vm_xms_free(struct vmregs *f, u16 h)
+{
+    xms_free(f, h);
 }
 
 static int xms_alloc(struct vmregs *f, u32 kb, u16 *h, u32 *phys)
@@ -661,6 +677,7 @@ static void cleanup(struct vmregs *f, struct dpmicl *c)
         vm_setredir(0x24, !isdef(dcl, 0x24));
     }
     vmc->pmode = (u8)(dcl != NULL);
+    if (!dcl) lpms_cur = LPMS_SIZE - 16;
 }
 
 /* the client ends with INT 21h AH=4Ch AL */
@@ -768,6 +785,8 @@ void dpmi_enter(struct vmregs *f)
         c->envsel = newsel(c, (u32)c->envseg << 4, envl - 1, 0xF2, 0);
         if (c->envsel) lin_wr16(((u32)psp << 4) + 0x2C, c->envsel);
     }
+    c->psel = c->dtasel = psel;
+    c->dtaoff = 0x80;
     if (!csel || !dsel || !ssel || !psel) {
         cleanup(f, c);
         v86_push(f, cs);
@@ -1073,8 +1092,7 @@ static void dpmi_api(struct vmregs *f)
         }
         d = &ldt[BX >> 3];
         if (fn == 0x0007) {
-            v = (CX << 16) | DX;
-            if (!c->is32) v &= 0x00FFFFFFUL;
+            v = (CX << 16) | DX;          /* all 32 bits for 16-bit clients too: their memory is at 40000000h */
             *d = (*d & 0x00FFFF000000FFFFULL) | ((u64)(v & 0xFFFFFF) << 16) | ((u64)(v >> 24) << 56);
         } else if (fn == 0x0008) {
             v = (CX << 16) | DX;
@@ -1348,8 +1366,10 @@ static void dpmi_api(struct vmregs *f)
         return;
     case 0x0400:
         setax(f, 0x005A);
-        setbx(f, 0x0003);
-        f->ecx = (f->ecx & ~0xFFUL) | vmc->cpu;
+        setbx(f, 0x0001);                       /* 32-bit host, interrupts reflected in V86 mode */
+        /* the processor type as Windows gives it, 4 at most: older clients (Borland's RTM)
+           look it up in a table that ends with the 486 and refuse to start on anything else */
+        f->ecx = (f->ecx & ~0xFFUL) | (vmc->cpu > 4 ? 4 : vmc->cpu);
         setdx(f, ((u32)vm_mbase << 8) | vm_sbase);
         ok(f);
         return;
@@ -1454,6 +1474,454 @@ static void dpmi_api(struct vmregs *f)
     fail(f, 0x8001);
 }
 
+/* ---------------------------------------------------------------- DOS extensions
+
+   16-bit clients get the MS-DOS extensions of Windows' DPMI: INT 21h calls with pointers take
+   protected-mode pointers (selector:offset), and the host copies the data through a buffer in
+   conventional memory. Borland's RTM (Borland Pascal and C++ programs in protected mode)
+   starts only when the host has them; it asks for Windows (INT 2Fh AX=1600h) to know it. */
+
+#define XBUF        0x2000                      /* the client's transfer buffer, bytes */
+#define XO_DTA      0x0000                      /* find first / next */
+#define XO_P1       0x0080                      /* first name */
+#define XO_P2       0x0180                      /* second name, command tail */
+#define XO_DATA     0x0280                      /* data of reads and writes, other blocks */
+#define XDLEN       (XBUF - XO_DATA)
+
+static u32 xb(struct dpmicl *c, u32 o)
+{
+    return ((u32)c->xseg << 4) + o;
+}
+
+static int xbuf_get(struct dpmicl *c)
+{
+    struct vmregs t;
+    if (c->xseg) return 1;
+    if (rm_setup(&t, NULL)) return 0;
+    t.eax = 0x4800;
+    t.ebx = XBUF >> 4;
+    rm_int(&t, 0x21);
+    if (t.eflags & EFL_CF) return 0;
+    c->xseg = (u16)t.eax;
+    return 1;
+}
+
+/* linear address of len bytes at sel:off, 0 when they are outside the segment */
+static u32 xptr(u32 sel, u32 off, u32 len)
+{
+    u32 lim, b = sel_base(sel, NULL, &lim);
+    off &= 0xFFFF;
+    if (!(sel & 0xFFFC) || off > lim || len > lim - off + 1 || !lin_ok(b + off, len)) return 0;
+    return b + off;
+}
+
+/* bytes a block at sel:off can have, up to max */
+static u32 xroom(u32 sel, u32 off, u32 max)
+{
+    u32 lim;
+    (void)sel_base(sel, NULL, &lim);
+    off &= 0xFFFF;
+    if (!(sel & 0xFFFC) || off > lim) return 0;
+    return lim - off + 1 < max ? lim - off + 1 : max;
+}
+
+static int xin(struct dpmicl *c, u32 sel, u32 off, u32 xo, u32 n)
+{
+    u32 l = xptr(sel, off, n);
+    if (!l && n) return 0;
+    memcpy((void *)xb(c, xo), (void *)l, n);
+    return 1;
+}
+
+static int xout(struct dpmicl *c, u32 xo, u32 sel, u32 off, u32 n)
+{
+    u32 l = xptr(sel, off, n);
+    if (!l && n) return 0;
+    memcpy((void *)l, (void *)xb(c, xo), n);
+    return 1;
+}
+
+/* a string ending with end (0 or '$'), max bytes with the end */
+static int xstr(struct dpmicl *c, u32 sel, u32 off, u32 xo, u32 max, u8 end)
+{
+    u32 n = xroom(sel, off, max), i, l;
+    if (!n) return 0;
+    l = sel_base(sel, NULL, NULL) + (off & 0xFFFF);
+    for (i = 0; i < n; i++) {
+        u8 ch = lin_rd8(l + i);
+        lin_wr8(xb(c, xo + i), ch);
+        if (ch == end) return 1;
+    }
+    lin_wr8(xb(c, xo + n - 1), end);
+    return 1;
+}
+
+/* the string the call left in the buffer back to the client */
+static void xstrout(struct dpmicl *c, u32 xo, u32 sel, u32 off, u32 max)
+{
+    u32 n = xroom(sel, off, max), i, l;
+    if (!n) return;
+    l = sel_base(sel, NULL, NULL) + (off & 0xFFFF);
+    for (i = 0; i < n; i++) {
+        u8 ch = lin_rd8(xb(c, xo + i));
+        lin_wr8(l + i, ch);
+        if (!ch) return;
+    }
+}
+
+static int xcall(struct vmregs *f, struct vmregs *t, struct dpmicl *c, u32 dx, u32 si, u32 di)
+{
+    if (rm_setup(t, NULL)) return 0;
+    t->eax = f->eax;
+    t->ebx = f->ebx;
+    t->ecx = f->ecx;
+    t->edx = dx;
+    t->esi = si;
+    t->edi = di;
+    t->ebp = f->ebp;
+    t->ds = t->es = c->xseg;
+    t->eflags = (f->eflags & (EFL_ARITH | EFL_DF)) | EFL_IF | 2;
+    rm_int(t, 0x21);
+    return 1;
+}
+
+/* results: AX BX CX and the flags (the pointer registers stay the client's) */
+static void xres(struct vmregs *f, struct vmregs *t)
+{
+    f->eax = t->eax;
+    f->ebx = t->ebx;
+    f->ecx = t->ecx;
+    f->eflags = (f->eflags & ~EFL_ARITH) | (t->eflags & EFL_ARITH);
+}
+
+/* a host function for the client (0002h, 0100h-0102h, 0204h, 0205h) */
+static void xapi(struct vmregs *f, u16 fn, u32 bx, u32 cx, u32 dx)
+{
+    struct vmregs t = *f;
+    t.eax = fn;
+    t.ebx = bx;
+    t.ecx = cx;
+    t.edx = dx;
+    dpmi_api(&t);
+    *f = t;
+}
+
+static u16 xseg2sel(struct vmregs *f, u16 seg)
+{
+    struct vmregs t = *f;
+    t.eax = 0x0002;
+    t.ebx = seg;
+    dpmi_api(&t);
+    return (t.eflags & EFL_CF) ? 0 : (u16)t.eax;
+}
+
+/* find first / next: the client's DTA through the buffer, DOS's own DTA put back after */
+static void xfind(struct vmregs *f, struct dpmicl *c, struct vmregs *t, u32 dta, u32 len, int name)
+{
+    struct vmregs u;
+    u32 old;
+    if (rm_setup(&u, NULL)) return;
+    u.eax = 0x2F00;
+    rm_int(&u, 0x21);
+    old = ((u.es & 0xFFFF) << 16) | (u.ebx & 0xFFFF);
+    rm_setup(&u, NULL);
+    u.eax = 0x1A00;
+    u.ds = c->xseg;
+    u.edx = XO_DTA;
+    rm_int(&u, 0x21);
+    if (dta) memcpy((void *)xb(c, XO_DTA), (void *)dta, len);
+    xcall(f, t, c, name ? XO_P1 : DX, 0, 0);
+    if (dta) memcpy((void *)dta, (void *)xb(c, XO_DTA), len);
+    rm_setup(&u, NULL);
+    u.eax = 0x1A00;
+    u.ds = old >> 16;
+    u.edx = old & 0xFFFF;
+    rm_int(&u, 0x21);
+}
+
+/* INT 21h of a 16-bit client with pointers; 0: not one of them (reflected as it is) */
+static int dosx(struct vmregs *f)
+{
+    struct dpmicl *c = dcl;
+    struct vmregs t;
+    u8 ah = (u8)(f->eax >> 8), al = (u8)f->eax;
+    u32 l, n, done;
+    if (c->is32) return 0;
+    switch (ah) {
+    case 0x25:                                  /* vectors: the protected-mode ones */
+        xapi(f, 0x0205, al, f->ds, DX);
+        return 1;
+    case 0x35:
+        n = f->eax;
+        xapi(f, 0x0204, al, 0, 0);
+        f->es = f->ecx & 0xFFFF;
+        f->ebx = (f->ebx & ~0xFFFFUL) | (f->edx & 0xFFFF);
+        f->eax = n;
+        return 1;
+    case 0x1A:
+        c->dtasel = (u16)f->ds;
+        c->dtaoff = DX;
+        return 1;
+    case 0x2F:
+        f->es = c->dtasel;
+        f->ebx = (f->ebx & ~0xFFFFUL) | c->dtaoff;
+        return 1;
+    case 0x50:                                  /* PSPs: selectors */
+        l = sel_base(BX, NULL, NULL);
+        if (!(BX & 4) || l >= 0x100000UL || (l & 15)) return 0;
+        if (rm_setup(&t, NULL)) return 0;
+        t.eax = 0x5000;
+        t.ebx = l >> 4;
+        rm_int(&t, 0x21);
+        return 1;
+    case 0x51:
+    case 0x62:
+        if (rm_setup(&t, NULL)) return 0;
+        t.eax = 0x6200;
+        rm_int(&t, 0x21);
+        n = t.ebx & 0xFFFF;
+        n = n == c->psp ? c->psel : xseg2sel(f, (u16)n);
+        f->ebx = (f->ebx & ~0xFFFFUL) | n;
+        return 1;
+    case 0x48:                                  /* DOS memory: selectors */
+        xapi(f, 0x0100, BX, 0, 0);
+        if (!(f->eflags & EFL_CF)) f->eax = (f->eax & ~0xFFFFUL) | (f->edx & 0xFFFF);
+        return 1;
+    case 0x49:
+        n = f->es;
+        xapi(f, 0x0101, 0, 0, n);
+        if (!(f->eflags & EFL_CF)) f->es = 0;
+        return 1;
+    case 0x4A:
+        xapi(f, 0x0102, BX, 0, f->es);
+        return 1;
+    }
+    if (!xbuf_get(c)) return 0;
+    switch (ah) {
+    case 0x09:
+        if (!xstr(c, f->ds, DX, XO_DATA, XDLEN, '$')) return 0;
+        xcall(f, &t, c, XO_DATA, 0, 0);
+        return 1;
+    case 0x0A:
+        if (!(l = xptr(f->ds, DX, 1))) return 0;
+        n = (u32)lin_rd8(l) + 2;
+        if (!xin(c, f->ds, DX, XO_DATA, n)) return 0;
+        xcall(f, &t, c, XO_DATA, 0, 0);
+        xout(c, XO_DATA, f->ds, DX, n);
+        return 1;
+    case 0x1B:                                  /* DS:BX out */
+    case 0x1C:
+    case 0x1F:
+    case 0x32:
+        if (!xcall(f, &t, c, DX, 0, 0)) return 0;
+        xres(f, &t);
+        f->ds = xseg2sel(f, (u16)t.ds);
+        return 1;
+    case 0x34:                                  /* ES:BX out */
+    case 0x52:
+        if (!xcall(f, &t, c, DX, 0, 0)) return 0;
+        xres(f, &t);
+        f->es = xseg2sel(f, (u16)t.es);
+        return 1;
+    case 0x29:
+        if (!xstr(c, f->ds, SI, XO_P1, 128, 0) || !xin(c, f->es, DI, XO_DATA, 37)) return 0;
+        xcall(f, &t, c, DX, XO_P1, XO_DATA);
+        xres(f, &t);
+        f->esi = (f->esi & ~0xFFFFUL) | (u16)(SI + (t.esi & 0xFFFF) - XO_P1);
+        xout(c, XO_DATA, f->es, DI, 37);
+        return 1;
+    case 0x38:
+        if (DX == 0xFFFF) return 0;
+        if (!xptr(f->ds, DX, 34)) return 0;
+        xcall(f, &t, c, XO_DATA, 0, 0);
+        xres(f, &t);
+        if (!(t.eflags & EFL_CF)) xout(c, XO_DATA, f->ds, DX, 34);
+        return 1;
+    case 0x39:                                  /* a name at DS:DX */
+    case 0x3A:
+    case 0x3B:
+    case 0x3C:
+    case 0x3D:
+    case 0x41:
+    case 0x43:
+    case 0x5B:
+        if (!xstr(c, f->ds, DX, XO_P1, 128, 0)) return 0;
+        xcall(f, &t, c, XO_P1, 0, 0);
+        xres(f, &t);
+        return 1;
+    case 0x5A:
+        if (!xstr(c, f->ds, DX, XO_P1, 128, 0)) return 0;
+        xcall(f, &t, c, XO_P1, 0, 0);
+        xres(f, &t);
+        if (!(t.eflags & EFL_CF)) xstrout(c, XO_P1, f->ds, DX, 128);
+        return 1;
+    case 0x56:
+        if (!xstr(c, f->ds, DX, XO_P1, 128, 0) || !xstr(c, f->es, DI, XO_P2, 128, 0)) return 0;
+        xcall(f, &t, c, XO_P1, 0, XO_P2);
+        xres(f, &t);
+        return 1;
+    case 0x6C:
+        if (!xstr(c, f->ds, SI, XO_P1, 128, 0)) return 0;
+        xcall(f, &t, c, DX, XO_P1, 0);
+        xres(f, &t);
+        f->edx = (f->edx & ~0xFFFFUL) | (t.edx & 0xFFFF);
+        return 1;
+    case 0x47:
+        if (!xptr(f->ds, SI, 64)) return 0;
+        xcall(f, &t, c, DX, XO_P1, 0);
+        xres(f, &t);
+        if (!(t.eflags & EFL_CF)) xstrout(c, XO_P1, f->ds, SI, 64);
+        return 1;
+    case 0x4E:
+    case 0x4F:
+        l = xptr(c->dtasel, c->dtaoff, 43);
+        if (ah == 0x4E && !xstr(c, f->ds, DX, XO_P1, 128, 0)) return 0;
+        xfind(f, c, &t, l, 43, ah == 0x4E);
+        xres(f, &t);
+        return 1;
+    case 0x3F:                                  /* read and write in pieces */
+    case 0x40:
+        n = CX;
+        if (!n) {
+            xcall(f, &t, c, XO_DATA, 0, 0);
+            xres(f, &t);
+            return 1;
+        }
+        if (!xptr(f->ds, DX, n)) return 0;
+        for (done = 0; done < n;) {
+            u32 k = n - done < XDLEN ? n - done : XDLEN, got;
+            struct vmregs g = *f;
+            g.ecx = (g.ecx & ~0xFFFFUL) | k;
+            if (ah == 0x40) xin(c, f->ds, DX + done, XO_DATA, k);
+            xcall(&g, &t, c, XO_DATA, 0, 0);
+            if (t.eflags & EFL_CF) {
+                if (!done) {
+                    xres(f, &t);
+                    return 1;
+                }
+                break;
+            }
+            got = t.eax & 0xFFFF;
+            if (ah == 0x3F) xout(c, XO_DATA, f->ds, DX + done, got);
+            done += got;
+            if (got < k) break;
+        }
+        f->eax = (f->eax & ~0xFFFFUL) | done;
+        f->eflags &= ~EFL_CF;
+        return 1;
+    case 0x44:
+        if (al == 0x02 || al == 0x03 || al == 0x04 || al == 0x05) {
+            n = CX < XDLEN ? CX : XDLEN;
+            if (!xptr(f->ds, DX, n)) return 0;
+            if (al & 1) xin(c, f->ds, DX, XO_DATA, n);
+            xcall(f, &t, c, XO_DATA, 0, 0);
+            xres(f, &t);
+            if (!(al & 1) && !(t.eflags & EFL_CF)) xout(c, XO_DATA, f->ds, DX, t.eax & 0xFFFF);
+            return 1;
+        }
+        if (al == 0x0C || al == 0x0D) {
+            n = xroom(f->ds, DX, 256);
+            if (!n || !xin(c, f->ds, DX, XO_DATA, n)) return 0;
+            xcall(f, &t, c, XO_DATA, 0, 0);
+            xres(f, &t);
+            xout(c, XO_DATA, f->ds, DX, n);
+            return 1;
+        }
+        return 0;
+    case 0x4B:
+        if (al == 0x00 || al == 0x01) {
+            u32 pb = xptr(f->es, BX, 14), env, tail, f1, f2, k;
+            u16 *q = (u16 *)xb(c, XO_DATA);
+            if (!pb || !xstr(c, f->ds, DX, XO_P1, 128, 0)) return 0;
+            env = lin_rd16(pb);
+            if (env) {
+                env = sel_base(env, NULL, NULL);
+                env = env < 0xA0000UL && !(env & 15) ? env >> 4 : 0;
+            }
+            q[0] = (u16)env;
+            tail = lin_rd16(pb + 2);
+            k = xroom(lin_rd16(pb + 4), tail, 128);
+            memset((void *)xb(c, XO_P2), 0, 128);
+            if (k) xin(c, lin_rd16(pb + 4), tail, XO_P2, k);
+            q[1] = XO_P2;
+            q[2] = c->xseg;
+            f1 = xptr(lin_rd16(pb + 8), lin_rd16(pb + 6), 16);
+            f2 = xptr(lin_rd16(pb + 12), lin_rd16(pb + 10), 16);
+            memset((void *)xb(c, XO_DATA + 16), 0, 0x50);
+            if (f1) memcpy((void *)xb(c, XO_DATA + 16), (void *)f1, 16);
+            if (f2) memcpy((void *)xb(c, XO_DATA + 56), (void *)f2, 16);
+            q[3] = XO_DATA + 16;
+            q[4] = c->xseg;
+            q[5] = XO_DATA + 56;
+            q[6] = c->xseg;
+            {
+                struct vmregs g = *f;
+                g.ebx = (g.ebx & ~0xFFFFUL) | XO_DATA;
+                xcall(&g, &t, c, XO_P1, 0, 0);
+            }
+            f->eax = t.eax;
+            f->eflags = (f->eflags & ~EFL_ARITH) | (t.eflags & EFL_ARITH);
+            return 1;
+        }
+        if (al == 0x03) {
+            if (!xstr(c, f->ds, DX, XO_P1, 128, 0) || !xin(c, f->es, BX, XO_DATA, 4)) return 0;
+            {
+                struct vmregs g = *f;
+                g.ebx = (g.ebx & ~0xFFFFUL) | XO_DATA;
+                xcall(&g, &t, c, XO_P1, 0, 0);
+            }
+            f->eax = t.eax;
+            f->eflags = (f->eflags & ~EFL_ARITH) | (t.eflags & EFL_ARITH);
+            return 1;
+        }
+        return 0;
+    case 0x71:                                  /* long file names */
+        switch (al) {
+        case 0x39:
+        case 0x3A:
+        case 0x3B:
+        case 0x41:
+        case 0x43:
+            if (!xstr(c, f->ds, DX, XO_P1, 261 < XO_DATA - XO_P1 ? 261 : XO_DATA - XO_P1, 0)) return 0;
+            xcall(f, &t, c, XO_P1, 0, 0);
+            xres(f, &t);
+            return 1;
+        case 0x6C:
+            if (!xstr(c, f->ds, SI, XO_P1, XO_DATA - XO_P1, 0)) return 0;
+            xcall(f, &t, c, DX, XO_P1, 0);
+            xres(f, &t);
+            return 1;
+        case 0x47:
+            if (!xptr(f->ds, SI, 64)) return 0;
+            xcall(f, &t, c, DX, XO_DATA, 0);
+            xres(f, &t);
+            if (!(t.eflags & EFL_CF)) xstrout(c, XO_DATA, f->ds, SI, 261);
+            return 1;
+        case 0x4E:
+        case 0x4F:
+            if (!xptr(f->es, DI, 318)) return 0;
+            if (al == 0x4E && !xstr(c, f->ds, DX, XO_P1, XO_DATA - XO_P1, 0)) return 0;
+            xcall(f, &t, c, XO_P1, 0, XO_DATA);
+            xres(f, &t);
+            if (!(t.eflags & EFL_CF)) xout(c, XO_DATA, f->es, DI, 318);
+            return 1;
+        case 0x56:
+            if (!xstr(c, f->ds, DX, XO_DATA, 261, 0) || !xstr(c, f->es, DI, XO_DATA + 261, 261, 0)) return 0;
+            xcall(f, &t, c, XO_DATA, 0, XO_DATA + 261);
+            xres(f, &t);
+            return 1;
+        case 0x60:
+            if (!xstr(c, f->ds, SI, XO_P1, XO_DATA - XO_P1, 0) || !xptr(f->es, DI, 128)) return 0;
+            xcall(f, &t, c, DX, XO_P1, XO_DATA);
+            xres(f, &t);
+            if (!(t.eflags & EFL_CF)) xstrout(c, XO_DATA, f->es, DI, 261);
+            return 1;
+        }
+        return 0;
+    }
+    return 0;
+}
+
 /* ---------------------------------------------------------------- protected-mode traps */
 
 /* the default action of a protected-mode interrupt; stub: reached through the host's
@@ -1466,8 +1934,12 @@ static void pm_default(struct vmregs *f, int v, int stub)
     } else if (v == 0x21 && (u8)(f->eax >> 8) == 0x4C) {
         dpmi_exit(f, (u8)f->eax);
         return;
+    } else if (v == 0x21 && dosx(f)) {
+        /* done with the DOS extensions */
     } else if (v == 0x2F && (u16)f->eax == 0x1686) {
         setax(f, 0);
+    } else if (v == 0x2F && (u16)f->eax == 0x1600 && !c->is32 && xbuf_get(c)) {
+        setax(f, 0x0A03);               /* "Windows 3.10 enhanced mode": the DOS extensions are there */
     } else if (v == 0x2F && (u16)f->eax == 0x168A) {
         /* no vendor API */
     } else {
@@ -1659,7 +2131,24 @@ static void pm_gp(struct vmregs *f)
     f->eip = big ? ip : ip & 0xFFFF;
 }
 
+static void pm_trap2(struct vmregs *f);
+
+/* Everything the trap leads to (a real-mode call, a callback, an interrupt in between)
+   that runs on the locked stack goes below what the client has on it now: a handler that
+   chained to the host's default handler with PUSHF / CALL FAR had its return address
+   overwritten by the next interrupt */
 void pm_trap(struct vmregs *f)
+{
+    u32 old = lpms_cur, sp;
+    if ((f->ss & 0xFFFF) == SEL_LPMS16 || (f->ss & 0xFFFF) == SEL_LPMS32) {
+        sp = ((f->ss & 0xFFFF) == SEL_LPMS16 ? f->esp & 0xFFFF : f->esp) & ~3UL;
+        if (sp < lpms_cur && sp > 256) lpms_cur = sp - 16;
+    }
+    pm_trap2(f);
+    lpms_cur = old;
+}
+
+static void pm_trap2(struct vmregs *f)
 {
     int v = (int)(f->vec & 0xFF), err = (f->vec & 0x100) != 0;
     if (!dcl) {

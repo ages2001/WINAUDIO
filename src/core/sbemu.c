@@ -21,6 +21,13 @@ static int sb_sid = -1, opl_sid = -1;
 static int sb_run, opl_run;
 static u32 sb_last, opl_last;       /* plat_ms() of the last use */
 static struct winsb *sbc;
+
+/* DOS under QEMM 7.5: the mode and mask registers are not trapped (SBX_NOMODE) */
+static int nomode(void)
+{
+    return (sbc->xflags & SBX_NOMODE) && !(sbc->flags & SBF_VXD);
+}
+
 static int on, vdma_ext;
 
 /* ---- DSP ---- */
@@ -43,6 +50,8 @@ struct xfer {
     u32 frac;
 };
 static struct xfer x;
+static u32 owe;                     /* frames owed after a single-cycle block (block_check) */
+static u8 blkend;
 static u8 adsub;                    /* ADPCM: samples left in the current byte */
 
 /* direct DAC (command 10h) */
@@ -266,6 +275,7 @@ static void xfer_stop(void)
 static void dsp_reset(void)
 {
     xfer_stop();
+    owe = 0;
     highspeed = 0;
     uart = 0;
     oqh = oqt = 0;
@@ -290,6 +300,10 @@ static void xfer_start(int bits16, int autoinit, int input, u32 len, int stereo,
     if (x.rate < 4000) x.rate = 4000;
     if (x.rate > 48000) x.rate = 48000;
     x.active = 1;
+    if (nomode()) {
+        dma[x.dma].masked = 0;
+        dma[x.dma].autoinit = 1;
+    }
     sb_stream(1);
     aeng_rt_rate(sb_sid, x.rate);
 }
@@ -450,7 +464,7 @@ static void dma_calc(int i)
         d->lin = ((u32)(d->page & 0xFE) << 16) | ((u32)d->baddr << 1);
         d->len = ((u32)d->bcnt + 1) * 2;
     }
-    d->autoinit = (u8)((d->mode >> 4) & 1);
+    d->autoinit = (u8)(nomode() ? 1 : (d->mode >> 4) & 1);
     d->valid = 1;
 }
 
@@ -740,7 +754,8 @@ static int fetch(u8 *mem, s16 *l, s16 *r)
     struct sbdma *d = &dma[x.dma];
     int nb = (x.bits16 ? 2 : 1) * (x.stereo ? 2 : 1), k;
     u8 bt[4];
-    if (x.silence) {
+    if (x.silence) {                    /* command 80h: counts samples, no DMA */
+        x.blkpos++;
         *l = *r = 0;
         return 1;
     }
@@ -785,6 +800,11 @@ static int fetch(u8 *mem, s16 *l, s16 *r)
     return 1;
 }
 
+/* Single-cycle transfers: the program starts the next block when the interrupt of the last
+   one comes, which can be a few ms later here (the interrupt waits for the next service
+   and the program's own handler). The frames of that wait are not produced as silence but
+   owed: the next block plays them (up to 10 ms; a longer pause is silence, as on a card). */
+
 static void block_check(void)
 {
     if (x.blkpos < x.blklen) return;
@@ -793,6 +813,7 @@ static void block_check(void)
     if (!x.autoinit || x.exitai) {
         xfer_stop();
         highspeed = 0;
+        blkend = 1;
     }
 }
 
@@ -815,6 +836,16 @@ static void sb_frames(u32 n)
     u8 *mem = NULL;
     u32 done = 0;
     struct sbdma *d = &dma[x.dma];
+    if (x.active) {
+        n += owe;
+        owe = 0;
+    } else if (owe && !dqn) {
+        owe += n;
+        if (owe < (x.rate ? x.rate : orate) / 100) return;
+        n = owe;
+        owe = 0;
+    }
+    blkend = 0;
     if (x.active && d->valid) mem = plat_sb_mem(d->lin, d->len);
     while (done < n) {
         u32 k = MIN(n - done, 256), i;
@@ -832,6 +863,13 @@ static void sb_frames(u32 n)
                 }
                 buf[i * 2] = l;
                 buf[i * 2 + 1] = r;
+                if (blkend) {
+                    blkend = 0;
+                    k = ++i;
+                    owe = n - done - k;
+                    n = done + k;
+                    break;
+                }
             }
         }
         ring_put(&sbr.h, buf, k);

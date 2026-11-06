@@ -46,6 +46,7 @@
 #define K_NV    2
 #define K_VIA   3       /* 82C686 */
 #define K_VIA8  4       /* VT8233 and later */
+#define K_EXT   5       /* the codec of another controller (ac97_ext: Ensoniq ES1371) */
 
 struct ac97 {
     struct adev a;
@@ -58,6 +59,9 @@ struct ac97 {
     u8 hbits;
     u8 vra;
     u16 coff;           /* ICH: codec register block (0 primary, 80h secondary codec) */
+    void *xctx;         /* K_EXT: the controller and its codec access */
+    u16 (*xrd)(void *ctx, int reg);
+    void (*xwr)(void *ctx, int reg, u16 v);
 };
 
 static struct ac97 *ctrls[MAXAC];
@@ -83,6 +87,7 @@ static void ich_cas(struct ac97 *c)
 
 static u16 crd(struct ac97 *c, int reg)
 {
+    if (c->kind == K_EXT) return c->xrd(c->xctx, reg);
     if (c->kind >= K_VIA) {
         u32 v, t0;
         via_wait(c);
@@ -101,6 +106,10 @@ static u16 crd(struct ac97 *c, int reg)
 
 static void cwr(struct ac97 *c, int reg, u16 v)
 {
+    if (c->kind == K_EXT) {
+        c->xwr(c->xctx, reg, v);
+        return;
+    }
     if (c->kind >= K_VIA) {
         via_wait(c);
         outl((u16)(c->nam + 0x80), ((u32)reg << 16) | v);
@@ -595,3 +604,43 @@ void ac97_remove(u32 bdf)
     for (i = 0; i < nctrl; i++)
         if (PCI_BDF(&ctrls[i]->pci) == bdf) aeng_remove(&ctrls[i]->a);
 }
+
+/* ---------------------------------------------------------------- the codec of another controller
+
+   Controllers with their own DMA engine and an AC'97 codec (Ensoniq ES1371 / ES1373, Creative
+   CT5880, Ectiva EV1938; es137x.c) use the codec part of this file through rd / wr. */
+struct ac97 *ac97_ext(void *ctx, u16 (*rd)(void *ctx, int reg), void (*wr)(void *ctx, int reg, u16 v))
+{
+    struct ac97 *c = kmalloc(sizeof(*c));
+    if (!c) return NULL;
+    memset(c, 0, sizeof(*c));
+    c->kind = K_EXT;
+    c->xctx = ctx;
+    c->xrd = rd;
+    c->xwr = wr;
+    c->a.priv = c;
+    if (codec_init(c)) {
+        kfree(c);
+        return NULL;
+    }
+    set_src(&c->a, AS_MIC);
+    return c;
+}
+
+void ac97_ext_vol(struct ac97 *c, int ctl, u32 lr)
+{
+    set_vol(&c->a, ctl, lr);
+}
+
+void ac97_ext_src(struct ac97 *c, int src)
+{
+    set_src(&c->a, src);
+}
+
+/* vendor id 1 << 16 | vendor id 2, variable rate audio */
+u32 ac97_ext_id(struct ac97 *c, int *vra)
+{
+    if (vra) *vra = c->vra;
+    return (u32)c->a.vid << 16 | c->a.pid;
+}
+

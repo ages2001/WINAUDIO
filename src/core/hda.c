@@ -1189,6 +1189,7 @@ int hda_probe(struct pcidev *p)
     h->a.pcivid = h->pci.vendor;
     h->a.pcidid = h->pci.device;
     h->a.loc = (u16)((h->pci.bus << 8) | (h->pci.dev << 3) | h->pci.fn);
+    h->a.cad1 = (u8)(h->cad + 1);
     if (h->a.insrcs) {
         int s;
         for (s = 0; s < 5 && !(h->a.insrcs & (1 << s)); s++) ;

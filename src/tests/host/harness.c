@@ -13,6 +13,11 @@ void *plat_sysrm(u32 so) { return so < 16 ? rings[so] : NULL; }
 void *plat_rm(u32 so) { return plat_sysrm(so); }
 void kprintf(const char *f, ...) { va_list a; va_start(a, f); vprintf(f, a); va_end(a); }
 void strlcpy(char *d, const char *s, u32 n) { u32 i; for (i = 0; i + 1 < n && s[i]; i++) d[i] = s[i]; d[i] = 0; }
+void plat_vol_saved(const void *recs, u32 len) { (void)recs; (void)len; }
+struct winbridge *plat_bridge_peer(void) { return NULL; }
+void *plat_bridge_ring(struct winbridge *p) { (void)p; return NULL; }
+void plat_bridge_publish(struct winbridge *own) { (void)own; }
+u32 crc32(u32 crc, const void *p, u32 n) { (void)p; (void)n; return crc; }
 
 static struct adev dev;
 static u32 played;          /* bytes the fake DAC consumed */

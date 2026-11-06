@@ -10,3 +10,7 @@ src/tests/host/hdacodec/hdacheck
 src/tests/host/hdacodec/hdadefs.c
 src/tests/host/hdacodec/hdapart.c
 src/tests/host/tp/*.bin
+src/tests/host/es1371/gen/
+src/tests/host/es1371/*.o
+src/tests/host/es1371/es1371
+src/tests/host/es1371/*.raw

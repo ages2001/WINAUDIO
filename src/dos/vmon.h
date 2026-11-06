@@ -159,7 +159,18 @@ int rmstk_depth(void);
 void rmstk_set(int n);
 int dpmi_mapped(u32 lin, u32 len);
 
+void vm_phys_copy(u32 dst, u32 src, u32 n);    /* physical memory, up to 128 KB */
+u8 *vm_phys_ptr(u32 phys, u32 len);             /* a window onto physical memory (until the next one) */
+
+/* ems.c */
+int ems_init(u32 *pt0, u32 mb);                 /* 0: expanded memory offered */
+u16 ems_frame(void);                            /* its page frame, 0 none */
+void ems_call(struct vmregs *f);                /* INT 67h AH 40h..5Dh */
+void ems_drop(struct vmregs *f);                /* Windows 386 enhanced mode takes over */
+
 /* dpmi.c */
+int vm_xms_alloc(struct vmregs *f, u32 kb, u16 *h, u32 *phys);  /* locked XMS block */
+void vm_xms_free(struct vmregs *f, u16 h);
 extern struct dpmicl *dcl;                      /* the running client, NULL none */
 u32 dpmi_setup(u32 *ldt, u32 stubs, u32 lpms);  /* LDT entries, 0: no DPMI */
 int dpmi_hoststack(u32 *ss, u32 *sp);           /* the client's real-mode host stack */

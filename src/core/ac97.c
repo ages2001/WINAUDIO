@@ -231,25 +231,44 @@ static int steps_of(struct ac97 *c, int reg)
     return (v & 0x20) ? 63 : 31;
 }
 
+/* a codec this driver does not take: its volumes go back to what they were, so that a probe
+   that gives up does not leave the card muted for the driver Windows or DOS keeps for it */
+static void codec_leave(struct ac97 *c, u16 m0, u16 p0)
+{
+    if (m0 != 0xFFFF) cwr(c, AC_MASTER, m0);     /* a register that did not answer is left */
+    if (p0 != 0xFFFF) cwr(c, AC_PCM, p0);
+}
+
 static int codec_init(struct ac97 *c)
 {
     u32 t0;
-    u16 ext, v1, v2;
+    u16 ext, v1, v2, m0, p0;
+    m0 = crd(c, AC_MASTER);
+    p0 = crd(c, AC_PCM);
     cwr(c, CR_RESET, 0);
     t0 = plat_ms();
+    /* the power state is a hint: a codec that does not implement it (some emulations answer
+       0) is not in power-down either, and must not hold up the start of Windows */
     while ((crd(c, AC_POWER) & 0x0F) != 0x0F)
-        if (plat_ms() - t0 > 1000) break;
+        if (plat_ms() - t0 > 10) break;
     v1 = crd(c, AC_VID1);
     v2 = crd(c, AC_VID2);
-    if ((v1 == 0xFFFF && v2 == 0xFFFF) || (!v1 && !v2)) return -1;
+    if ((v1 == 0xFFFF && v2 == 0xFFFF) || (!v1 && !v2)) {
+        codec_leave(c, m0, p0);
+        return -1;
+    }
     cwr(c, AC_MASTER, 0x8808);
-    if (!(crd(c, AC_MASTER) & 0x8000)) return -1;            /* a modem codec has no mixer */
+    /* a modem codec has no mixer: it does not keep the mute bit of a master volume */
+    if (!(crd(c, AC_MASTER) & 0x8000)) {
+        codec_leave(c, m0, p0);
+        return -1;
+    }
     c->a.vid = v1;
     c->a.pid = v2;
     /* external amplifier on (EAPD = 0), everything powered */
     cwr(c, AC_POWER, (u16)((cb->opts & OPT_INVEAPD) ? 0x8000 : 0));
     t0 = plat_ms();
-    while ((crd(c, AC_POWER) & 0x0F) != 0x0F && plat_ms() - t0 < 500) ;
+    while ((crd(c, AC_POWER) & 0x0F) != 0x0F && plat_ms() - t0 < 50) ;
     if (v1 == 0x4352 && (v2 & 0xFF00) == 0x5900)
         cwr(c, 0x5E, 0x0080);       /* Cirrus Logic CS4297A..CS4299, CS420x: AC mode (as Linux) */
     ext = crd(c, AC_EXTID);
@@ -261,7 +280,12 @@ static int codec_init(struct ac97 *c)
     }
     c->mbits = (u8)steps_of(c, AC_MASTER);
     c->hbits = (u8)steps_of(c, AC_HP);
+    /* audible before a mixer sets a level: 0 dB and not muted */
+    cwr(c, AC_MASTER, 0x0000);
+    cwr(c, AC_HP, 0x0000);
     cwr(c, AC_PCM, 0x0808);                                 /* 0 dB */
+    kprintf("ac97: codec %04x:%04x master %04x hp %04x pcm %04x\n", v1, v2, crd(c, AC_MASTER),
+            crd(c, AC_HP), crd(c, AC_PCM));
     cwr(c, AC_AUX, 0x8808);
     cwr(c, AC_RECGAIN, 0x0808);
     set_vol(&c->a, MX_CD, 0xC000C000UL);

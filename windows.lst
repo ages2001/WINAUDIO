@@ -1,0 +1,3911 @@
+A20PROC.................................................................A20PROC
+ABORTDOC...............................................................ABORTDOC
+ACCESSRESOURCE...................................................ACCESSRESOURCE
+ADDATOM.................................................................ADDATOM
+ADDFONTRESOURCE.................................................ADDFONTRESOURCE
+ADJUSTWINDOWRECT...............................................ADJUSTWINDOWRECT
+ADJUSTWINDOWRECTEX...........................................ADJUSTWINDOWRECTEX
+ALLOCALIAS...........................................................ALLOCALIAS
+ALLOCCSTODSALIAS...............................................ALLOCCSTODSALIAS
+ALLOCDSTOCSALIAS...............................................ALLOCDSTOCSALIAS
+ALLOCRESOURCE.....................................................ALLOCRESOURCE
+ALLOCSELECTOR.....................................................ALLOCSELECTOR
+ALLOCSELECTORARRAY...........................................ALLOCSELECTORARRAY
+ANIMATEPALETTE...................................................ANIMATEPALETTE
+ANSILOWER.............................................................ANSILOWER
+ANSILOWERBUFF.....................................................ANSILOWERBUFF
+ANSINEXT...............................................................ANSINEXT
+ANSIPREV...............................................................ANSIPREV
+ANSITOOEM.............................................................ANSITOOEM
+ANSITOOEMBUFF.....................................................ANSITOOEMBUFF
+ANSIUPPER.............................................................ANSIUPPER
+ANSIUPPERBUFF.....................................................ANSIUPPERBUFF
+ANYPOPUP...............................................................ANYPOPUP
+APPENDMENU...........................................................APPENDMENU
+ARC.........................................................................ARC
+ARRANGEICONICWINDOWS.......................................ARRANGEICONICWINDOWS
+BEAR11...................................................................BEAR11
+BEAR182.................................................................BEAR182
+BEAR285.................................................................BEAR285
+BEAR306.................................................................BEAR306
+BEAR51...................................................................BEAR51
+BEAR86...................................................................BEAR86
+BEGINDEFERWINDOWPOS.........................................BEGINDEFERWINDOWPOS
+BEGINPAINT...........................................................BEGINPAINT
+BITBLT...................................................................BITBLT
+BOZOSLIVEHERE.....................................................BOZOSLIVEHERE
+BRINGWINDOWTOTOP...............................................BRINGWINDOWTOTOP
+BRUTE.....................................................................BRUTE
+BUILDCOMMDCB.......................................................BUILDCOMMDCB
+BUILDPDB...............................................................BUILDPDB
+BUNNY_351.............................................................BUNNY_351
+CALCCHILDSCROLL.................................................CALCCHILDSCROLL
+CALLMSGFILTER.....................................................CALLMSGFILTER
+CALLNEXTHOOKEX...................................................CALLNEXTHOOKEX
+CALLPROCINSTANCE...............................................CALLPROCINSTANCE
+CALLWINDOWPROC...................................................CALLWINDOWPROC
+CASCADECHILDWINDOWS.........................................CASCADECHILDWINDOWS
+CATCH.....................................................................CATCH
+CHANGECLIPBOARDCHAIN.......................................CHANGECLIPBOARDCHAIN
+CHANGEMENU...........................................................CHANGEMENU
+CHECKDLGBUTTON...................................................CHECKDLGBUTTON
+CHECKMENUITEM.....................................................CHECKMENUITEM
+CHECKRADIOBUTTON...............................................CHECKRADIOBUTTON
+CHILDWINDOWFROMPOINT.......................................CHILDWINDOWFROMPOINT
+CHORD.....................................................................CHORD
+CLEARCOMMBREAK...................................................CLEARCOMMBREAK
+CLIENTTOSCREEN...................................................CLIENTTOSCREEN
+CLIPCURSOR...........................................................CLIPCURSOR
+CLOSECLIPBOARD...................................................CLOSECLIPBOARD
+CLOSECOMM.............................................................CLOSECOMM
+CLOSEDRIVER.........................................................CLOSEDRIVER
+CLOSEJOB...............................................................CLOSEJOB
+CLOSEMETAFILE.....................................................CLOSEMETAFILE
+CLOSESOUND...........................................................CLOSESOUND
+CLOSEWINDOW.........................................................CLOSEWINDOW
+COMBINERGN...........................................................COMBINERGN
+CONTROLPANELINFO...............................................CONTROLPANELINFO
+CONVERTOUTLINEFONTFILE...................................CONVERTOUTLINEFONTFILE
+COPY.......................................................................COPY
+COPYCURSOR...........................................................COPYCURSOR
+COPYICON...............................................................COPYICON
+COPYMETAFILE.......................................................COPYMETAFILE
+COPYRECT...............................................................COPYRECT
+COUNTCLIPBOARDFORMATS.....................................COUNTCLIPBOARDFORMATS
+COUNTVOICENOTES.................................................COUNTVOICENOTES
+CREATEBITMAP.......................................................CREATEBITMAP
+CREATEBITMAPINDIRECT.......................................CREATEBITMAPINDIRECT
+CREATEBRUSHINDIRECT.........................................CREATEBRUSHINDIRECT
+CREATECARET.........................................................CREATECARET
+CREATECOMPATIBLEBITMAP...................................CREATECOMPATIBLEBITMAP
+CREATECOMPATIBLEDC...........................................CREATECOMPATIBLEDC
+CREATECURSOR.......................................................CREATECURSOR
+CREATECURSORICONINDIRECT...............................CREATECURSORICONINDIRECT
+CREATEDC...............................................................CREATEDC
+CREATEDIALOG.......................................................CREATEDIALOG
+CREATEDIALOGINDIRECT.......................................CREATEDIALOGINDIRECT
+CREATEDIALOGINDIRECTPARAM.............................CREATEDIALOGINDIRECTPARAM
+CREATEDIALOGPARAM.............................................CREATEDIALOGPARAM
+CREATEDIBITMAP...................................................CREATEDIBITMAP
+CREATEDIBPATTERNBRUSH.....................................CREATEDIBPATTERNBRUSH
+CREATEDISCARDABLEBITMAP.................................CREATEDISCARDABLEBITMAP
+CREATEELLIPTICRGN.............................................CREATEELLIPTICRGN
+CREATEELLIPTICRGNINDIRECT.............................CREATEELLIPTICRGNINDIRECT
+CREATEFONT...........................................................CREATEFONT
+CREATEFONTINDIRECT...........................................CREATEFONTINDIRECT
+CREATEHATCHBRUSH...............................................CREATEHATCHBRUSH
+CREATEIC...............................................................CREATEIC
+CREATEICON...........................................................CREATEICON
+CREATEMENU...........................................................CREATEMENU
+CREATEMETAFILE...................................................CREATEMETAFILE
+CREATEPALETTE.....................................................CREATEPALETTE
+CREATEPATTERNBRUSH...........................................CREATEPATTERNBRUSH
+CREATEPEN.............................................................CREATEPEN
+CREATEPENINDIRECT.............................................CREATEPENINDIRECT
+CREATEPOLYGONRGN...............................................CREATEPOLYGONRGN
+CREATEPOLYPOLYGONRGN.......................................CREATEPOLYPOLYGONRGN
+CREATEPOPUPMENU.................................................CREATEPOPUPMENU
+CREATEPQ...............................................................CREATEPQ
+CREATERECTRGN.....................................................CREATERECTRGN
+CREATERECTRGNINDIRECT.....................................CREATERECTRGNINDIRECT
+CREATEROUNDRECTRGN...........................................CREATEROUNDRECTRGN
+CREATESCALABLEFONTRESOURCE...........................CREATESCALABLEFONTRESOURCE
+CREATESOLIDBRUSH...............................................CREATESOLIDBRUSH
+CREATEUSERBITMAP...............................................CREATEUSERBITMAP
+CREATEUSERDISCARDABLEBITMAP.........................CREATEUSERDISCARDABLEBITMAP
+CREATEWINDOW.......................................................CREATEWINDOW
+CREATEWINDOWEX...................................................CREATEWINDOWEX
+CVWBREAK...............................................................CVWBREAK
+DCHOOK...................................................................DCHOOK
+DEATH.....................................................................DEATH
+DEBUGBREAK...........................................................DEBUGBREAK
+DEBUGDEFINESEGMENT...........................................DEBUGDEFINESEGMENT
+DEFDLGPROC...........................................................DEFDLGPROC
+DEFDRIVERPROC.....................................................DEFDRIVERPROC
+DEFERWINDOWPOS...................................................DEFERWINDOWPOS
+DEFFRAMEPROC.......................................................DEFFRAMEPROC
+DEFHOOKPROC.........................................................DEFHOOKPROC
+DEFINEHANDLETABLE.............................................DEFINEHANDLETABLE
+DEFMDICHILDPROC.................................................DEFMDICHILDPROC
+DEFWINDOWPROC.....................................................DEFWINDOWPROC
+DELETEATOM...........................................................DELETEATOM
+DELETEDC...............................................................DELETEDC
+DELETEJOB.............................................................DELETEJOB
+DELETEMENU...........................................................DELETEMENU
+DELETEMETAFILE...................................................DELETEMETAFILE
+DELETEOBJECT.......................................................DELETEOBJECT
+DELETEPATHNAME...................................................DELETEPATHNAME
+DELETEPQ...............................................................DELETEPQ
+DELETESPOOLPAGE.................................................DELETESPOOLPAGE
+DESTROYCARET.......................................................DESTROYCARET
+DESTROYCURSOR.....................................................DESTROYCURSOR
+DESTROYICON.........................................................DESTROYICON
+DESTROYMENU.........................................................DESTROYMENU
+DESTROYWINDOW.....................................................DESTROYWINDOW
+DEVICECOLORMATCH...............................................DEVICECOLORMATCH
+DIAGOUTPUT...........................................................DIAGOUTPUT
+DIAGQUERY.............................................................DIAGQUERY
+DIALOGBOX.............................................................DIALOGBOX
+DIALOGBOXINDIRECT.............................................DIALOGBOXINDIRECT
+DIALOGBOXINDIRECTPARAM...................................DIALOGBOXINDIRECTPARAM
+DIALOGBOXPARAM...................................................DIALOGBOXPARAM
+DIRECTEDYIELD.....................................................DIRECTEDYIELD
+DIRECTRESALLOC...................................................DIRECTRESALLOC
+DISABLE.................................................................DISABLE
+DISABLEDOS...........................................................DISABLEDOS
+DISABLEKERNEL.....................................................DISABLEKERNEL
+DISABLEOEMLAYER.................................................DISABLEOEMLAYER
+DISPATCHMESSAGE.................................................DISPATCHMESSAGE
+DLGDIRLIST...........................................................DLGDIRLIST
+DLGDIRLISTCOMBOBOX...........................................DLGDIRLISTCOMBOBOX
+DLGDIRSELECT.......................................................DLGDIRSELECT
+DLGDIRSELECTCOMBOBOX.......................................DLGDIRSELECTCOMBOBOX
+DLGDIRSELECTCOMBOBOXEX...................................DLGDIRSELECTCOMBOBOXEX
+DLGDIRSELECTEX...................................................DLGDIRSELECTEX
+DMBITBLT...............................................................DMBITBLT
+DMCOLORINFO.........................................................DMCOLORINFO
+DMDIBBITS.............................................................DMDIBBITS
+DMENUMDFONTS.......................................................DMENUMDFONTS
+DMENUMOBJ.............................................................DMENUMOBJ
+DMEXTTEXTOUT.......................................................DMEXTTEXTOUT
+DMGETCHARWIDTH...................................................DMGETCHARWIDTH
+DMOUTPUT...............................................................DMOUTPUT
+DMPIXEL.................................................................DMPIXEL
+DMREALIZEOBJECT.................................................DMREALIZEOBJECT
+DMSCANLR...............................................................DMSCANLR
+DMSETDIBTODEV.....................................................DMSETDIBTODEV
+DMSTRBLT...............................................................DMSTRBLT
+DMSTRETCHBLT.......................................................DMSTRETCHBLT
+DMSTRETCHDIBITS.................................................DMSTRETCHDIBITS
+DMTRANSPOSE.........................................................DMTRANSPOSE
+DOBEEP...................................................................DOBEEP
+DOS3CALL...............................................................DOS3CALL
+DOSIGNAL...............................................................DOSIGNAL
+DPTOLP...................................................................DPTOLP
+DRAGDETECT...........................................................DRAGDETECT
+DRAGOBJECT...........................................................DRAGOBJECT
+DRAWFOCUSRECT.....................................................DRAWFOCUSRECT
+DRAWICON...............................................................DRAWICON
+DRAWMENUBAR.........................................................DRAWMENUBAR
+DRAWTEXT...............................................................DRAWTEXT
+DUMPICON...............................................................DUMPICON
+ELLIPSE.................................................................ELLIPSE
+EMPTYCLIPBOARD...................................................EMPTYCLIPBOARD
+EMSCOPY.................................................................EMSCOPY
+ENABLE...................................................................ENABLE
+ENABLECOMMNOTIFICATION...................................ENABLECOMMNOTIFICATION
+ENABLEDOS.............................................................ENABLEDOS
+ENABLEHARDWAREINPUT.........................................ENABLEHARDWAREINPUT
+ENABLEKBSYSREQ...................................................ENABLEKBSYSREQ
+ENABLEKERNEL.......................................................ENABLEKERNEL
+ENABLEMENUITEM...................................................ENABLEMENUITEM
+ENABLEOEMLAYER...................................................ENABLEOEMLAYER
+ENABLESCROLLBAR.................................................ENABLESCROLLBAR
+ENABLEWINDOW.......................................................ENABLEWINDOW
+ENDDEFERWINDOWPOS.............................................ENDDEFERWINDOWPOS
+ENDDIALOG.............................................................ENDDIALOG
+ENDDOC...................................................................ENDDOC
+ENDMENU.................................................................ENDMENU
+ENDPAGE.................................................................ENDPAGE
+ENDPAINT...............................................................ENDPAINT
+ENDSPOOLPAGE.......................................................ENDSPOOLPAGE
+ENGINEDELETEFONT...............................................ENGINEDELETEFONT
+ENGINEENUMERATEFONT.........................................ENGINEENUMERATEFONT
+ENGINEEXTTEXTOUT...............................................ENGINEEXTTEXTOUT
+ENGINEGETCHARWIDTH...........................................ENGINEGETCHARWIDTH
+ENGINEGETGLYPHBMP.............................................ENGINEGETGLYPHBMP
+ENGINEMAKEFONTDIR.............................................ENGINEMAKEFONTDIR
+ENGINEREALIZEFONT.............................................ENGINEREALIZEFONT
+ENGINESETFONTCONTEXT.......................................ENGINESETFONTCONTEXT
+ENUMCHILDWINDOWS...............................................ENUMCHILDWINDOWS
+ENUMCLIPBOARDFORMATS.......................................ENUMCLIPBOARDFORMATS
+ENUMFONTFAMILIES...............................................ENUMFONTFAMILIES
+ENUMFONTS.............................................................ENUMFONTS
+ENUMMETAFILE.......................................................ENUMMETAFILE
+ENUMOBJECTS.........................................................ENUMOBJECTS
+ENUMPROPS.............................................................ENUMPROPS
+ENUMTASKWINDOWS.................................................ENUMTASKWINDOWS
+ENUMWINDOWS.........................................................ENUMWINDOWS
+EQUALRECT.............................................................EQUALRECT
+EQUALRGN...............................................................EQUALRGN
+ESCAPE...................................................................ESCAPE
+ESCAPECOMMFUNCTION...........................................ESCAPECOMMFUNCTION
+EXCLUDECLIPRECT.................................................EXCLUDECLIPRECT
+EXCLUDEUPDATERGN...............................................EXCLUDEUPDATERGN
+EXCLUDEVISRECT...................................................EXCLUDEVISRECT
+EXITKERNEL...........................................................EXITKERNEL
+EXITWINDOWS.........................................................EXITWINDOWS
+EXITWINDOWSEXEC.................................................EXITWINDOWSEXEC
+EXTFLOODFILL.......................................................EXTFLOODFILL
+EXTRACTPQ.............................................................EXTRACTPQ
+EXTTEXTOUT...........................................................EXTTEXTOUT
+FASTWINDOWFRAME.................................................FASTWINDOWFRAME
+FATALAPPEXIT.......................................................FATALAPPEXIT
+FATALEXIT.............................................................FATALEXIT
+FATALEXITHOOK.....................................................FATALEXITHOOK
+FILECDR.................................................................FILECDR
+FILLRECT...............................................................FILLRECT
+FILLRGN.................................................................FILLRGN
+FILLWINDOW...........................................................FILLWINDOW
+FINALGDIINIT.......................................................FINALGDIINIT
+FINALUSERINIT.....................................................FINALUSERINIT
+FINDATOM...............................................................FINDATOM
+FINDRESOURCE.......................................................FINDRESOURCE
+FINDWINDOW...........................................................FINDWINDOW
+FIXUPBOGUSPUBLISHERMETAFILE.........................FIXUPBOGUSPUBLISHERMETAFILE
+FLASHWINDOW.........................................................FLASHWINDOW
+FLOODFILL.............................................................FLOODFILL
+FLUSHCACHEDFILEHANDLE.....................................FLUSHCACHEDFILEHANDLE
+FLUSHCOMM.............................................................FLUSHCOMM
+FRAMERECT.............................................................FRAMERECT
+FRAMERGN...............................................................FRAMERGN
+FREELIBRARY.........................................................FREELIBRARY
+FREEMODULE...........................................................FREEMODULE
+FREEPROCINSTANCE...............................................FREEPROCINSTANCE
+FREERESOURCE.......................................................FREERESOURCE
+FREESELECTOR.......................................................FREESELECTOR
+FTRAPPING0...........................................................FTRAPPING0
+GDIINIT2...............................................................GDIINIT2
+GDIMOVEBITMAP.....................................................GDIMOVEBITMAP
+GDIREALIZEPALETTE.............................................GDIREALIZEPALETTE
+GDISEEGDIDO.........................................................GDISEEGDIDO
+GDISELECTPALETTE...............................................GDISELECTPALETTE
+GDITASKTERMINATION...........................................GDITASKTERMINATION
+GETACTIVEWINDOW.................................................GETACTIVEWINDOW
+GETAPPCOMPATFLAGS.............................................GETAPPCOMPATFLAGS
+GETASPECTRATIOFILTER.......................................GETASPECTRATIOFILTER
+GETASPECTRATIOFILTEREX...................................GETASPECTRATIOFILTEREX
+GETASYNCKEYSTATE...............................................GETASYNCKEYSTATE
+GETATOMHANDLE.....................................................GETATOMHANDLE
+GETATOMNAME.........................................................GETATOMNAME
+GETBIOSKEYPROC...................................................GETBIOSKEYPROC
+GETBITMAPBITS.....................................................GETBITMAPBITS
+GETBITMAPDIMENSION...........................................GETBITMAPDIMENSION
+GETBITMAPDIMENSIONEX.......................................GETBITMAPDIMENSIONEX
+GETBKCOLOR...........................................................GETBKCOLOR
+GETBKMODE.............................................................GETBKMODE
+GETBOUNDSRECT.....................................................GETBOUNDSRECT
+GETBRUSHORG.........................................................GETBRUSHORG
+GETBRUSHORGEX.....................................................GETBRUSHORGEX
+GETCAPTURE...........................................................GETCAPTURE
+GETCARETBLINKTIME.............................................GETCARETBLINKTIME
+GETCARETPOS.........................................................GETCARETPOS
+GETCHARABCWIDTHS...............................................GETCHARABCWIDTHS
+GETCHARWIDTH.......................................................GETCHARWIDTH
+GETCLASSINFO.......................................................GETCLASSINFO
+GETCLASSLONG.......................................................GETCLASSLONG
+GETCLASSNAME.......................................................GETCLASSNAME
+GETCLASSWORD.......................................................GETCLASSWORD
+GETCLIENTRECT.....................................................GETCLIENTRECT
+GETCLIPBOARDDATA...............................................GETCLIPBOARDDATA
+GETCLIPBOARDFORMATNAME...................................GETCLIPBOARDFORMATNAME
+GETCLIPBOARDOWNER.............................................GETCLIPBOARDOWNER
+GETCLIPBOARDVIEWER...........................................GETCLIPBOARDVIEWER
+GETCLIPBOX...........................................................GETCLIPBOX
+GETCLIPCURSOR.....................................................GETCLIPCURSOR
+GETCLIPRGN...........................................................GETCLIPRGN
+GETCODEHANDLE.....................................................GETCODEHANDLE
+GETCODEINFO.........................................................GETCODEINFO
+GETCOMMERROR.......................................................GETCOMMERROR
+GETCOMMEVENTMASK...............................................GETCOMMEVENTMASK
+GETCOMMSTATE.......................................................GETCOMMSTATE
+GETCONTROLBRUSH.................................................GETCONTROLBRUSH
+GETCURLOGFONT.....................................................GETCURLOGFONT
+GETCURPID.............................................................GETCURPID
+GETCURRENTPDB.....................................................GETCURRENTPDB
+GETCURRENTPOSITION...........................................GETCURRENTPOSITION
+GETCURRENTPOSITIONEX.......................................GETCURRENTPOSITIONEX
+GETCURRENTTASK...................................................GETCURRENTTASK
+GETCURRENTTIME...................................................GETCURRENTTIME
+GETCURSOR.............................................................GETCURSOR
+GETCURSORPOS.......................................................GETCURSORPOS
+GETDC.....................................................................GETDC
+GETDCEX.................................................................GETDCEX
+GETDCHOOK.............................................................GETDCHOOK
+GETDCORG...............................................................GETDCORG
+GETDCSTATE...........................................................GETDCSTATE
+GETDESKTOPHWND...................................................GETDESKTOPHWND
+GETDESKTOPWINDOW...............................................GETDESKTOPWINDOW
+GETDEVICECAPS.....................................................GETDEVICECAPS
+GETDIALOGBASEUNITS...........................................GETDIALOGBASEUNITS
+GETDIBITS.............................................................GETDIBITS
+GETDLGCTRLID.......................................................GETDLGCTRLID
+GETDLGITEM...........................................................GETDLGITEM
+GETDLGITEMINT.....................................................GETDLGITEMINT
+GETDLGITEMTEXT...................................................GETDLGITEMTEXT
+GETDOSENVIRONMENT.............................................GETDOSENVIRONMENT
+GETDOUBLECLICKTIME...........................................GETDOUBLECLICKTIME
+GETDRIVERINFO.....................................................GETDRIVERINFO
+GETDRIVERMODULEHANDLE.....................................GETDRIVERMODULEHANDLE
+GETDRIVETYPE.......................................................GETDRIVETYPE
+GETENVIRONMENT...................................................GETENVIRONMENT
+GETEXEPTR.............................................................GETEXEPTR
+GETEXEVERSION.....................................................GETEXEVERSION
+GETEXPWINVER.......................................................GETEXPWINVER
+GETFILEPORTNAME.................................................GETFILEPORTNAME
+GETFOCUS...............................................................GETFOCUS
+GETFONTDATA.........................................................GETFONTDATA
+GETFREEMEMINFO...................................................GETFREEMEMINFO
+GETFREESPACE.......................................................GETFREESPACE
+GETFREESYSTEMRESOURCES...................................GETFREESYSTEMRESOURCES
+GETGLYPHOUTLINE.................................................GETGLYPHOUTLINE
+GETHEAPSPACES.....................................................GETHEAPSPACES
+GETICONID.............................................................GETICONID
+GETINPUTSTATE.....................................................GETINPUTSTATE
+GETINSTANCEDATA.................................................GETINSTANCEDATA
+GETINTERNALICONHEADER.....................................GETINTERNALICONHEADER
+GETINTERNALWINDOWPOS.......................................GETINTERNALWINDOWPOS
+GETKBCODEPAGE.....................................................GETKBCODEPAGE
+GETKERNINGPAIRS.................................................GETKERNINGPAIRS
+GETKEYBOARDSTATE...............................................GETKEYBOARDSTATE
+GETKEYBOARDTYPE.................................................GETKEYBOARDTYPE
+GETKEYNAMETEXT...................................................GETKEYNAMETEXT
+GETKEYSTATE.........................................................GETKEYSTATE
+GETLASTACTIVEPOPUP...........................................GETLASTACTIVEPOPUP
+GETLASTDISKCHANGE.............................................GETLASTDISKCHANGE
+GETLPERRMODE.......................................................GETLPERRMODE
+GETMAPMODE...........................................................GETMAPMODE
+GETMENU.................................................................GETMENU
+GETMENUCHECKMARKDIMENSIONS...........................GETMENUCHECKMARKDIMENSIONS
+GETMENUITEMCOUNT...............................................GETMENUITEMCOUNT
+GETMENUITEMID.....................................................GETMENUITEMID
+GETMENUSTATE.......................................................GETMENUSTATE
+GETMENUSTRING.....................................................GETMENUSTRING
+GETMESSAGE...........................................................GETMESSAGE
+GETMESSAGE2.........................................................GETMESSAGE2
+GETMESSAGEEXTRAINFO.........................................GETMESSAGEEXTRAINFO
+GETMESSAGEPOS.....................................................GETMESSAGEPOS
+GETMESSAGETIME...................................................GETMESSAGETIME
+GETMETAFILE.........................................................GETMETAFILE
+GETMETAFILEBITS.................................................GETMETAFILEBITS
+GETMODULEFILENAME.............................................GETMODULEFILENAME
+GETMODULEHANDLE.................................................GETMODULEHANDLE
+GETMODULEUSAGE...................................................GETMODULEUSAGE
+GETMOUSEEVENTPROC.............................................GETMOUSEEVENTPROC
+GETNEARESTCOLOR.................................................GETNEARESTCOLOR
+GETNEARESTPALETTEINDEX...................................GETNEARESTPALETTEINDEX
+GETNEXTDLGGROUPITEM.........................................GETNEXTDLGGROUPITEM
+GETNEXTDLGTABITEM.............................................GETNEXTDLGTABITEM
+GETNEXTDRIVER.....................................................GETNEXTDRIVER
+GETNEXTQUEUEWINDOW...........................................GETNEXTQUEUEWINDOW
+GETNEXTWINDOW.....................................................GETNEXTWINDOW
+GETNUMTASKS.........................................................GETNUMTASKS
+GETOBJECT.............................................................GETOBJECT
+GETOPENCLIPBOARDWINDOW...................................GETOPENCLIPBOARDWINDOW
+GETOUTLINETEXTMETRICS.....................................GETOUTLINETEXTMETRICS
+GETPALETTEENTRIES.............................................GETPALETTEENTRIES
+GETPARENT.............................................................GETPARENT
+GETPHYSICALFONTHANDLE.....................................GETPHYSICALFONTHANDLE
+GETPIXEL...............................................................GETPIXEL
+GETPOLYFILLMODE.................................................GETPOLYFILLMODE
+GETPRIORITYCLIPBOARDFORMAT...........................GETPRIORITYCLIPBOARDFORMAT
+GETPRIVATEPROFILEINT.......................................GETPRIVATEPROFILEINT
+GETPRIVATEPROFILESTRING.................................GETPRIVATEPROFILESTRING
+GETPROCADDRESS...................................................GETPROCADDRESS
+GETPROFILEINT.....................................................GETPROFILEINT
+GETPROFILESTRING...............................................GETPROFILESTRING
+GETPROP.................................................................GETPROP
+GETQUEUESTATUS...................................................GETQUEUESTATUS
+GETRASTERIZERCAPS.............................................GETRASTERIZERCAPS
+GETRELABS.............................................................GETRELABS
+GETRGNBOX.............................................................GETRGNBOX
+GETROP2.................................................................GETROP2
+GETSCROLLPOS.......................................................GETSCROLLPOS
+GETSCROLLRANGE...................................................GETSCROLLRANGE
+GETSELECTORBASE.................................................GETSELECTORBASE
+GETSELECTORLIMIT...............................................GETSELECTORLIMIT
+GETSETKERNELDOSPROC.........................................GETSETKERNELDOSPROC
+GETSPOOLJOB.........................................................GETSPOOLJOB
+GETSTOCKOBJECT...................................................GETSTOCKOBJECT
+GETSTRETCHBLTMODE.............................................GETSTRETCHBLTMODE
+GETSUBMENU...........................................................GETSUBMENU
+GETSYSCOLOR.........................................................GETSYSCOLOR
+GETSYSMODALWINDOW.............................................GETSYSMODALWINDOW
+GETSYSTEMDEBUGSTATE.........................................GETSYSTEMDEBUGSTATE
+GETSYSTEMDIRECTORY...........................................GETSYSTEMDIRECTORY
+GETSYSTEMMENU.....................................................GETSYSTEMMENU
+GETSYSTEMMETRICS...............................................GETSYSTEMMETRICS
+GETSYSTEMPALETTEENTRIES.................................GETSYSTEMPALETTEENTRIES
+GETSYSTEMPALETTEUSE.........................................GETSYSTEMPALETTEUSE
+GETTABBEDTEXTEXTENT.........................................GETTABBEDTEXTEXTENT
+GETTABLESEG.........................................................GETTABLESEG
+GETTASKDS.............................................................GETTASKDS
+GETTASKQUEUE.......................................................GETTASKQUEUE
+GETTASKQUEUEDS...................................................GETTASKQUEUEDS
+GETTASKQUEUEES...................................................GETTASKQUEUEES
+GETTEMPDRIVE.......................................................GETTEMPDRIVE
+GETTEMPFILENAME.................................................GETTEMPFILENAME
+GETTEXTALIGN.......................................................GETTEXTALIGN
+GETTEXTCHARACTEREXTRA.....................................GETTEXTCHARACTEREXTRA
+GETTEXTCOLOR.......................................................GETTEXTCOLOR
+GETTEXTEXTENT.....................................................GETTEXTEXTENT
+GETTEXTEXTENTPOINT...........................................GETTEXTEXTENTPOINT
+GETTEXTFACE.........................................................GETTEXTFACE
+GETTEXTMETRICS...................................................GETTEXTMETRICS
+GETTHRESHOLDEVENT.............................................GETTHRESHOLDEVENT
+GETTHRESHOLDSTATUS...........................................GETTHRESHOLDSTATUS
+GETTICKCOUNT.......................................................GETTICKCOUNT
+GETTIMERRESOLUTION...........................................GETTIMERRESOLUTION
+GETTOPWINDOW.......................................................GETTOPWINDOW
+GETUPDATERECT.....................................................GETUPDATERECT
+GETUPDATERGN.......................................................GETUPDATERGN
+GETUSERLOCALOBJTYPE.........................................GETUSERLOCALOBJTYPE
+GETVERSION...........................................................GETVERSION
+GETVIEWPORTEXT...................................................GETVIEWPORTEXT
+GETVIEWPORTEXTEX...............................................GETVIEWPORTEXTEX
+GETVIEWPORTORG...................................................GETVIEWPORTORG
+GETVIEWPORTORGEX...............................................GETVIEWPORTORGEX
+GETWINDEBUGINFO.................................................GETWINDEBUGINFO
+GETWINDOW.............................................................GETWINDOW
+GETWINDOWDC.........................................................GETWINDOWDC
+GETWINDOWEXT.......................................................GETWINDOWEXT
+GETWINDOWEXTEX...................................................GETWINDOWEXTEX
+GETWINDOWLONG.....................................................GETWINDOWLONG
+GETWINDOWORG.......................................................GETWINDOWORG
+GETWINDOWORGEX...................................................GETWINDOWORGEX
+GETWINDOWPLACEMENT...........................................GETWINDOWPLACEMENT
+GETWINDOWRECT.....................................................GETWINDOWRECT
+GETWINDOWSDIRECTORY.........................................GETWINDOWSDIRECTORY
+GETWINDOWTASK.....................................................GETWINDOWTASK
+GETWINDOWTEXT.....................................................GETWINDOWTEXT
+GETWINDOWTEXTLENGTH.........................................GETWINDOWTEXTLENGTH
+GETWINDOWWORD.....................................................GETWINDOWWORD
+GETWINFLAGS.........................................................GETWINFLAGS
+GETWINOLDAPHOOKS...............................................GETWINOLDAPHOOKS
+GLOBALADDATOM.....................................................GLOBALADDATOM
+GLOBALALLOC.........................................................GLOBALALLOC
+GLOBALCOMPACT.....................................................GLOBALCOMPACT
+GLOBALDELETEATOM...............................................GLOBALDELETEATOM
+GLOBALDOSALLOC...................................................GLOBALDOSALLOC
+GLOBALDOSFREE.....................................................GLOBALDOSFREE
+GLOBALFINDATOM...................................................GLOBALFINDATOM
+GLOBALFIX.............................................................GLOBALFIX
+GLOBALFLAGS.........................................................GLOBALFLAGS
+GLOBALFREE...........................................................GLOBALFREE
+GLOBALFREEALL.....................................................GLOBALFREEALL
+GLOBALGETATOMNAME.............................................GLOBALGETATOMNAME
+GLOBALHANDLE.......................................................GLOBALHANDLE
+GLOBALHANDLENORIP.............................................GLOBALHANDLENORIP
+GLOBALLOCK...........................................................GLOBALLOCK
+GLOBALLRUNEWEST.................................................GLOBALLRUNEWEST
+GLOBALLRUOLDEST.................................................GLOBALLRUOLDEST
+GLOBALMASTERHANDLE...........................................GLOBALMASTERHANDLE
+GLOBALNOTIFY.......................................................GLOBALNOTIFY
+GLOBALPAGELOCK...................................................GLOBALPAGELOCK
+GLOBALPAGEUNLOCK...............................................GLOBALPAGEUNLOCK
+GLOBALREALLOC.....................................................GLOBALREALLOC
+GLOBALSIZE...........................................................GLOBALSIZE
+GLOBALUNFIX.........................................................GLOBALUNFIX
+GLOBALUNLOCK.......................................................GLOBALUNLOCK
+GLOBALUNWIRE.......................................................GLOBALUNWIRE
+GLOBALWIRE...........................................................GLOBALWIRE
+GRAYSTRING...........................................................GRAYSTRING
+HARDWARE_EVENT...................................................HARDWARE_EVENT
+HASGPHANDLER.......................................................HASGPHANDLER
+HIDECARET.............................................................HIDECARET
+HILITEMENUITEM...................................................HILITEMENUITEM
+HMEMCPY.................................................................HMEMCPY
+INFLATERECT.........................................................INFLATERECT
+INITAPP.................................................................INITAPP
+INITATOMTABLE.....................................................INITATOMTABLE
+INITLIB.................................................................INITLIB
+INITTASK...............................................................INITTASK
+INITTASK1.............................................................INITTASK1
+INQUIRE.................................................................INQUIRE
+INQUIREVISRGN.....................................................INQUIREVISRGN
+INSENDMESSAGE.....................................................INSENDMESSAGE
+INSERTMENU...........................................................INSERTMENU
+INSERTPQ...............................................................INSERTPQ
+INTERSECTCLIPRECT.............................................INTERSECTCLIPRECT
+INTERSECTRECT.....................................................INTERSECTRECT
+INTERSECTVISRECT...............................................INTERSECTVISRECT
+INVALIDATERECT...................................................INVALIDATERECT
+INVALIDATERGN.....................................................INVALIDATERGN
+INVERTRECT...........................................................INVERTRECT
+INVERTRGN.............................................................INVERTRGN
+ISBADCODEPTR.......................................................ISBADCODEPTR
+ISBADHUGEREADPTR...............................................ISBADHUGEREADPTR
+ISBADHUGEWRITEPTR.............................................ISBADHUGEWRITEPTR
+ISBADREADPTR.......................................................ISBADREADPTR
+ISBADSTRINGPTR...................................................ISBADSTRINGPTR
+ISBADWRITEPTR.....................................................ISBADWRITEPTR
+ISCHARALPHA.........................................................ISCHARALPHA
+ISCHARALPHANUMERIC...........................................ISCHARALPHANUMERIC
+ISCHARLOWER.........................................................ISCHARLOWER
+ISCHARUPPER.........................................................ISCHARUPPER
+ISCHILD.................................................................ISCHILD
+ISCLIPBOARDFORMATAVAILABLE...........................ISCLIPBOARDFORMATAVAILABLE
+ISDBCSLEADBYTE...................................................ISDBCSLEADBYTE
+ISDCCURRENTPALETTE...........................................ISDCCURRENTPALETTE
+ISDCDIRTY.............................................................ISDCDIRTY
+ISDIALOGMESSAGE.................................................ISDIALOGMESSAGE
+ISDLGBUTTONCHECKED...........................................ISDLGBUTTONCHECKED
+ISGDIOBJECT.........................................................ISGDIOBJECT
+ISICONIC...............................................................ISICONIC
+ISMENU...................................................................ISMENU
+ISRECTEMPTY.........................................................ISRECTEMPTY
+ISROMFILE.............................................................ISROMFILE
+ISROMMODULE.........................................................ISROMMODULE
+ISSCREENGRAB.......................................................ISSCREENGRAB
+ISSHAREDSELECTOR...............................................ISSHAREDSELECTOR
+ISTASK...................................................................ISTASK
+ISTASKLOCKED.......................................................ISTASKLOCKED
+ISUSERIDLE...........................................................ISUSERIDLE
+ISVALIDMETAFILE.................................................ISVALIDMETAFILE
+ISWINDOW...............................................................ISWINDOW
+ISWINDOWENABLED.................................................ISWINDOWENABLED
+ISWINDOWVISIBLE.................................................ISWINDOWVISIBLE
+ISWINOLDAPTASK...................................................ISWINOLDAPTASK
+ISZOOMED...............................................................ISZOOMED
+K327.......................................................................K327
+K329.......................................................................K329
+K403.......................................................................K403
+K404.......................................................................K404
+KBDRST...................................................................KBDRST
+KEYBD_EVENT.........................................................KEYBD_EVENT
+KILLTIMER.............................................................KILLTIMER
+LIMITEMSPAGES.....................................................LIMITEMSPAGES
+LINEDDA.................................................................LINEDDA
+LINETO...................................................................LINETO
+LOADACCELERATORS...............................................LOADACCELERATORS
+LOADBITMAP...........................................................LOADBITMAP
+LOADCURSOR...........................................................LOADCURSOR
+LOADCURSORICONHANDLER.....................................LOADCURSORICONHANDLER
+LOADDIBCURSORHANDLER.......................................LOADDIBCURSORHANDLER
+LOADDIBICONHANDLER...........................................LOADDIBICONHANDLER
+LOADICON...............................................................LOADICON
+LOADICONHANDLER.................................................LOADICONHANDLER
+LOADLIBRARY.........................................................LOADLIBRARY
+LOADMENU...............................................................LOADMENU
+LOADMENUINDIRECT...............................................LOADMENUINDIRECT
+LOADMODULE...........................................................LOADMODULE
+LOADRESOURCE.......................................................LOADRESOURCE
+LOADSTRING...........................................................LOADSTRING
+LOCALALLOC...........................................................LOCALALLOC
+LOCALCOMPACT.......................................................LOCALCOMPACT
+LOCALCOUNTFREE...................................................LOCALCOUNTFREE
+LOCALFLAGS...........................................................LOCALFLAGS
+LOCALFREE.............................................................LOCALFREE
+LOCALHANDLE.........................................................LOCALHANDLE
+LOCALHANDLEDELTA...............................................LOCALHANDLEDELTA
+LOCALHEAPSIZE.....................................................LOCALHEAPSIZE
+LOCALINIT.............................................................LOCALINIT
+LOCALLOCK.............................................................LOCALLOCK
+LOCALNOTIFY.........................................................LOCALNOTIFY
+LOCALREALLOC.......................................................LOCALREALLOC
+LOCALSHRINK.........................................................LOCALSHRINK
+LOCALSIZE.............................................................LOCALSIZE
+LOCALUNLOCK.........................................................LOCALUNLOCK
+LOCKCURRENTTASK.................................................LOCKCURRENTTASK
+LOCKINPUT.............................................................LOCKINPUT
+LOCKMYTASK...........................................................LOCKMYTASK
+LOCKRESOURCE.......................................................LOCKRESOURCE
+LOCKSEGMENT.........................................................LOCKSEGMENT
+LOCKWINDOWUPDATE...............................................LOCKWINDOWUPDATE
+LOGERROR...............................................................LOGERROR
+LOGPARAMERROR.....................................................LOGPARAMERROR
+LONGPTRADD...........................................................LONGPTRADD
+LOOKUPMENUHANDLE...............................................LOOKUPMENUHANDLE
+LPTODP...................................................................LPTODP
+LSTRCAT.................................................................LSTRCAT
+LSTRCMP.................................................................LSTRCMP
+LSTRCMPI...............................................................LSTRCMPI
+LSTRCPY.................................................................LSTRCPY
+LSTRCPYN...............................................................LSTRCPYN
+LSTRLEN.................................................................LSTRLEN
+MAKEOBJECTPRIVATE.............................................MAKEOBJECTPRIVATE
+MAKEPROCINSTANCE...............................................MAKEPROCINSTANCE
+MAPDIALOGRECT.....................................................MAPDIALOGRECT
+MAPVIRTUALKEY.....................................................MAPVIRTUALKEY
+MAPWINDOWPOINTS.................................................MAPWINDOWPOINTS
+MEMORYFREED.........................................................MEMORYFREED
+MESSAGEBEEP.........................................................MESSAGEBEEP
+MESSAGEBOX...........................................................MESSAGEBOX
+MINPQ.....................................................................MINPQ
+MODIFYMENU...........................................................MODIFYMENU
+MOUSE_EVENT.........................................................MOUSE_EVENT
+MOVETO...................................................................MOVETO
+MOVETOEX...............................................................MOVETOEX
+MOVEWINDOW...........................................................MOVEWINDOW
+MULDIV...................................................................MULDIV
+NETBIOSCALL.........................................................NETBIOSCALL
+NEWTABLE...............................................................NEWTABLE
+NOHOOKDOSCALL.....................................................NOHOOKDOSCALL
+OEMKEYSCAN...........................................................OEMKEYSCAN
+OEMTOANSI.............................................................OEMTOANSI
+OEMTOANSIBUFF.....................................................OEMTOANSIBUFF
+OFFSETCLIPRGN.....................................................OFFSETCLIPRGN
+OFFSETRECT...........................................................OFFSETRECT
+OFFSETRGN.............................................................OFFSETRGN
+OFFSETVIEWPORTORG.............................................OFFSETVIEWPORTORG
+OFFSETVIEWPORTORGEX.........................................OFFSETVIEWPORTORGEX
+OFFSETVISRGN.......................................................OFFSETVISRGN
+OFFSETWINDOWORG.................................................OFFSETWINDOWORG
+OFFSETWINDOWORGEX.............................................OFFSETWINDOWORGEX
+OLDEXITWINDOWS...................................................OLDEXITWINDOWS
+OLDSETDESKPATTERN.............................................OLDSETDESKPATTERN
+OLDYIELD...............................................................OLDYIELD
+OPENCLIPBOARD.....................................................OPENCLIPBOARD
+OPENCOMM...............................................................OPENCOMM
+OPENDRIVER...........................................................OPENDRIVER
+OPENFILE...............................................................OPENFILE
+OPENICON...............................................................OPENICON
+OPENJOB.................................................................OPENJOB
+OPENPATHNAME.......................................................OPENPATHNAME
+OPENSOUND.............................................................OPENSOUND
+OUTPUTDEBUGSTRING.............................................OUTPUTDEBUGSTRING
+PAINTRECT.............................................................PAINTRECT
+PAINTRGN...............................................................PAINTRGN
+PATBLT...................................................................PATBLT
+PATCHCODEHANDLE.................................................PATCHCODEHANDLE
+PEEKMESSAGE.........................................................PEEKMESSAGE
+PIE.........................................................................PIE
+PLAYMETAFILE.......................................................PLAYMETAFILE
+PLAYMETAFILERECORD...........................................PLAYMETAFILERECORD
+POLYGON.................................................................POLYGON
+POLYLINE...............................................................POLYLINE
+POLYPOLYGON.........................................................POLYPOLYGON
+POSTAPPMESSAGE...................................................POSTAPPMESSAGE
+POSTEVENT.............................................................POSTEVENT
+POSTMESSAGE.........................................................POSTMESSAGE
+POSTQUITMESSAGE.................................................POSTQUITMESSAGE
+PRESTOCHANGOSELECTOR.......................................PRESTOCHANGOSELECTOR
+PROFCLEAR.............................................................profc.asm
+PROFFINISH............................................................profc.asm
+PROFFLUSH.............................................................profc.asm
+PROFINSCHK............................................................profc.asm
+PROFSAMPRATE..........................................................profc.asm
+PROFSETUP.............................................................profc.asm
+PROFSTART.............................................................profc.asm
+PROFSTOP..............................................................profc.asm
+PTINRECT...............................................................PTINRECT
+PTINREGION...........................................................PTINREGION
+PTVISIBLE.............................................................PTVISIBLE
+QUERYABORT...........................................................QUERYABORT
+QUERYJOB...............................................................QUERYJOB
+QUERYSENDMESSAGE...............................................QUERYSENDMESSAGE
+READCOMM...............................................................READCOMM
+REALIZEDEFAULTPALETTE.....................................REALIZEDEFAULTPALETTE
+REALIZEPALETTE...................................................REALIZEPALETTE
+RECTANGLE.............................................................RECTANGLE
+RECTINREGION.......................................................RECTINREGION
+RECTINREGION_EHH...............................................RECTINREGION_EHH
+RECTVISIBLE.........................................................RECTVISIBLE
+RECTVISIBLE_EHH.................................................RECTVISIBLE_EHH
+REDRAWWINDOW.......................................................REDRAWWINDOW
+REGISTERCLASS.....................................................REGISTERCLASS
+REGISTERCLIPBOARDFORMAT.................................REGISTERCLIPBOARDFORMAT
+REGISTERPTRACE...................................................REGISTERPTRACE
+REGISTERWINDOWMESSAGE.....................................REGISTERWINDOWMESSAGE
+REGISTERWINOLDAPHOOK.......................................REGISTERWINOLDAPHOOK
+RELEASECAPTURE...................................................RELEASECAPTURE
+RELEASEDC.............................................................RELEASEDC
+REMOVEFONTRESOURCE...........................................REMOVEFONTRESOURCE
+REMOVEMENU...........................................................REMOVEMENU
+REMOVEPROP...........................................................REMOVEPROP
+REPAINTSCREEN.....................................................REPAINTSCREEN
+REPLACEINST.........................................................REPLACEINST
+REPLYMESSAGE.......................................................REPLYMESSAGE
+RESERVED1.............................................................RESERVED1
+RESERVED2.............................................................RESERVED2
+RESERVED3.............................................................RESERVED3
+RESERVED4.............................................................RESERVED4
+RESERVED5.............................................................RESERVED5
+RESETDC.................................................................RESETDC
+RESIZEPALETTE.....................................................RESIZEPALETTE
+RESTOREDC.............................................................RESTOREDC
+RESTOREVISRGN.....................................................RESTOREVISRGN
+RESURRECTION.......................................................RESURRECTION
+ROUNDRECT.............................................................ROUNDRECT
+SAVEDC...................................................................SAVEDC
+SAVEVISRGN...........................................................SAVEVISRGN
+SCALEVIEWPORTEXT...............................................SCALEVIEWPORTEXT
+SCALEVIEWPORTEXTEX...........................................SCALEVIEWPORTEXTEX
+SCALEWINDOWEXT...................................................SCALEWINDOWEXT
+SCALEWINDOWEXTEX...............................................SCALEWINDOWEXTEX
+SCANLR...................................................................SCANLR
+SCREENSWITCHENABLE...........................................SCREENSWITCHENABLE
+SCREENTOCLIENT...................................................SCREENTOCLIENT
+SCROLLCHILDREN...................................................SCROLLCHILDREN
+SCROLLDC...............................................................SCROLLDC
+SCROLLWINDOW.......................................................SCROLLWINDOW
+SCROLLWINDOWEX...................................................SCROLLWINDOWEX
+SELECTBITMAP.......................................................SELECTBITMAP
+SELECTCLIPRGN.....................................................SELECTCLIPRGN
+SELECTOBJECT.......................................................SELECTOBJECT
+SELECTORACCESSRIGHTS.......................................SELECTORACCESSRIGHTS
+SELECTPALETTE.....................................................SELECTPALETTE
+SELECTVISRGN.......................................................SELECTVISRGN
+SENDDLGITEMMESSAGE...........................................SENDDLGITEMMESSAGE
+SENDDRIVERMESSAGE.............................................SENDDRIVERMESSAGE
+SENDMESSAGE.........................................................SENDMESSAGE
+SETABORTPROC.......................................................SETABORTPROC
+SETACTIVEWINDOW.................................................SETACTIVEWINDOW
+SETBITMAPBITS.....................................................SETBITMAPBITS
+SETBITMAPDIMENSION...........................................SETBITMAPDIMENSION
+SETBITMAPDIMENSIONEX.......................................SETBITMAPDIMENSIONEX
+SETBKCOLOR...........................................................SETBKCOLOR
+SETBKMODE.............................................................SETBKMODE
+SETBOUNDSRECT.....................................................SETBOUNDSRECT
+SETBRUSHORG.........................................................SETBRUSHORG
+SETCAPTURE...........................................................SETCAPTURE
+SETCARETBLINKTIME.............................................SETCARETBLINKTIME
+SETCARETPOS.........................................................SETCARETPOS
+SETCLASSLONG.......................................................SETCLASSLONG
+SETCLASSWORD.......................................................SETCLASSWORD
+SETCLIPBOARDDATA...............................................SETCLIPBOARDDATA
+SETCLIPBOARDVIEWER...........................................SETCLIPBOARDVIEWER
+SETCOMMBREAK.......................................................SETCOMMBREAK
+SETCOMMEVENTMASK...............................................SETCOMMEVENTMASK
+SETCOMMSTATE.......................................................SETCOMMSTATE
+SETCURSOR.............................................................SETCURSOR
+SETCURSORPOS.......................................................SETCURSORPOS
+SETDCHOOK.............................................................SETDCHOOK
+SETDCORG...............................................................SETDCORG
+SETDCSTATE...........................................................SETDCSTATE
+SETDCSTATUS.........................................................SETDCSTATUS
+SETDIBITS.............................................................SETDIBITS
+SETDIBITSTODEVICE.............................................SETDIBITSTODEVICE
+SETDLGITEMINT.....................................................SETDLGITEMINT
+SETDLGITEMTEXT...................................................SETDLGITEMTEXT
+SETDOUBLECLICKTIME...........................................SETDOUBLECLICKTIME
+SETENVIRONMENT...................................................SETENVIRONMENT
+SETERRORMODE.......................................................SETERRORMODE
+SETEVENTHOOK.......................................................SETEVENTHOOK
+SETFOCUS...............................................................SETFOCUS
+SETHANDLECOUNT...................................................SETHANDLECOUNT
+SETHOOKFLAGS.......................................................SETHOOKFLAGS
+SETINTERNALWINDOWPOS.......................................SETINTERNALWINDOWPOS
+SETKEYBOARDSTATE...............................................SETKEYBOARDSTATE
+SETMAPMODE...........................................................SETMAPMODE
+SETMAPPERFLAGS...................................................SETMAPPERFLAGS
+SETMENU.................................................................SETMENU
+SETMENUITEMBITMAPS...........................................SETMENUITEMBITMAPS
+SETMESSAGEQUEUE.................................................SETMESSAGEQUEUE
+SETMETAFILEBITS.................................................SETMETAFILEBITS
+SETMETAFILEBITSBETTER.....................................SETMETAFILEBITSBETTER
+SETOBJECTOWNER...................................................SETOBJECTOWNER
+SETPALETTEENTRIES.............................................SETPALETTEENTRIES
+SETPARENT.............................................................SETPARENT
+SETPIXEL...............................................................SETPIXEL
+SETPOLYFILLMODE.................................................SETPOLYFILLMODE
+SETPRIORITY.........................................................SETPRIORITY
+SETPROP.................................................................SETPROP
+SETRECT.................................................................SETRECT
+SETRECTEMPTY.......................................................SETRECTEMPTY
+SETRECTRGN...........................................................SETRECTRGN
+SETRELABS.............................................................SETRELABS
+SETRESOURCEHANDLER...........................................SETRESOURCEHANDLER
+SETROP2.................................................................SETROP2
+SETSCROLLPOS.......................................................SETSCROLLPOS
+SETSCROLLRANGE...................................................SETSCROLLRANGE
+SETSELECTORBASE.................................................SETSELECTORBASE
+SETSELECTORLIMIT...............................................SETSELECTORLIMIT
+SETSIGHANDLER.....................................................SETSIGHANDLER
+SETSOUNDNOISE.....................................................SETSOUNDNOISE
+SETSPEED...............................................................SETSPEED
+SETSTRETCHBLTMODE.............................................SETSTRETCHBLTMODE
+SETSWAPAREASIZE.................................................SETSWAPAREASIZE
+SETSWAPHOOK.........................................................SETSWAPHOOK
+SETSYSCOLORS.......................................................SETSYSCOLORS
+SETSYSMODALWINDOW.............................................SETSYSMODALWINDOW
+SETSYSTEMMENU.....................................................SETSYSTEMMENU
+SETSYSTEMPALETTEUSE.........................................SETSYSTEMPALETTEUSE
+SETTASKINTERCHANGE...........................................SETTASKINTERCHANGE
+SETTASKQUEUE.......................................................SETTASKQUEUE
+SETTASKSIGNALPROC.............................................SETTASKSIGNALPROC
+SETTASKSWITCHPROC.............................................SETTASKSWITCHPROC
+SETTEXTALIGN.......................................................SETTEXTALIGN
+SETTEXTCHARACTEREXTRA.....................................SETTEXTCHARACTEREXTRA
+SETTEXTCOLOR.......................................................SETTEXTCOLOR
+SETTEXTJUSTIFICATION.......................................SETTEXTJUSTIFICATION
+SETTIMER...............................................................SETTIMER
+SETVIEWPORTEXT...................................................SETVIEWPORTEXT
+SETVIEWPORTEXTEX...............................................SETVIEWPORTEXTEX
+SETVIEWPORTORG...................................................SETVIEWPORTORG
+SETVIEWPORTORGEX...............................................SETVIEWPORTORGEX
+SETVOICEACCENT...................................................SETVOICEACCENT
+SETVOICEENVELOPE...............................................SETVOICEENVELOPE
+SETVOICENOTE.......................................................SETVOICENOTE
+SETVOICEQUEUESIZE.............................................SETVOICEQUEUESIZE
+SETVOICESOUND.....................................................SETVOICESOUND
+SETVOICETHRESHOLD.............................................SETVOICETHRESHOLD
+SETWINDEBUGINFO.................................................SETWINDEBUGINFO
+SETWINDOWEXT.......................................................SETWINDOWEXT
+SETWINDOWEXTEX...................................................SETWINDOWEXTEX
+SETWINDOWLONG.....................................................SETWINDOWLONG
+SETWINDOWORG.......................................................SETWINDOWORG
+SETWINDOWORGEX...................................................SETWINDOWORGEX
+SETWINDOWPLACEMENT...........................................SETWINDOWPLACEMENT
+SETWINDOWPOS.......................................................SETWINDOWPOS
+SETWINDOWSHOOK...................................................SETWINDOWSHOOK
+SETWINDOWSHOOKEX...............................................SETWINDOWSHOOKEX
+SETWINDOWTEXT.....................................................SETWINDOWTEXT
+SETWINDOWWORD.....................................................SETWINDOWWORD
+SHOWCARET.............................................................SHOWCARET
+SHOWCURSOR...........................................................SHOWCURSOR
+SHOWOWNEDPOPUPS.................................................SHOWOWNEDPOPUPS
+SHOWSCROLLBAR.....................................................SHOWSCROLLBAR
+SHOWWINDOW...........................................................SHOWWINDOW
+SHRINKGDIHEAP.....................................................SHRINKGDIHEAP
+SIGNALPROC...........................................................SIGNALPROC
+SIZEOFRESOURCE...................................................SIZEOFRESOURCE
+SIZEPQ...................................................................SIZEPQ
+SPOOLFILE.............................................................SPOOLFILE
+STARTDOC...............................................................STARTDOC
+STARTPAGE.............................................................STARTPAGE
+STARTSOUND...........................................................STARTSOUND
+STARTSPOOLPAGE...................................................STARTSPOOLPAGE
+STOPSOUND.............................................................STOPSOUND
+STRETCHBLT...........................................................STRETCHBLT
+STRETCHDIBITS.....................................................STRETCHDIBITS
+STRINGFUNC...........................................................STRINGFUNC
+SUBTRACTRECT.......................................................SUBTRACTRECT
+SWAPMOUSEBUTTON.................................................SWAPMOUSEBUTTON
+SWAPRECORDING.....................................................SWAPRECORDING
+SWITCHSTACKBACK.................................................SWITCHSTACKBACK
+SWITCHSTACKTO.....................................................SWITCHSTACKTO
+SWITCHTOTHISWINDOW...........................................SWITCHTOTHISWINDOW
+SYNCALLVOICES.....................................................SYNCALLVOICES
+SYSERRORBOX.........................................................SYSERRORBOX
+SYSTEMPARAMETERSINFO.......................................SYSTEMPARAMETERSINFO
+TABBEDTEXTOUT.....................................................TABBEDTEXTOUT
+TEXTOUT.................................................................TEXTOUT
+THHOOK...................................................................THHOOK
+THROW.....................................................................THROW
+TILECHILDWINDOWS...............................................TILECHILDWINDOWS
+TOASCII.................................................................TOASCII
+TOOLHELPHOOK.......................................................TOOLHELPHOOK
+TRACKPOPUPMENU...................................................TRACKPOPUPMENU
+TRANSLATEACCELERATOR.......................................TRANSLATEACCELERATOR
+TRANSLATEMDISYSACCEL.......................................TRANSLATEMDISYSACCEL
+TRANSLATEMESSAGE...............................................TRANSLATEMESSAGE
+TRANSMITCOMMCHAR...............................................TRANSMITCOMMCHAR
+UNDEFDYNLINK.......................................................UNDEFDYNLINK
+UNGETCOMMCHAR.....................................................UNGETCOMMCHAR
+UNHOOKWINDOWSHOOK.............................................UNHOOKWINDOWSHOOK
+UNHOOKWINDOWSHOOKEX.........................................UNHOOKWINDOWSHOOKEX
+UNICODETOANSI.....................................................UNICODETOANSI
+UNIONRECT.............................................................UNIONRECT
+UNLOCKSEGMENT.....................................................UNLOCKSEGMENT
+UNREALIZEOBJECT.................................................UNREALIZEOBJECT
+UNREGISTERCLASS.................................................UNREGISTERCLASS
+UPDATECOLORS.......................................................UPDATECOLORS
+UPDATEWINDOW.......................................................UPDATEWINDOW
+USERSEEUSERDO.....................................................USERSEEUSERDO
+USERYIELD.............................................................USERYIELD
+VALIDATECODESEGMENTS.......................................VALIDATECODESEGMENTS
+VALIDATEFREESPACES...........................................VALIDATEFREESPACES
+VALIDATERECT.......................................................VALIDATERECT
+VALIDATERGN.........................................................VALIDATERGN
+VKKEYSCAN.............................................................VKKEYSCAN
+WAITEVENT.............................................................WAITEVENT
+WAITMESSAGE.........................................................WAITMESSAGE
+WAITSOUNDSTATE...................................................WAITSOUNDSTATE
+WEP.........................................................................WEP
+WINDOWFROMPOINT.................................................WINDOWFROMPOINT
+WINEXEC.................................................................WINEXEC
+WINHELP.................................................................WINHELP
+WINOLDAPCALL.......................................................WINOLDAPCALL
+WINOLDAPPHACKOMATIC.........................................WINOLDAPPHACKOMATIC
+WNETABORTJOB.......................................................WNETABORTJOB
+WNETADDCONNECTION.............................................WNETADDCONNECTION
+WNETBROWSEDIALOG...............................................WNETBROWSEDIALOG
+WNETCANCELCONNECTION.......................................WNETCANCELCONNECTION
+WNETCANCELJOB.....................................................WNETCANCELJOB
+WNETCLOSEJOB.......................................................WNETCLOSEJOB
+WNETCONNECTDIALOG.............................................WNETCONNECTDIALOG
+WNETCONNECTIONDIALOG.......................................WNETCONNECTIONDIALOG
+WNETDEVICEMODE...................................................WNETDEVICEMODE
+WNETDIRECTORYNOTIFY.........................................WNETDIRECTORYNOTIFY
+WNETDISABLE.........................................................WNETDISABLE
+WNETDISCONNECTDIALOG.......................................WNETDISCONNECTDIALOG
+WNETENABLE...........................................................WNETENABLE
+WNETERRORTEXT.....................................................WNETERRORTEXT
+WNETGETCAPS.........................................................WNETGETCAPS
+WNETGETCONNECTION.............................................WNETGETCONNECTION
+WNETGETDIRECTORYTYPE.......................................WNETGETDIRECTORYTYPE
+WNETGETERROR.......................................................WNETGETERROR
+WNETGETERRORTEXT...............................................WNETGETERRORTEXT
+WNETGETPROPERTYTEXT.........................................WNETGETPROPERTYTEXT
+WNETGETUSER.........................................................WNETGETUSER
+WNETHOLDJOB.........................................................WNETHOLDJOB
+WNETLOCKQUEUEDATA.............................................WNETLOCKQUEUEDATA
+WNETOPENJOB.........................................................WNETOPENJOB
+WNETPROPERTYDIALOG...........................................WNETPROPERTYDIALOG
+WNETRELEASEJOB...................................................WNETRELEASEJOB
+WNETRESTORECONNECTION.....................................WNETRESTORECONNECTION
+WNETSETJOBCOPIES...............................................WNETSETJOBCOPIES
+WNETUNLOCKQUEUEDATA.........................................WNETUNLOCKQUEUEDATA
+WNETUNWATCHQUEUE...............................................WNETUNWATCHQUEUE
+WNETVIEWQUEUEDIALOG.........................................WNETVIEWQUEUEDIALOG
+WNETWATCHQUEUE...................................................WNETWATCHQUEUE
+WNETWRITEJOB.......................................................WNETWRITEJOB
+WRITECOMM.............................................................WRITECOMM
+WRITEDIALOG.........................................................WRITEDIALOG
+WRITEOUTPROFILES...............................................WRITEOUTPROFILES
+WRITEPRIVATEPROFILESTRING.............................WRITEPRIVATEPROFILESTRING
+WRITEPROFILESTRING...........................................WRITEPROFILESTRING
+WRITESPOOL...........................................................WRITESPOOL
+WVSPRINTF.............................................................WVSPRINTF
+YIELD.....................................................................YIELD
+_DEBUGOUTPUT......................................................._DEBUGOUTPUT
+_FFFE_FARFRAME..................................................._FFFE_FARFRAME
+_HREAD..................................................................._HREAD
+_HWRITE................................................................._HWRITE
+_LCLOSE................................................................._LCLOSE
+_LCREAT................................................................._LCREAT
+_LLSEEK................................................................._LLSEEK
+_LOPEN..................................................................._LOPEN
+_LREAD..................................................................._LREAD
+_LWRITE................................................................._LWRITE
+_WSPRINTF............................................................._WSPRINTF
+__0000H.................................................................__0000H
+__0040H.................................................................__0040H
+__A000H.................................................................__A000H
+__AHINCR...............................................................__AHINCR
+__AHSHIFT.............................................................__AHSHIFT
+__B000H.................................................................__B000H
+__B800H.................................................................__B800H
+__C000H.................................................................__C000H
+__D000H.................................................................__D000H
+__E000H.................................................................__E000H
+__F000H.................................................................__F000H
+__FPMATH...............................................................__FPMATH
+__GP.......................................................................__GP
+__ROMBIOS.............................................................__ROMBIOS
+__WIN87EMINFO.....................................................__WIN87EMINFO
+__WIN87EMRESTORE...............................................__WIN87EMRESTORE
+__WIN87EMSAVE.....................................................__WIN87EMSAVE
+__WINFLAGS...........................................................__WINFLAGS
+__fpmath...............................................................__fpmath
+ 
+SETBKCOLOR              Offset=00000010H
+    SETBKCOLOR
+ 
+SETBKMODE               Offset=00000050H
+    SETBKMODE
+ 
+SETMAPMODE              Offset=00000090H
+    SETMAPMODE
+ 
+SETROP2                 Offset=000000d0H
+    SETROP2
+ 
+SETRELABS               Offset=00000110H
+    SETRELABS
+ 
+SETPOLYFILLMODE         Offset=00000150H
+    SETPOLYFILLMODE
+ 
+SETSTRETCHBLTMODE       Offset=000001a0H
+    SETSTRETCHBLTMODE
+ 
+SETTEXTCHARACTEREXTRA   Offset=000001f0H
+    SETTEXTCHARACTEREXTRA
+ 
+SETTEXTCOLOR            Offset=00000240H
+    SETTEXTCOLOR
+ 
+SETTEXTJUSTIFICATION    Offset=00000280H
+    SETTEXTJUSTIFICATION
+ 
+SETWINDOWORG            Offset=000002d0H
+    SETWINDOWORG
+ 
+SETWINDOWEXT            Offset=00000310H
+    SETWINDOWEXT
+ 
+SETVIEWPORTORG          Offset=00000350H
+    SETVIEWPORTORG
+ 
+SETVIEWPORTEXT          Offset=00000390H
+    SETVIEWPORTEXT
+ 
+OFFSETWINDOWORG         Offset=000003d0H
+    OFFSETWINDOWORG
+ 
+SCALEWINDOWEXT          Offset=00000420H
+    SCALEWINDOWEXT
+ 
+OFFSETVIEWPORTORG       Offset=00000460H
+    OFFSETVIEWPORTORG
+ 
+SCALEVIEWPORTEXT        Offset=000004b0H
+    SCALEVIEWPORTEXT
+ 
+LINETO                  Offset=00000500H
+    LINETO
+ 
+MOVETO                  Offset=00000530H
+    MOVETO
+ 
+EXCLUDECLIPRECT         Offset=00000560H
+    EXCLUDECLIPRECT
+ 
+INTERSECTCLIPRECT       Offset=000005b0H
+    INTERSECTCLIPRECT
+ 
+ARC                     Offset=00000600H
+    ARC
+ 
+ELLIPSE                 Offset=00000630H
+    ELLIPSE
+ 
+FLOODFILL               Offset=00000670H
+    FLOODFILL
+ 
+PIE                     Offset=000006b0H
+    PIE
+ 
+RECTANGLE               Offset=000006e0H
+    RECTANGLE
+ 
+ROUNDRECT               Offset=00000720H
+    ROUNDRECT
+ 
+PATBLT                  Offset=00000760H
+    PATBLT
+ 
+SAVEDC                  Offset=00000790H
+    SAVEDC
+ 
+SETPIXEL                Offset=000007c0H
+    SETPIXEL
+ 
+OFFSETCLIPRGN           Offset=00000800H
+    OFFSETCLIPRGN
+ 
+TEXTOUT                 Offset=00000840H
+    TEXTOUT
+ 
+BITBLT                  Offset=00000880H
+    BITBLT
+ 
+STRETCHBLT              Offset=000008b0H
+    STRETCHBLT
+ 
+POLYGON                 Offset=000008f0H
+    POLYGON
+ 
+POLYLINE                Offset=00000930H
+    POLYLINE
+ 
+ESCAPE                  Offset=00000970H
+    ESCAPE
+ 
+RESTOREDC               Offset=000009a0H
+    RESTOREDC
+ 
+FILLRGN                 Offset=000009e0H
+    FILLRGN
+ 
+FRAMERGN                Offset=00000a20H
+    FRAMERGN
+ 
+INVERTRGN               Offset=00000a60H
+    INVERTRGN
+ 
+PAINTRGN                Offset=00000aa0H
+    PAINTRGN
+ 
+SELECTCLIPRGN           Offset=00000ae0H
+    SELECTCLIPRGN
+ 
+SELECTOBJECT            Offset=00000b20H
+    SELECTOBJECT
+ 
+__GP                    Offset=00000b60H
+    __GP
+ 
+COMBINERGN              Offset=00000b90H
+    COMBINERGN
+ 
+CREATEBITMAP            Offset=00000bd0H
+    CREATEBITMAP
+ 
+CREATEBITMAPINDIRECT    Offset=00000c10H
+    CREATEBITMAPINDIRECT
+ 
+CREATEBRUSHINDIRECT     Offset=00000c60H
+    CREATEBRUSHINDIRECT
+ 
+CREATECOMPATIBLEBITMAP  Offset=00000cb0H
+    CREATECOMPATIBLEBITMAP
+ 
+CREATECOMPATIBLEDC      Offset=00000d00H
+    CREATECOMPATIBLEDC
+ 
+CREATEDC                Offset=00000d50H
+    CREATEDC
+ 
+CREATEELLIPTICRGN       Offset=00000d90H
+    CREATEELLIPTICRGN
+ 
+CREATEELLIPTICRGNINDIRECT Offset=00000de0H
+    CREATEELLIPTICRGNINDIRECT
+ 
+CREATEFONT              Offset=00000e40H
+    CREATEFONT
+ 
+CREATEFONTINDIRECT      Offset=00000e80H
+    CREATEFONTINDIRECT
+ 
+CREATEHATCHBRUSH        Offset=00000ed0H
+    CREATEHATCHBRUSH
+ 
+WEP                     Offset=00000f20H
+    WEP
+ 
+CREATEPATTERNBRUSH      Offset=00000f50H
+    CREATEPATTERNBRUSH
+ 
+CREATEPEN               Offset=00000fa0H
+    CREATEPEN
+ 
+CREATEPENINDIRECT       Offset=00000fe0H
+    CREATEPENINDIRECT
+ 
+CREATEPOLYGONRGN        Offset=00001030H
+    CREATEPOLYGONRGN
+ 
+CREATERECTRGN           Offset=00001080H
+    CREATERECTRGN
+ 
+CREATERECTRGNINDIRECT   Offset=000010c0H
+    CREATERECTRGNINDIRECT
+ 
+CREATESOLIDBRUSH        Offset=00001110H
+    CREATESOLIDBRUSH
+ 
+DPTOLP                  Offset=00001160H
+    DPTOLP
+ 
+DELETEDC                Offset=00001190H
+    DELETEDC
+ 
+DELETEOBJECT            Offset=000011d0H
+    DELETEOBJECT
+ 
+ENUMFONTS               Offset=00001210H
+    ENUMFONTS
+ 
+ENUMOBJECTS             Offset=00001250H
+    ENUMOBJECTS
+ 
+EQUALRGN                Offset=00001290H
+    EQUALRGN
+ 
+EXCLUDEVISRECT          Offset=000012d0H
+    EXCLUDEVISRECT
+ 
+GETBITMAPBITS           Offset=00001310H
+    GETBITMAPBITS
+ 
+GETBKCOLOR              Offset=00001350H
+    GETBKCOLOR
+ 
+GETBKMODE               Offset=00001390H
+    GETBKMODE
+ 
+GETCLIPBOX              Offset=000013d0H
+    GETCLIPBOX
+ 
+GETCURRENTPOSITION      Offset=00001410H
+    GETCURRENTPOSITION
+ 
+GETDCORG                Offset=00001460H
+    GETDCORG
+ 
+GETDEVICECAPS           Offset=000014a0H
+    GETDEVICECAPS
+ 
+GETMAPMODE              Offset=000014e0H
+    GETMAPMODE
+ 
+GETOBJECT               Offset=00001520H
+    GETOBJECT
+ 
+GETPIXEL                Offset=00001560H
+    GETPIXEL
+ 
+GETPOLYFILLMODE         Offset=000015a0H
+    GETPOLYFILLMODE
+ 
+GETROP2                 Offset=000015f0H
+    GETROP2
+ 
+GETRELABS               Offset=00001630H
+    GETRELABS
+ 
+GETSTOCKOBJECT          Offset=00001670H
+    GETSTOCKOBJECT
+ 
+GETSTRETCHBLTMODE       Offset=000016b0H
+    GETSTRETCHBLTMODE
+ 
+GETTEXTCHARACTEREXTRA   Offset=00001700H
+    GETTEXTCHARACTEREXTRA
+ 
+GETTEXTCOLOR            Offset=00001750H
+    GETTEXTCOLOR
+ 
+GETTEXTEXTENT           Offset=00001790H
+    GETTEXTEXTENT
+ 
+GETTEXTFACE             Offset=000017d0H
+    GETTEXTFACE
+ 
+GETTEXTMETRICS          Offset=00001810H
+    GETTEXTMETRICS
+ 
+GETVIEWPORTEXT          Offset=00001850H
+    GETVIEWPORTEXT
+ 
+GETVIEWPORTORG          Offset=00001890H
+    GETVIEWPORTORG
+ 
+GETWINDOWEXT            Offset=000018d0H
+    GETWINDOWEXT
+ 
+GETWINDOWORG            Offset=00001910H
+    GETWINDOWORG
+ 
+INTERSECTVISRECT        Offset=00001950H
+    INTERSECTVISRECT
+ 
+LPTODP                  Offset=000019a0H
+    LPTODP
+ 
+LINEDDA                 Offset=000019d0H
+    LINEDDA
+ 
+OFFSETRGN               Offset=00001a10H
+    OFFSETRGN
+ 
+OFFSETVISRGN            Offset=00001a50H
+    OFFSETVISRGN
+ 
+PTVISIBLE               Offset=00001a90H
+    PTVISIBLE
+ 
+RECTVISIBLE             Offset=00001ad0H
+    RECTVISIBLE
+ 
+SELECTVISRGN            Offset=00001b10H
+    SELECTVISRGN
+ 
+SETBITMAPBITS           Offset=00001b50H
+    SETBITMAPBITS
+ 
+SETDCORG                Offset=00001b90H
+    SETDCORG
+ 
+ADDFONTRESOURCE         Offset=00001bd0H
+    ADDFONTRESOURCE
+ 
+DEATH                   Offset=00001c20H
+    DEATH
+ 
+RESURRECTION            Offset=00001c50H
+    RESURRECTION
+ 
+PLAYMETAFILE            Offset=00001c90H
+    PLAYMETAFILE
+ 
+GETMETAFILE             Offset=00001cd0H
+    GETMETAFILE
+ 
+CREATEMETAFILE          Offset=00001d10H
+    CREATEMETAFILE
+ 
+CLOSEMETAFILE           Offset=00001d50H
+    CLOSEMETAFILE
+ 
+DELETEMETAFILE          Offset=00001d90H
+    DELETEMETAFILE
+ 
+MULDIV                  Offset=00001dd0H
+    MULDIV
+ 
+SAVEVISRGN              Offset=00001e00H
+    SAVEVISRGN
+ 
+RESTOREVISRGN           Offset=00001e40H
+    RESTOREVISRGN
+ 
+INQUIREVISRGN           Offset=00001e80H
+    INQUIREVISRGN
+ 
+SETENVIRONMENT          Offset=00001ec0H
+    SETENVIRONMENT
+ 
+GETENVIRONMENT          Offset=00001f00H
+    GETENVIRONMENT
+ 
+GETRGNBOX               Offset=00001f40H
+    GETRGNBOX
+ 
+SCANLR                  Offset=00001f80H
+    SCANLR
+ 
+REMOVEFONTRESOURCE      Offset=00001fb0H
+    REMOVEFONTRESOURCE
+ 
+SETBRUSHORG             Offset=00002000H
+    SETBRUSHORG
+ 
+GETBRUSHORG             Offset=00002040H
+    GETBRUSHORG
+ 
+UNREALIZEOBJECT         Offset=00002080H
+    UNREALIZEOBJECT
+ 
+COPYMETAFILE            Offset=000020d0H
+    COPYMETAFILE
+ 
+CREATEIC                Offset=00002110H
+    CREATEIC
+ 
+GETNEARESTCOLOR         Offset=00002150H
+    GETNEARESTCOLOR
+ 
+QUERYABORT              Offset=000021a0H
+    QUERYABORT
+ 
+CREATEDISCARDABLEBITMAP Offset=000021e0H
+    CREATEDISCARDABLEBITMAP
+ 
+GETMETAFILEBITS         Offset=00002240H
+    GETMETAFILEBITS
+ 
+SETMETAFILEBITS         Offset=00002290H
+    SETMETAFILEBITS
+ 
+PTINREGION              Offset=000022e0H
+    PTINREGION
+ 
+GETBITMAPDIMENSION      Offset=00002320H
+    GETBITMAPDIMENSION
+ 
+SETBITMAPDIMENSION      Offset=00002370H
+    SETBITMAPDIMENSION
+ 
+ISDCDIRTY               Offset=000023c0H
+    ISDCDIRTY
+ 
+SETDCSTATUS             Offset=00002400H
+    SETDCSTATUS
+ 
+SETRECTRGN              Offset=00002440H
+    SETRECTRGN
+ 
+GETCLIPRGN              Offset=00002480H
+    GETCLIPRGN
+ 
+ENUMMETAFILE            Offset=000024c0H
+    ENUMMETAFILE
+ 
+PLAYMETAFILERECORD      Offset=00002500H
+    PLAYMETAFILERECORD
+ 
+GETDCSTATE              Offset=00002550H
+    GETDCSTATE
+ 
+SETDCSTATE              Offset=00002590H
+    SETDCSTATE
+ 
+RECTINREGION            Offset=000025d0H
+    RECTINREGION
+ 
+SETDCHOOK               Offset=00002610H
+    SETDCHOOK
+ 
+GETDCHOOK               Offset=00002650H
+    GETDCHOOK
+ 
+SETHOOKFLAGS            Offset=00002690H
+    SETHOOKFLAGS
+ 
+SETBOUNDSRECT           Offset=000026d0H
+    SETBOUNDSRECT
+ 
+GETBOUNDSRECT           Offset=00002710H
+    GETBOUNDSRECT
+ 
+SELECTBITMAP            Offset=00002750H
+    SELECTBITMAP
+ 
+SETMETAFILEBITSBETTER   Offset=00002790H
+    SETMETAFILEBITSBETTER
+ 
+DMBITBLT                Offset=000027e0H
+    DMBITBLT
+ 
+DMCOLORINFO             Offset=00002820H
+    DMCOLORINFO
+ 
+DMENUMDFONTS            Offset=00002860H
+    DMENUMDFONTS
+ 
+DMENUMOBJ               Offset=000028a0H
+    DMENUMOBJ
+ 
+DMOUTPUT                Offset=000028e0H
+    DMOUTPUT
+ 
+DMPIXEL                 Offset=00002920H
+    DMPIXEL
+ 
+DMREALIZEOBJECT         Offset=00002960H
+    DMREALIZEOBJECT
+ 
+DMSTRBLT                Offset=000029b0H
+    DMSTRBLT
+ 
+DMSCANLR                Offset=000029f0H
+    DMSCANLR
+ 
+BRUTE                   Offset=00002a30H
+    BRUTE
+ 
+DMEXTTEXTOUT            Offset=00002a60H
+    DMEXTTEXTOUT
+ 
+DMGETCHARWIDTH          Offset=00002aa0H
+    DMGETCHARWIDTH
+ 
+DMSTRETCHBLT            Offset=00002ae0H
+    DMSTRETCHBLT
+ 
+DMDIBBITS               Offset=00002b20H
+    DMDIBBITS
+ 
+DMSTRETCHDIBITS         Offset=00002b60H
+    DMSTRETCHDIBITS
+ 
+DMSETDIBTODEV           Offset=00002bb0H
+    DMSETDIBTODEV
+ 
+DMTRANSPOSE             Offset=00002bf0H
+    DMTRANSPOSE
+ 
+CREATEPQ                Offset=00002c30H
+    CREATEPQ
+ 
+MINPQ                   Offset=00002c70H
+    MINPQ
+ 
+EXTRACTPQ               Offset=00002ca0H
+    EXTRACTPQ
+ 
+INSERTPQ                Offset=00002ce0H
+    INSERTPQ
+ 
+SIZEPQ                  Offset=00002d20H
+    SIZEPQ
+ 
+DELETEPQ                Offset=00002d50H
+    DELETEPQ
+ 
+OPENJOB                 Offset=00002d90H
+    OPENJOB
+ 
+WRITESPOOL              Offset=00002dd0H
+    WRITESPOOL
+ 
+WRITEDIALOG             Offset=00002e10H
+    WRITEDIALOG
+ 
+CLOSEJOB                Offset=00002e50H
+    CLOSEJOB
+ 
+DELETEJOB               Offset=00002e90H
+    DELETEJOB
+ 
+GETSPOOLJOB             Offset=00002ed0H
+    GETSPOOLJOB
+ 
+STARTSPOOLPAGE          Offset=00002f10H
+    STARTSPOOLPAGE
+ 
+ENDSPOOLPAGE            Offset=00002f50H
+    ENDSPOOLPAGE
+ 
+QUERYJOB                Offset=00002f90H
+    QUERYJOB
+ 
+COPY                    Offset=00002fd0H
+    COPY
+ 
+DELETESPOOLPAGE         Offset=00003000H
+    DELETESPOOLPAGE
+ 
+SPOOLFILE               Offset=00003050H
+    SPOOLFILE
+ 
+ENGINEENUMERATEFONT     Offset=00003090H
+    ENGINEENUMERATEFONT
+ 
+ENGINEDELETEFONT        Offset=000030e0H
+    ENGINEDELETEFONT
+ 
+ENGINEREALIZEFONT       Offset=00003130H
+    ENGINEREALIZEFONT
+ 
+ENGINEGETCHARWIDTH      Offset=00003180H
+    ENGINEGETCHARWIDTH
+ 
+ENGINESETFONTCONTEXT    Offset=000031d0H
+    ENGINESETFONTCONTEXT
+ 
+ENGINEGETGLYPHBMP       Offset=00003220H
+    ENGINEGETGLYPHBMP
+ 
+ENGINEMAKEFONTDIR       Offset=00003270H
+    ENGINEMAKEFONTDIR
+ 
+GETCHARABCWIDTHS        Offset=000032c0H
+    GETCHARABCWIDTHS
+ 
+GETOUTLINETEXTMETRICS   Offset=00003310H
+    GETOUTLINETEXTMETRICS
+ 
+GETGLYPHOUTLINE         Offset=00003360H
+    GETGLYPHOUTLINE
+ 
+CREATESCALABLEFONTRESOURCE Offset=000033b0H
+    CREATESCALABLEFONTRESOURCE
+ 
+GETFONTDATA             Offset=00003410H
+    GETFONTDATA
+ 
+CONVERTOUTLINEFONTFILE  Offset=00003450H
+    CONVERTOUTLINEFONTFILE
+ 
+GETRASTERIZERCAPS       Offset=000034a0H
+    GETRASTERIZERCAPS
+ 
+ENGINEEXTTEXTOUT        Offset=000034f0H
+    ENGINEEXTTEXTOUT
+ 
+ENUMFONTFAMILIES        Offset=00003540H
+    ENUMFONTFAMILIES
+ 
+GETKERNINGPAIRS         Offset=00003590H
+    GETKERNINGPAIRS
+ 
+GETTEXTALIGN            Offset=000035e0H
+    GETTEXTALIGN
+ 
+SETTEXTALIGN            Offset=00003620H
+    SETTEXTALIGN
+ 
+CHORD                   Offset=00003660H
+    CHORD
+ 
+SETMAPPERFLAGS          Offset=00003690H
+    SETMAPPERFLAGS
+ 
+GETCHARWIDTH            Offset=000036d0H
+    GETCHARWIDTH
+ 
+EXTTEXTOUT              Offset=00003710H
+    EXTTEXTOUT
+ 
+GETPHYSICALFONTHANDLE   Offset=00003750H
+    GETPHYSICALFONTHANDLE
+ 
+GETASPECTRATIOFILTER    Offset=000037a0H
+    GETASPECTRATIOFILTER
+ 
+SHRINKGDIHEAP           Offset=000037f0H
+    SHRINKGDIHEAP
+ 
+FTRAPPING0              Offset=00003830H
+    FTRAPPING0
+ 
+CREATEPALETTE           Offset=00003870H
+    CREATEPALETTE
+ 
+GDISELECTPALETTE        Offset=000038b0H
+    GDISELECTPALETTE
+ 
+GDIREALIZEPALETTE       Offset=00003900H
+    GDIREALIZEPALETTE
+ 
+GETPALETTEENTRIES       Offset=00003950H
+    GETPALETTEENTRIES
+ 
+SETPALETTEENTRIES       Offset=000039a0H
+    SETPALETTEENTRIES
+ 
+REALIZEDEFAULTPALETTE   Offset=000039f0H
+    REALIZEDEFAULTPALETTE
+ 
+UPDATECOLORS            Offset=00003a40H
+    UPDATECOLORS
+ 
+ANIMATEPALETTE          Offset=00003a80H
+    ANIMATEPALETTE
+ 
+RESIZEPALETTE           Offset=00003ac0H
+    RESIZEPALETTE
+ 
+GETNEARESTPALETTEINDEX  Offset=00003b00H
+    GETNEARESTPALETTEINDEX
+ 
+EXTFLOODFILL            Offset=00003b50H
+    EXTFLOODFILL
+ 
+SETSYSTEMPALETTEUSE     Offset=00003b90H
+    SETSYSTEMPALETTEUSE
+ 
+GETSYSTEMPALETTEUSE     Offset=00003be0H
+    GETSYSTEMPALETTEUSE
+ 
+GETSYSTEMPALETTEENTRIES Offset=00003c30H
+    GETSYSTEMPALETTEENTRIES
+ 
+RESETDC                 Offset=00003c90H
+    RESETDC
+ 
+STARTDOC                Offset=00003cd0H
+    STARTDOC
+ 
+ENDDOC                  Offset=00003d10H
+    ENDDOC
+ 
+STARTPAGE               Offset=00003d40H
+    STARTPAGE
+ 
+ENDPAGE                 Offset=00003d80H
+    ENDPAGE
+ 
+SETABORTPROC            Offset=00003dc0H
+    SETABORTPROC
+ 
+ABORTDOC                Offset=00003e00H
+    ABORTDOC
+ 
+FASTWINDOWFRAME         Offset=00003e40H
+    FASTWINDOWFRAME
+ 
+GDIMOVEBITMAP           Offset=00003e90H
+    GDIMOVEBITMAP
+ 
+GDIINIT2                Offset=00003ed0H
+    GDIINIT2
+ 
+FINALGDIINIT            Offset=00003f10H
+    FINALGDIINIT
+ 
+CREATEUSERBITMAP        Offset=00003f50H
+    CREATEUSERBITMAP
+ 
+CREATEUSERDISCARDABLEBITMAP Offset=00003fa0H
+    CREATEUSERDISCARDABLEBITMAP
+ 
+ISVALIDMETAFILE         Offset=00004000H
+    ISVALIDMETAFILE
+ 
+GETCURLOGFONT           Offset=00004050H
+    GETCURLOGFONT
+ 
+ISDCCURRENTPALETTE      Offset=00004090H
+    ISDCCURRENTPALETTE
+ 
+STRETCHDIBITS           Offset=000040e0H
+    STRETCHDIBITS
+ 
+SETDIBITS               Offset=00004120H
+    SETDIBITS
+ 
+GETDIBITS               Offset=00004160H
+    GETDIBITS
+ 
+CREATEDIBITMAP          Offset=000041a0H
+    CREATEDIBITMAP
+ 
+SETDIBITSTODEVICE       Offset=000041e0H
+    SETDIBITSTODEVICE
+ 
+CREATEROUNDRECTRGN      Offset=00004230H
+    CREATEROUNDRECTRGN
+ 
+CREATEDIBPATTERNBRUSH   Offset=00004280H
+    CREATEDIBPATTERNBRUSH
+ 
+DEVICECOLORMATCH        Offset=000042d0H
+    DEVICECOLORMATCH
+ 
+POLYPOLYGON             Offset=00004320H
+    POLYPOLYGON
+ 
+CREATEPOLYPOLYGONRGN    Offset=00004360H
+    CREATEPOLYPOLYGONRGN
+ 
+GDISEEGDIDO             Offset=000043b0H
+    GDISEEGDIDO
+ 
+GDITASKTERMINATION      Offset=000043f0H
+    GDITASKTERMINATION
+ 
+SETOBJECTOWNER          Offset=00004440H
+    SETOBJECTOWNER
+ 
+ISGDIOBJECT             Offset=00004480H
+    ISGDIOBJECT
+ 
+MAKEOBJECTPRIVATE       Offset=000044c0H
+    MAKEOBJECTPRIVATE
+ 
+FIXUPBOGUSPUBLISHERMETAFILE Offset=00004510H
+    FIXUPBOGUSPUBLISHERMETAFILE
+ 
+RECTVISIBLE_EHH         Offset=00004570H
+    RECTVISIBLE_EHH
+ 
+RECTINREGION_EHH        Offset=000045c0H
+    RECTINREGION_EHH
+ 
+UNICODETOANSI           Offset=00004610H
+    UNICODETOANSI
+ 
+GETBITMAPDIMENSIONEX    Offset=00004650H
+    GETBITMAPDIMENSIONEX
+ 
+GETBRUSHORGEX           Offset=000046a0H
+    GETBRUSHORGEX
+ 
+GETCURRENTPOSITIONEX    Offset=000046e0H
+    GETCURRENTPOSITIONEX
+ 
+GETTEXTEXTENTPOINT      Offset=00004730H
+    GETTEXTEXTENTPOINT
+ 
+GETVIEWPORTEXTEX        Offset=00004780H
+    GETVIEWPORTEXTEX
+ 
+GETVIEWPORTORGEX        Offset=000047d0H
+    GETVIEWPORTORGEX
+ 
+GETWINDOWEXTEX          Offset=00004820H
+    GETWINDOWEXTEX
+ 
+GETWINDOWORGEX          Offset=00004860H
+    GETWINDOWORGEX
+ 
+OFFSETVIEWPORTORGEX     Offset=000048a0H
+    OFFSETVIEWPORTORGEX
+ 
+OFFSETWINDOWORGEX       Offset=000048f0H
+    OFFSETWINDOWORGEX
+ 
+SETBITMAPDIMENSIONEX    Offset=00004940H
+    SETBITMAPDIMENSIONEX
+ 
+SETVIEWPORTEXTEX        Offset=00004990H
+    SETVIEWPORTEXTEX
+ 
+SETVIEWPORTORGEX        Offset=000049e0H
+    SETVIEWPORTORGEX
+ 
+SETWINDOWEXTEX          Offset=00004a30H
+    SETWINDOWEXTEX
+ 
+SETWINDOWORGEX          Offset=00004a70H
+    SETWINDOWORGEX
+ 
+MOVETOEX                Offset=00004ab0H
+    MOVETOEX
+ 
+SCALEVIEWPORTEXTEX      Offset=00004af0H
+    SCALEVIEWPORTEXTEX
+ 
+SCALEWINDOWEXTEX        Offset=00004b40H
+    SCALEWINDOWEXTEX
+ 
+GETASPECTRATIOFILTEREX  Offset=00004b90H
+    GETASPECTRATIOFILTEREX
+ 
+FATALEXIT               Offset=00004be0H
+    FATALEXIT
+ 
+EXITKERNEL              Offset=00004c20H
+    EXITKERNEL
+ 
+GETVERSION              Offset=00004c60H
+    GETVERSION
+ 
+LOCALINIT               Offset=00004ca0H
+    LOCALINIT
+ 
+LOCALALLOC              Offset=00004ce0H
+    LOCALALLOC
+ 
+LOCALREALLOC            Offset=00004d20H
+    LOCALREALLOC
+ 
+LOCALFREE               Offset=00004d60H
+    LOCALFREE
+ 
+LOCALLOCK               Offset=00004da0H
+    LOCALLOCK
+ 
+LOCALUNLOCK             Offset=00004de0H
+    LOCALUNLOCK
+ 
+LOCALSIZE               Offset=00004e20H
+    LOCALSIZE
+ 
+LOCALHANDLE             Offset=00004e60H
+    LOCALHANDLE
+ 
+LOCALFLAGS              Offset=00004ea0H
+    LOCALFLAGS
+ 
+LOCALCOMPACT            Offset=00004ee0H
+    LOCALCOMPACT
+ 
+LOCALNOTIFY             Offset=00004f20H
+    LOCALNOTIFY
+ 
+GLOBALALLOC             Offset=00004f60H
+    GLOBALALLOC
+ 
+GLOBALREALLOC           Offset=00004fa0H
+    GLOBALREALLOC
+ 
+GLOBALFREE              Offset=00004ff0H
+    GLOBALFREE
+ 
+GLOBALLOCK              Offset=00005030H
+    GLOBALLOCK
+ 
+GLOBALUNLOCK            Offset=00005070H
+    GLOBALUNLOCK
+ 
+GLOBALSIZE              Offset=000050b0H
+    GLOBALSIZE
+ 
+GLOBALHANDLE            Offset=000050f0H
+    GLOBALHANDLE
+ 
+GLOBALFLAGS             Offset=00005130H
+    GLOBALFLAGS
+ 
+LOCKSEGMENT             Offset=00005170H
+    LOCKSEGMENT
+ 
+UNLOCKSEGMENT           Offset=000051b0H
+    UNLOCKSEGMENT
+ 
+GLOBALCOMPACT           Offset=00005200H
+    GLOBALCOMPACT
+ 
+GLOBALFREEALL           Offset=00005250H
+    GLOBALFREEALL
+ 
+SETSWAPHOOK             Offset=000052a0H
+    SETSWAPHOOK
+ 
+GLOBALMASTERHANDLE      Offset=000052e0H
+    GLOBALMASTERHANDLE
+ 
+YIELD                   Offset=00005330H
+    YIELD
+ 
+WAITEVENT               Offset=00005370H
+    WAITEVENT
+ 
+POSTEVENT               Offset=000053b0H
+    POSTEVENT
+ 
+SETPRIORITY             Offset=000053f0H
+    SETPRIORITY
+ 
+LOCKCURRENTTASK         Offset=00005430H
+    LOCKCURRENTTASK
+ 
+SETTASKQUEUE            Offset=00005480H
+    SETTASKQUEUE
+ 
+GETTASKQUEUE            Offset=000054c0H
+    GETTASKQUEUE
+ 
+GETCURRENTTASK          Offset=00005500H
+    GETCURRENTTASK
+ 
+GETCURRENTPDB           Offset=00005550H
+    GETCURRENTPDB
+ 
+SETTASKSIGNALPROC       Offset=000055a0H
+    SETTASKSIGNALPROC
+ 
+SETTASKSWITCHPROC       Offset=000055f0H
+    SETTASKSWITCHPROC
+ 
+SETTASKINTERCHANGE      Offset=00005640H
+    SETTASKINTERCHANGE
+ 
+ENABLEDOS               Offset=00005690H
+    ENABLEDOS
+ 
+DISABLEDOS              Offset=000056d0H
+    DISABLEDOS
+ 
+ISSCREENGRAB            Offset=00005710H
+    ISSCREENGRAB
+ 
+BUILDPDB                Offset=00005750H
+    BUILDPDB
+ 
+LOADMODULE              Offset=00005790H
+    LOADMODULE
+ 
+FREEMODULE              Offset=000057d0H
+    FREEMODULE
+ 
+GETMODULEHANDLE         Offset=00005810H
+    GETMODULEHANDLE
+ 
+GETMODULEUSAGE          Offset=00005860H
+    GETMODULEUSAGE
+ 
+GETMODULEFILENAME       Offset=000058b0H
+    GETMODULEFILENAME
+ 
+GETPROCADDRESS          Offset=00005900H
+    GETPROCADDRESS
+ 
+MAKEPROCINSTANCE        Offset=00005950H
+    MAKEPROCINSTANCE
+ 
+FREEPROCINSTANCE        Offset=000059a0H
+    FREEPROCINSTANCE
+ 
+CALLPROCINSTANCE        Offset=000059f0H
+    CALLPROCINSTANCE
+ 
+GETINSTANCEDATA         Offset=00005a40H
+    GETINSTANCEDATA
+ 
+CATCH                   Offset=00005a90H
+    CATCH
+ 
+THROW                   Offset=00005ad0H
+    THROW
+ 
+GETPROFILEINT           Offset=00005b10H
+    GETPROFILEINT
+ 
+GETPROFILESTRING        Offset=00005b60H
+    GETPROFILESTRING
+ 
+WRITEPROFILESTRING      Offset=00005bb0H
+    WRITEPROFILESTRING
+ 
+FINDRESOURCE            Offset=00005c00H
+    FINDRESOURCE
+ 
+LOADRESOURCE            Offset=00005c40H
+    LOADRESOURCE
+ 
+LOCKRESOURCE            Offset=00005c80H
+    LOCKRESOURCE
+ 
+FREERESOURCE            Offset=00005cc0H
+    FREERESOURCE
+ 
+ACCESSRESOURCE          Offset=00005d00H
+    ACCESSRESOURCE
+ 
+SIZEOFRESOURCE          Offset=00005d50H
+    SIZEOFRESOURCE
+ 
+ALLOCRESOURCE           Offset=00005da0H
+    ALLOCRESOURCE
+ 
+SETRESOURCEHANDLER      Offset=00005df0H
+    SETRESOURCEHANDLER
+ 
+INITATOMTABLE           Offset=00005e40H
+    INITATOMTABLE
+ 
+FINDATOM                Offset=00005e90H
+    FINDATOM
+ 
+ADDATOM                 Offset=00005ed0H
+    ADDATOM
+ 
+DELETEATOM              Offset=00005f10H
+    DELETEATOM
+ 
+GETATOMNAME             Offset=00005f50H
+    GETATOMNAME
+ 
+GETATOMHANDLE           Offset=00005f90H
+    GETATOMHANDLE
+ 
+OPENFILE                Offset=00005fe0H
+    OPENFILE
+ 
+OPENPATHNAME            Offset=00006020H
+    OPENPATHNAME
+ 
+DELETEPATHNAME          Offset=00006060H
+    DELETEPATHNAME
+ 
+RESERVED1               Offset=000060b0H
+    RESERVED1
+ 
+RESERVED2               Offset=000060f0H
+    RESERVED2
+ 
+RESERVED3               Offset=00006130H
+    RESERVED3
+ 
+RESERVED4               Offset=00006170H
+    RESERVED4
+ 
+_LCLOSE                 Offset=000061b0H
+    _LCLOSE
+ 
+_LREAD                  Offset=000061f0H
+    _LREAD
+ 
+_LCREAT                 Offset=00006230H
+    _LCREAT
+ 
+_LLSEEK                 Offset=00006270H
+    _LLSEEK
+ 
+_LOPEN                  Offset=000062b0H
+    _LOPEN
+ 
+_LWRITE                 Offset=000062f0H
+    _LWRITE
+ 
+RESERVED5               Offset=00006330H
+    RESERVED5
+ 
+LSTRCPY                 Offset=00006370H
+    LSTRCPY
+ 
+LSTRCAT                 Offset=000063b0H
+    LSTRCAT
+ 
+LSTRLEN                 Offset=000063f0H
+    LSTRLEN
+ 
+INITTASK                Offset=00006430H
+    INITTASK
+ 
+GETTEMPDRIVE            Offset=00006470H
+    GETTEMPDRIVE
+ 
+GETCODEHANDLE           Offset=000064b0H
+    GETCODEHANDLE
+ 
+DEFINEHANDLETABLE       Offset=00006500H
+    DEFINEHANDLETABLE
+ 
+LOADLIBRARY             Offset=00006550H
+    LOADLIBRARY
+ 
+FREELIBRARY             Offset=00006590H
+    FREELIBRARY
+ 
+GETTEMPFILENAME         Offset=000065d0H
+    GETTEMPFILENAME
+ 
+GETLASTDISKCHANGE       Offset=00006620H
+    GETLASTDISKCHANGE
+ 
+GETLPERRMODE            Offset=00006670H
+    GETLPERRMODE
+ 
+VALIDATECODESEGMENTS    Offset=000066b0H
+    VALIDATECODESEGMENTS
+ 
+NOHOOKDOSCALL           Offset=00006700H
+    NOHOOKDOSCALL
+ 
+DOS3CALL                Offset=00006750H
+    DOS3CALL
+ 
+NETBIOSCALL             Offset=00006790H
+    NETBIOSCALL
+ 
+GETCODEINFO             Offset=000067d0H
+    GETCODEINFO
+ 
+GETEXEVERSION           Offset=00006810H
+    GETEXEVERSION
+ 
+SETSWAPAREASIZE         Offset=00006860H
+    SETSWAPAREASIZE
+ 
+SETERRORMODE            Offset=000068b0H
+    SETERRORMODE
+ 
+SWITCHSTACKTO           Offset=000068f0H
+    SWITCHSTACKTO
+ 
+SWITCHSTACKBACK         Offset=00006940H
+    SWITCHSTACKBACK
+ 
+PATCHCODEHANDLE         Offset=00006990H
+    PATCHCODEHANDLE
+ 
+GLOBALWIRE              Offset=000069e0H
+    GLOBALWIRE
+ 
+GLOBALUNWIRE            Offset=00006a20H
+    GLOBALUNWIRE
+ 
+__AHSHIFT               Offset=00006a60H
+    __AHSHIFT
+ 
+__AHINCR                Offset=00006aa0H
+    __AHINCR
+ 
+OUTPUTDEBUGSTRING       Offset=00006ae0H
+    OUTPUTDEBUGSTRING
+ 
+INITLIB                 Offset=00006b30H
+    INITLIB
+ 
+OLDYIELD                Offset=00006b70H
+    OLDYIELD
+ 
+GETTASKQUEUEDS          Offset=00006bb0H
+    GETTASKQUEUEDS
+ 
+GETTASKQUEUEES          Offset=00006c00H
+    GETTASKQUEUEES
+ 
+UNDEFDYNLINK            Offset=00006c50H
+    UNDEFDYNLINK
+ 
+LOCALSHRINK             Offset=00006c90H
+    LOCALSHRINK
+ 
+ISTASKLOCKED            Offset=00006cd0H
+    ISTASKLOCKED
+ 
+KBDRST                  Offset=00006d10H
+    KBDRST
+ 
+ENABLEKERNEL            Offset=00006d50H
+    ENABLEKERNEL
+ 
+DISABLEKERNEL           Offset=00006d90H
+    DISABLEKERNEL
+ 
+MEMORYFREED             Offset=00006de0H
+    MEMORYFREED
+ 
+GETPRIVATEPROFILEINT    Offset=00006e20H
+    GETPRIVATEPROFILEINT
+ 
+GETPRIVATEPROFILESTRING Offset=00006e70H
+    GETPRIVATEPROFILESTRING
+ 
+WRITEPRIVATEPROFILESTRING Offset=00006ed0H
+    WRITEPRIVATEPROFILESTRING
+ 
+FILECDR                 Offset=00006f30H
+    FILECDR
+ 
+GETDOSENVIRONMENT       Offset=00006f70H
+    GETDOSENVIRONMENT
+ 
+GETWINFLAGS             Offset=00006fc0H
+    GETWINFLAGS
+ 
+GETEXEPTR               Offset=00007000H
+    GETEXEPTR
+ 
+GETWINDOWSDIRECTORY     Offset=00007040H
+    GETWINDOWSDIRECTORY
+ 
+GETSYSTEMDIRECTORY      Offset=00007090H
+    GETSYSTEMDIRECTORY
+ 
+GETDRIVETYPE            Offset=000070e0H
+    GETDRIVETYPE
+ 
+FATALAPPEXIT            Offset=00007120H
+    FATALAPPEXIT
+ 
+GETHEAPSPACES           Offset=00007160H
+    GETHEAPSPACES
+ 
+DOSIGNAL                Offset=000071b0H
+    DOSIGNAL
+ 
+SETSIGHANDLER           Offset=000071f0H
+    SETSIGHANDLER
+ 
+INITTASK1               Offset=00007240H
+    INITTASK1
+ 
+DIRECTEDYIELD           Offset=00007280H
+    DIRECTEDYIELD
+ 
+WINOLDAPCALL            Offset=000072d0H
+    WINOLDAPCALL
+ 
+GETNUMTASKS             Offset=00007310H
+    GETNUMTASKS
+ 
+GLOBALNOTIFY            Offset=00007350H
+    GLOBALNOTIFY
+ 
+GETTASKDS               Offset=00007390H
+    GETTASKDS
+ 
+LIMITEMSPAGES           Offset=000073d0H
+    LIMITEMSPAGES
+ 
+GETCURPID               Offset=00007420H
+    GETCURPID
+ 
+ISWINOLDAPTASK          Offset=00007460H
+    ISWINOLDAPTASK
+ 
+GLOBALHANDLENORIP       Offset=000074b0H
+    GLOBALHANDLENORIP
+ 
+EMSCOPY                 Offset=00007500H
+    EMSCOPY
+ 
+LOCALCOUNTFREE          Offset=00007540H
+    LOCALCOUNTFREE
+ 
+LOCALHEAPSIZE           Offset=00007590H
+    LOCALHEAPSIZE
+ 
+GLOBALLRUOLDEST         Offset=000075e0H
+    GLOBALLRUOLDEST
+ 
+GLOBALLRUNEWEST         Offset=00007630H
+    GLOBALLRUNEWEST
+ 
+A20PROC                 Offset=00007680H
+    A20PROC
+ 
+WINEXEC                 Offset=000076c0H
+    WINEXEC
+ 
+GETEXPWINVER            Offset=00007700H
+    GETEXPWINVER
+ 
+DIRECTRESALLOC          Offset=00007740H
+    DIRECTRESALLOC
+ 
+GETFREESPACE            Offset=00007790H
+    GETFREESPACE
+ 
+ALLOCCSTODSALIAS        Offset=000077d0H
+    ALLOCCSTODSALIAS
+ 
+ALLOCDSTOCSALIAS        Offset=00007820H
+    ALLOCDSTOCSALIAS
+ 
+ALLOCALIAS              Offset=00007870H
+    ALLOCALIAS
+ 
+__ROMBIOS               Offset=000078b0H
+    __ROMBIOS
+ 
+__A000H                 Offset=000078f0H
+    __A000H
+ 
+ALLOCSELECTOR           Offset=00007930H
+    ALLOCSELECTOR
+ 
+FREESELECTOR            Offset=00007980H
+    FREESELECTOR
+ 
+PRESTOCHANGOSELECTOR    Offset=000079c0H
+    PRESTOCHANGOSELECTOR
+ 
+__WINFLAGS              Offset=00007a10H
+    __WINFLAGS
+ 
+__D000H                 Offset=00007a50H
+    __D000H
+ 
+LONGPTRADD              Offset=00007a90H
+    LONGPTRADD
+ 
+__B000H                 Offset=00007ad0H
+    __B000H
+ 
+__B800H                 Offset=00007b10H
+    __B800H
+ 
+__0000H                 Offset=00007b50H
+    __0000H
+ 
+GLOBALDOSALLOC          Offset=00007b90H
+    GLOBALDOSALLOC
+ 
+GLOBALDOSFREE           Offset=00007be0H
+    GLOBALDOSFREE
+ 
+GETSELECTORBASE         Offset=00007c30H
+    GETSELECTORBASE
+ 
+SETSELECTORBASE         Offset=00007c80H
+    SETSELECTORBASE
+ 
+GETSELECTORLIMIT        Offset=00007cd0H
+    GETSELECTORLIMIT
+ 
+SETSELECTORLIMIT        Offset=00007d20H
+    SETSELECTORLIMIT
+ 
+__E000H                 Offset=00007d70H
+    __E000H
+ 
+GLOBALPAGELOCK          Offset=00007db0H
+    GLOBALPAGELOCK
+ 
+GLOBALPAGEUNLOCK        Offset=00007e00H
+    GLOBALPAGEUNLOCK
+ 
+__0040H                 Offset=00007e50H
+    __0040H
+ 
+__F000H                 Offset=00007e90H
+    __F000H
+ 
+__C000H                 Offset=00007ed0H
+    __C000H
+ 
+SELECTORACCESSRIGHTS    Offset=00007f10H
+    SELECTORACCESSRIGHTS
+ 
+GLOBALFIX               Offset=00007f60H
+    GLOBALFIX
+ 
+GLOBALUNFIX             Offset=00007fa0H
+    GLOBALUNFIX
+ 
+SETHANDLECOUNT          Offset=00007fe0H
+    SETHANDLECOUNT
+ 
+VALIDATEFREESPACES      Offset=00008030H
+    VALIDATEFREESPACES
+ 
+REPLACEINST             Offset=00008080H
+    REPLACEINST
+ 
+REGISTERPTRACE          Offset=000080c0H
+    REGISTERPTRACE
+ 
+DEBUGBREAK              Offset=00008110H
+    DEBUGBREAK
+ 
+SWAPRECORDING           Offset=00008150H
+    SWAPRECORDING
+ 
+CVWBREAK                Offset=000081a0H
+    CVWBREAK
+ 
+ALLOCSELECTORARRAY      Offset=000081e0H
+    ALLOCSELECTORARRAY
+ 
+ISDBCSLEADBYTE          Offset=00008230H
+    ISDBCSLEADBYTE
+ 
+LOCALHANDLEDELTA        Offset=00008280H
+    LOCALHANDLEDELTA
+ 
+GETSETKERNELDOSPROC     Offset=000082d0H
+    GETSETKERNELDOSPROC
+ 
+DEBUGDEFINESEGMENT      Offset=00008320H
+    DEBUGDEFINESEGMENT
+ 
+WRITEOUTPROFILES        Offset=00008370H
+    WRITEOUTPROFILES
+ 
+GETFREEMEMINFO          Offset=000083c0H
+    GETFREEMEMINFO
+ 
+FATALEXITHOOK           Offset=00008410H
+    FATALEXITHOOK
+ 
+FLUSHCACHEDFILEHANDLE   Offset=00008460H
+    FLUSHCACHEDFILEHANDLE
+ 
+ISTASK                  Offset=000084c0H
+    ISTASK
+ 
+ISROMMODULE             Offset=00008500H
+    ISROMMODULE
+ 
+LOGERROR                Offset=00008540H
+    LOGERROR
+ 
+LOGPARAMERROR           Offset=00008580H
+    LOGPARAMERROR
+ 
+ISROMFILE               Offset=000085d0H
+    ISROMFILE
+ 
+K327                    Offset=00008610H
+    K327
+ 
+_DEBUGOUTPUT            Offset=00008640H
+    _DEBUGOUTPUT
+ 
+K329                    Offset=00008680H
+    K329
+ 
+THHOOK                  Offset=000086b0H
+    THHOOK
+ 
+ISBADREADPTR            Offset=000086f0H
+    ISBADREADPTR
+ 
+ISBADWRITEPTR           Offset=00008730H
+    ISBADWRITEPTR
+ 
+ISBADCODEPTR            Offset=00008780H
+    ISBADCODEPTR
+ 
+ISBADSTRINGPTR          Offset=000087c0H
+    ISBADSTRINGPTR
+ 
+HASGPHANDLER            Offset=00008810H
+    HASGPHANDLER
+ 
+DIAGQUERY               Offset=00008850H
+    DIAGQUERY
+ 
+DIAGOUTPUT              Offset=00008890H
+    DIAGOUTPUT
+ 
+TOOLHELPHOOK            Offset=000088d0H
+    TOOLHELPHOOK
+ 
+REGISTERWINOLDAPHOOK    Offset=00008910H
+    REGISTERWINOLDAPHOOK
+ 
+GETWINOLDAPHOOKS        Offset=00008960H
+    GETWINOLDAPHOOKS
+ 
+ISSHAREDSELECTOR        Offset=000089b0H
+    ISSHAREDSELECTOR
+ 
+ISBADHUGEREADPTR        Offset=00008a00H
+    ISBADHUGEREADPTR
+ 
+ISBADHUGEWRITEPTR       Offset=00008a50H
+    ISBADHUGEWRITEPTR
+ 
+HMEMCPY                 Offset=00008aa0H
+    HMEMCPY
+ 
+_HREAD                  Offset=00008ae0H
+    _HREAD
+ 
+_HWRITE                 Offset=00008b20H
+    _HWRITE
+ 
+BUNNY_351               Offset=00008b60H
+    BUNNY_351
+ 
+LSTRCPYN                Offset=00008ba0H
+    LSTRCPYN
+ 
+GETAPPCOMPATFLAGS       Offset=00008be0H
+    GETAPPCOMPATFLAGS
+ 
+GETWINDEBUGINFO         Offset=00008c30H
+    GETWINDEBUGINFO
+ 
+SETWINDEBUGINFO         Offset=00008c80H
+    SETWINDEBUGINFO
+ 
+K403                    Offset=00008cd0H
+    K403
+ 
+K404                    Offset=00008d00H
+    K404
+ 
+INQUIRE                 Offset=00008d30H
+    INQUIRE
+ 
+ENABLE                  Offset=00008d70H
+    ENABLE
+ 
+DISABLE                 Offset=00008db0H
+    DISABLE
+ 
+TOASCII                 Offset=00008df0H
+    TOASCII
+ 
+ANSITOOEM               Offset=00008e30H
+    ANSITOOEM
+ 
+OEMTOANSI               Offset=00008e70H
+    OEMTOANSI
+ 
+SETSPEED                Offset=00008eb0H
+    SETSPEED
+ 
+SCREENSWITCHENABLE      Offset=00008ef0H
+    SCREENSWITCHENABLE
+ 
+GETTABLESEG             Offset=00008f40H
+    GETTABLESEG
+ 
+NEWTABLE                Offset=00008f80H
+    NEWTABLE
+ 
+OEMKEYSCAN              Offset=00008fc0H
+    OEMKEYSCAN
+ 
+VKKEYSCAN               Offset=00009000H
+    VKKEYSCAN
+ 
+GETKEYBOARDTYPE         Offset=00009040H
+    GETKEYBOARDTYPE
+ 
+MAPVIRTUALKEY           Offset=00009090H
+    MAPVIRTUALKEY
+ 
+GETKBCODEPAGE           Offset=000090e0H
+    GETKBCODEPAGE
+ 
+GETKEYNAMETEXT          Offset=00009130H
+    GETKEYNAMETEXT
+ 
+ANSITOOEMBUFF           Offset=00009180H
+    ANSITOOEMBUFF
+ 
+OEMTOANSIBUFF           Offset=000091d0H
+    OEMTOANSIBUFF
+ 
+ENABLEKBSYSREQ          Offset=00009220H
+    ENABLEKBSYSREQ
+ 
+GETBIOSKEYPROC          Offset=00009270H
+    GETBIOSKEYPROC
+ 
+OPENSOUND               Offset=000092c0H
+    OPENSOUND
+ 
+CLOSESOUND              Offset=00009300H
+    CLOSESOUND
+ 
+SETVOICEQUEUESIZE       Offset=00009340H
+    SETVOICEQUEUESIZE
+ 
+SETVOICENOTE            Offset=00009390H
+    SETVOICENOTE
+ 
+SETVOICEACCENT          Offset=000093d0H
+    SETVOICEACCENT
+ 
+SETVOICEENVELOPE        Offset=00009420H
+    SETVOICEENVELOPE
+ 
+SETSOUNDNOISE           Offset=00009470H
+    SETSOUNDNOISE
+ 
+SETVOICESOUND           Offset=000094b0H
+    SETVOICESOUND
+ 
+STARTSOUND              Offset=000094f0H
+    STARTSOUND
+ 
+STOPSOUND               Offset=00009530H
+    STOPSOUND
+ 
+WAITSOUNDSTATE          Offset=00009570H
+    WAITSOUNDSTATE
+ 
+SYNCALLVOICES           Offset=000095c0H
+    SYNCALLVOICES
+ 
+COUNTVOICENOTES         Offset=00009600H
+    COUNTVOICENOTES
+ 
+GETTHRESHOLDEVENT       Offset=00009650H
+    GETTHRESHOLDEVENT
+ 
+GETTHRESHOLDSTATUS      Offset=000096a0H
+    GETTHRESHOLDSTATUS
+ 
+SETVOICETHRESHOLD       Offset=000096f0H
+    SETVOICETHRESHOLD
+ 
+DOBEEP                  Offset=00009740H
+    DOBEEP
+ 
+MESSAGEBOX              Offset=00009780H
+    MESSAGEBOX
+ 
+OLDEXITWINDOWS          Offset=000097c0H
+    OLDEXITWINDOWS
+ 
+ENABLEOEMLAYER          Offset=00009810H
+    ENABLEOEMLAYER
+ 
+DISABLEOEMLAYER         Offset=00009860H
+    DISABLEOEMLAYER
+ 
+INITAPP                 Offset=000098b0H
+    INITAPP
+ 
+POSTQUITMESSAGE         Offset=000098f0H
+    POSTQUITMESSAGE
+ 
+EXITWINDOWS             Offset=00009940H
+    EXITWINDOWS
+ 
+SETTIMER                Offset=00009980H
+    SETTIMER
+ 
+BEAR11                  Offset=000099c0H
+    BEAR11
+ 
+KILLTIMER               Offset=00009a00H
+    KILLTIMER
+ 
+GETTICKCOUNT            Offset=00009a40H
+    GETTICKCOUNT
+ 
+GETTIMERRESOLUTION      Offset=00009a80H
+    GETTIMERRESOLUTION
+ 
+GETCURRENTTIME          Offset=00009ad0H
+    GETCURRENTTIME
+ 
+CLIPCURSOR              Offset=00009b20H
+    CLIPCURSOR
+ 
+GETCURSORPOS            Offset=00009b60H
+    GETCURSORPOS
+ 
+SETCAPTURE              Offset=00009ba0H
+    SETCAPTURE
+ 
+RELEASECAPTURE          Offset=00009be0H
+    RELEASECAPTURE
+ 
+SETDOUBLECLICKTIME      Offset=00009c30H
+    SETDOUBLECLICKTIME
+ 
+GETDOUBLECLICKTIME      Offset=00009c80H
+    GETDOUBLECLICKTIME
+ 
+SETFOCUS                Offset=00009cd0H
+    SETFOCUS
+ 
+GETFOCUS                Offset=00009d10H
+    GETFOCUS
+ 
+REMOVEPROP              Offset=00009d50H
+    REMOVEPROP
+ 
+GETPROP                 Offset=00009d90H
+    GETPROP
+ 
+SETPROP                 Offset=00009dd0H
+    SETPROP
+ 
+ENUMPROPS               Offset=00009e10H
+    ENUMPROPS
+ 
+CLIENTTOSCREEN          Offset=00009e50H
+    CLIENTTOSCREEN
+ 
+SCREENTOCLIENT          Offset=00009ea0H
+    SCREENTOCLIENT
+ 
+WINDOWFROMPOINT         Offset=00009ef0H
+    WINDOWFROMPOINT
+ 
+ISICONIC                Offset=00009f40H
+    ISICONIC
+ 
+GETWINDOWRECT           Offset=00009f80H
+    GETWINDOWRECT
+ 
+GETCLIENTRECT           Offset=00009fc0H
+    GETCLIENTRECT
+ 
+ENABLEWINDOW            Offset=0000a000H
+    ENABLEWINDOW
+ 
+ISWINDOWENABLED         Offset=0000a040H
+    ISWINDOWENABLED
+ 
+GETWINDOWTEXT           Offset=0000a090H
+    GETWINDOWTEXT
+ 
+SETWINDOWTEXT           Offset=0000a0d0H
+    SETWINDOWTEXT
+ 
+GETWINDOWTEXTLENGTH     Offset=0000a110H
+    GETWINDOWTEXTLENGTH
+ 
+BEGINPAINT              Offset=0000a160H
+    BEGINPAINT
+ 
+ENDPAINT                Offset=0000a1a0H
+    ENDPAINT
+ 
+CREATEWINDOW            Offset=0000a1e0H
+    CREATEWINDOW
+ 
+SHOWWINDOW              Offset=0000a220H
+    SHOWWINDOW
+ 
+CLOSEWINDOW             Offset=0000a260H
+    CLOSEWINDOW
+ 
+OPENICON                Offset=0000a2a0H
+    OPENICON
+ 
+BRINGWINDOWTOTOP        Offset=0000a2e0H
+    BRINGWINDOWTOTOP
+ 
+GETPARENT               Offset=0000a330H
+    GETPARENT
+ 
+ISWINDOW                Offset=0000a370H
+    ISWINDOW
+ 
+ISCHILD                 Offset=0000a3b0H
+    ISCHILD
+ 
+ISWINDOWVISIBLE         Offset=0000a3f0H
+    ISWINDOWVISIBLE
+ 
+FINDWINDOW              Offset=0000a440H
+    FINDWINDOW
+ 
+BEAR51                  Offset=0000a480H
+    BEAR51
+ 
+ANYPOPUP                Offset=0000a4c0H
+    ANYPOPUP
+ 
+DESTROYWINDOW           Offset=0000a500H
+    DESTROYWINDOW
+ 
+ENUMWINDOWS             Offset=0000a540H
+    ENUMWINDOWS
+ 
+ENUMCHILDWINDOWS        Offset=0000a580H
+    ENUMCHILDWINDOWS
+ 
+MOVEWINDOW              Offset=0000a5d0H
+    MOVEWINDOW
+ 
+REGISTERCLASS           Offset=0000a610H
+    REGISTERCLASS
+ 
+GETCLASSNAME            Offset=0000a650H
+    GETCLASSNAME
+ 
+SETACTIVEWINDOW         Offset=0000a690H
+    SETACTIVEWINDOW
+ 
+GETACTIVEWINDOW         Offset=0000a6e0H
+    GETACTIVEWINDOW
+ 
+SCROLLWINDOW            Offset=0000a730H
+    SCROLLWINDOW
+ 
+SETSCROLLPOS            Offset=0000a770H
+    SETSCROLLPOS
+ 
+GETSCROLLPOS            Offset=0000a7b0H
+    GETSCROLLPOS
+ 
+SETSCROLLRANGE          Offset=0000a7f0H
+    SETSCROLLRANGE
+ 
+GETSCROLLRANGE          Offset=0000a840H
+    GETSCROLLRANGE
+ 
+GETDC                   Offset=0000a890H
+    GETDC
+ 
+GETWINDOWDC             Offset=0000a8c0H
+    GETWINDOWDC
+ 
+RELEASEDC               Offset=0000a900H
+    RELEASEDC
+ 
+SETCURSOR               Offset=0000a940H
+    SETCURSOR
+ 
+SETCURSORPOS            Offset=0000a980H
+    SETCURSORPOS
+ 
+SHOWCURSOR              Offset=0000a9c0H
+    SHOWCURSOR
+ 
+SETRECT                 Offset=0000aa00H
+    SETRECT
+ 
+SETRECTEMPTY            Offset=0000aa40H
+    SETRECTEMPTY
+ 
+COPYRECT                Offset=0000aa80H
+    COPYRECT
+ 
+ISRECTEMPTY             Offset=0000aac0H
+    ISRECTEMPTY
+ 
+PTINRECT                Offset=0000ab00H
+    PTINRECT
+ 
+OFFSETRECT              Offset=0000ab40H
+    OFFSETRECT
+ 
+INFLATERECT             Offset=0000ab80H
+    INFLATERECT
+ 
+INTERSECTRECT           Offset=0000abc0H
+    INTERSECTRECT
+ 
+UNIONRECT               Offset=0000ac00H
+    UNIONRECT
+ 
+FILLRECT                Offset=0000ac40H
+    FILLRECT
+ 
+INVERTRECT              Offset=0000ac80H
+    INVERTRECT
+ 
+FRAMERECT               Offset=0000acc0H
+    FRAMERECT
+ 
+DRAWICON                Offset=0000ad00H
+    DRAWICON
+ 
+DRAWTEXT                Offset=0000ad40H
+    DRAWTEXT
+ 
+BEAR86                  Offset=0000ad80H
+    BEAR86
+ 
+DIALOGBOX               Offset=0000adc0H
+    DIALOGBOX
+ 
+ENDDIALOG               Offset=0000ae00H
+    ENDDIALOG
+ 
+CREATEDIALOG            Offset=0000ae40H
+    CREATEDIALOG
+ 
+ISDIALOGMESSAGE         Offset=0000ae80H
+    ISDIALOGMESSAGE
+ 
+GETDLGITEM              Offset=0000aed0H
+    GETDLGITEM
+ 
+SETDLGITEMTEXT          Offset=0000af10H
+    SETDLGITEMTEXT
+ 
+GETDLGITEMTEXT          Offset=0000af60H
+    GETDLGITEMTEXT
+ 
+SETDLGITEMINT           Offset=0000afb0H
+    SETDLGITEMINT
+ 
+GETDLGITEMINT           Offset=0000aff0H
+    GETDLGITEMINT
+ 
+CHECKRADIOBUTTON        Offset=0000b030H
+    CHECKRADIOBUTTON
+ 
+CHECKDLGBUTTON          Offset=0000b080H
+    CHECKDLGBUTTON
+ 
+ISDLGBUTTONCHECKED      Offset=0000b0d0H
+    ISDLGBUTTONCHECKED
+ 
+DLGDIRSELECT            Offset=0000b120H
+    DLGDIRSELECT
+ 
+DLGDIRLIST              Offset=0000b160H
+    DLGDIRLIST
+ 
+SENDDLGITEMMESSAGE      Offset=0000b1a0H
+    SENDDLGITEMMESSAGE
+ 
+ADJUSTWINDOWRECT        Offset=0000b1f0H
+    ADJUSTWINDOWRECT
+ 
+MAPDIALOGRECT           Offset=0000b240H
+    MAPDIALOGRECT
+ 
+MESSAGEBEEP             Offset=0000b280H
+    MESSAGEBEEP
+ 
+FLASHWINDOW             Offset=0000b2c0H
+    FLASHWINDOW
+ 
+GETKEYSTATE             Offset=0000b300H
+    GETKEYSTATE
+ 
+DEFWINDOWPROC           Offset=0000b340H
+    DEFWINDOWPROC
+ 
+GETMESSAGE              Offset=0000b380H
+    GETMESSAGE
+ 
+PEEKMESSAGE             Offset=0000b3c0H
+    PEEKMESSAGE
+ 
+POSTMESSAGE             Offset=0000b400H
+    POSTMESSAGE
+ 
+SENDMESSAGE             Offset=0000b440H
+    SENDMESSAGE
+ 
+WAITMESSAGE             Offset=0000b480H
+    WAITMESSAGE
+ 
+TRANSLATEMESSAGE        Offset=0000b4c0H
+    TRANSLATEMESSAGE
+ 
+DISPATCHMESSAGE         Offset=0000b510H
+    DISPATCHMESSAGE
+ 
+REPLYMESSAGE            Offset=0000b560H
+    REPLYMESSAGE
+ 
+POSTAPPMESSAGE          Offset=0000b5a0H
+    POSTAPPMESSAGE
+ 
+REGISTERWINDOWMESSAGE   Offset=0000b5f0H
+    REGISTERWINDOWMESSAGE
+ 
+GETMESSAGEPOS           Offset=0000b640H
+    GETMESSAGEPOS
+ 
+GETMESSAGETIME          Offset=0000b680H
+    GETMESSAGETIME
+ 
+SETWINDOWSHOOK          Offset=0000b6d0H
+    SETWINDOWSHOOK
+ 
+CALLWINDOWPROC          Offset=0000b720H
+    CALLWINDOWPROC
+ 
+CALLMSGFILTER           Offset=0000b770H
+    CALLMSGFILTER
+ 
+UPDATEWINDOW            Offset=0000b7b0H
+    UPDATEWINDOW
+ 
+INVALIDATERECT          Offset=0000b7f0H
+    INVALIDATERECT
+ 
+INVALIDATERGN           Offset=0000b840H
+    INVALIDATERGN
+ 
+VALIDATERECT            Offset=0000b880H
+    VALIDATERECT
+ 
+VALIDATERGN             Offset=0000b8c0H
+    VALIDATERGN
+ 
+GETCLASSWORD            Offset=0000b900H
+    GETCLASSWORD
+ 
+SETCLASSWORD            Offset=0000b940H
+    SETCLASSWORD
+ 
+GETCLASSLONG            Offset=0000b980H
+    GETCLASSLONG
+ 
+SETCLASSLONG            Offset=0000b9c0H
+    SETCLASSLONG
+ 
+GETWINDOWWORD           Offset=0000ba00H
+    GETWINDOWWORD
+ 
+SETWINDOWWORD           Offset=0000ba40H
+    SETWINDOWWORD
+ 
+GETWINDOWLONG           Offset=0000ba80H
+    GETWINDOWLONG
+ 
+SETWINDOWLONG           Offset=0000bac0H
+    SETWINDOWLONG
+ 
+OPENCLIPBOARD           Offset=0000bb00H
+    OPENCLIPBOARD
+ 
+CLOSECLIPBOARD          Offset=0000bb40H
+    CLOSECLIPBOARD
+ 
+EMPTYCLIPBOARD          Offset=0000bb90H
+    EMPTYCLIPBOARD
+ 
+GETCLIPBOARDOWNER       Offset=0000bbe0H
+    GETCLIPBOARDOWNER
+ 
+SETCLIPBOARDDATA        Offset=0000bc30H
+    SETCLIPBOARDDATA
+ 
+GETCLIPBOARDDATA        Offset=0000bc80H
+    GETCLIPBOARDDATA
+ 
+COUNTCLIPBOARDFORMATS   Offset=0000bcd0H
+    COUNTCLIPBOARDFORMATS
+ 
+ENUMCLIPBOARDFORMATS    Offset=0000bd20H
+    ENUMCLIPBOARDFORMATS
+ 
+REGISTERCLIPBOARDFORMAT Offset=0000bd70H
+    REGISTERCLIPBOARDFORMAT
+ 
+GETCLIPBOARDFORMATNAME  Offset=0000bdd0H
+    GETCLIPBOARDFORMATNAME
+ 
+SETCLIPBOARDVIEWER      Offset=0000be30H
+    SETCLIPBOARDVIEWER
+ 
+GETCLIPBOARDVIEWER      Offset=0000be80H
+    GETCLIPBOARDVIEWER
+ 
+CHANGECLIPBOARDCHAIN    Offset=0000bed0H
+    CHANGECLIPBOARDCHAIN
+ 
+LOADMENU                Offset=0000bf20H
+    LOADMENU
+ 
+CREATEMENU              Offset=0000bf60H
+    CREATEMENU
+ 
+DESTROYMENU             Offset=0000bfa0H
+    DESTROYMENU
+ 
+CHANGEMENU              Offset=0000bfe0H
+    CHANGEMENU
+ 
+CHECKMENUITEM           Offset=0000c020H
+    CHECKMENUITEM
+ 
+ENABLEMENUITEM          Offset=0000c060H
+    ENABLEMENUITEM
+ 
+GETSYSTEMMENU           Offset=0000c0b0H
+    GETSYSTEMMENU
+ 
+GETMENU                 Offset=0000c0f0H
+    GETMENU
+ 
+SETMENU                 Offset=0000c130H
+    SETMENU
+ 
+GETSUBMENU              Offset=0000c170H
+    GETSUBMENU
+ 
+DRAWMENUBAR             Offset=0000c1b0H
+    DRAWMENUBAR
+ 
+GETMENUSTRING           Offset=0000c1f0H
+    GETMENUSTRING
+ 
+HILITEMENUITEM          Offset=0000c230H
+    HILITEMENUITEM
+ 
+CREATECARET             Offset=0000c280H
+    CREATECARET
+ 
+DESTROYCARET            Offset=0000c2c0H
+    DESTROYCARET
+ 
+SETCARETPOS             Offset=0000c300H
+    SETCARETPOS
+ 
+HIDECARET               Offset=0000c340H
+    HIDECARET
+ 
+SHOWCARET               Offset=0000c380H
+    SHOWCARET
+ 
+SETCARETBLINKTIME       Offset=0000c3c0H
+    SETCARETBLINKTIME
+ 
+GETCARETBLINKTIME       Offset=0000c410H
+    GETCARETBLINKTIME
+ 
+ARRANGEICONICWINDOWS    Offset=0000c460H
+    ARRANGEICONICWINDOWS
+ 
+WINHELP                 Offset=0000c4b0H
+    WINHELP
+ 
+SWITCHTOTHISWINDOW      Offset=0000c4f0H
+    SWITCHTOTHISWINDOW
+ 
+LOADCURSOR              Offset=0000c540H
+    LOADCURSOR
+ 
+LOADICON                Offset=0000c580H
+    LOADICON
+ 
+LOADBITMAP              Offset=0000c5c0H
+    LOADBITMAP
+ 
+LOADSTRING              Offset=0000c600H
+    LOADSTRING
+ 
+LOADACCELERATORS        Offset=0000c640H
+    LOADACCELERATORS
+ 
+TRANSLATEACCELERATOR    Offset=0000c690H
+    TRANSLATEACCELERATOR
+ 
+GETSYSTEMMETRICS        Offset=0000c6e0H
+    GETSYSTEMMETRICS
+ 
+GETSYSCOLOR             Offset=0000c730H
+    GETSYSCOLOR
+ 
+SETSYSCOLORS            Offset=0000c770H
+    SETSYSCOLORS
+ 
+BEAR182                 Offset=0000c7b0H
+    BEAR182
+ 
+GETCARETPOS             Offset=0000c7f0H
+    GETCARETPOS
+ 
+QUERYSENDMESSAGE        Offset=0000c830H
+    QUERYSENDMESSAGE
+ 
+GRAYSTRING              Offset=0000c880H
+    GRAYSTRING
+ 
+SWAPMOUSEBUTTON         Offset=0000c8c0H
+    SWAPMOUSEBUTTON
+ 
+ENDMENU                 Offset=0000c910H
+    ENDMENU
+ 
+SETSYSMODALWINDOW       Offset=0000c950H
+    SETSYSMODALWINDOW
+ 
+GETSYSMODALWINDOW       Offset=0000c9a0H
+    GETSYSMODALWINDOW
+ 
+GETUPDATERECT           Offset=0000c9f0H
+    GETUPDATERECT
+ 
+CHILDWINDOWFROMPOINT    Offset=0000ca30H
+    CHILDWINDOWFROMPOINT
+ 
+INSENDMESSAGE           Offset=0000ca80H
+    INSENDMESSAGE
+ 
+ISCLIPBOARDFORMATAVAILABLE Offset=0000cac0H
+    ISCLIPBOARDFORMATAVAILABLE
+ 
+DLGDIRSELECTCOMBOBOX    Offset=0000cb20H
+    DLGDIRSELECTCOMBOBOX
+ 
+DLGDIRLISTCOMBOBOX      Offset=0000cb70H
+    DLGDIRLISTCOMBOBOX
+ 
+TABBEDTEXTOUT           Offset=0000cbc0H
+    TABBEDTEXTOUT
+ 
+GETTABBEDTEXTEXTENT     Offset=0000cc00H
+    GETTABBEDTEXTEXTENT
+ 
+CASCADECHILDWINDOWS     Offset=0000cc50H
+    CASCADECHILDWINDOWS
+ 
+TILECHILDWINDOWS        Offset=0000cca0H
+    TILECHILDWINDOWS
+ 
+OPENCOMM                Offset=0000ccf0H
+    OPENCOMM
+ 
+SETCOMMSTATE            Offset=0000cd30H
+    SETCOMMSTATE
+ 
+GETCOMMSTATE            Offset=0000cd70H
+    GETCOMMSTATE
+ 
+GETCOMMERROR            Offset=0000cdb0H
+    GETCOMMERROR
+ 
+READCOMM                Offset=0000cdf0H
+    READCOMM
+ 
+WRITECOMM               Offset=0000ce30H
+    WRITECOMM
+ 
+TRANSMITCOMMCHAR        Offset=0000ce70H
+    TRANSMITCOMMCHAR
+ 
+CLOSECOMM               Offset=0000cec0H
+    CLOSECOMM
+ 
+SETCOMMEVENTMASK        Offset=0000cf00H
+    SETCOMMEVENTMASK
+ 
+GETCOMMEVENTMASK        Offset=0000cf50H
+    GETCOMMEVENTMASK
+ 
+SETCOMMBREAK            Offset=0000cfa0H
+    SETCOMMBREAK
+ 
+CLEARCOMMBREAK          Offset=0000cfe0H
+    CLEARCOMMBREAK
+ 
+UNGETCOMMCHAR           Offset=0000d030H
+    UNGETCOMMCHAR
+ 
+BUILDCOMMDCB            Offset=0000d070H
+    BUILDCOMMDCB
+ 
+ESCAPECOMMFUNCTION      Offset=0000d0b0H
+    ESCAPECOMMFUNCTION
+ 
+FLUSHCOMM               Offset=0000d100H
+    FLUSHCOMM
+ 
+USERSEEUSERDO           Offset=0000d140H
+    USERSEEUSERDO
+ 
+LOOKUPMENUHANDLE        Offset=0000d180H
+    LOOKUPMENUHANDLE
+ 
+DIALOGBOXINDIRECT       Offset=0000d1d0H
+    DIALOGBOXINDIRECT
+ 
+CREATEDIALOGINDIRECT    Offset=0000d220H
+    CREATEDIALOGINDIRECT
+ 
+LOADMENUINDIRECT        Offset=0000d270H
+    LOADMENUINDIRECT
+ 
+SCROLLDC                Offset=0000d2c0H
+    SCROLLDC
+ 
+GETKEYBOARDSTATE        Offset=0000d300H
+    GETKEYBOARDSTATE
+ 
+SETKEYBOARDSTATE        Offset=0000d350H
+    SETKEYBOARDSTATE
+ 
+GETWINDOWTASK           Offset=0000d3a0H
+    GETWINDOWTASK
+ 
+ENUMTASKWINDOWS         Offset=0000d3e0H
+    ENUMTASKWINDOWS
+ 
+LOCKINPUT               Offset=0000d430H
+    LOCKINPUT
+ 
+GETNEXTDLGGROUPITEM     Offset=0000d470H
+    GETNEXTDLGGROUPITEM
+ 
+GETNEXTDLGTABITEM       Offset=0000d4c0H
+    GETNEXTDLGTABITEM
+ 
+GETTOPWINDOW            Offset=0000d510H
+    GETTOPWINDOW
+ 
+GETNEXTWINDOW           Offset=0000d550H
+    GETNEXTWINDOW
+ 
+GETSYSTEMDEBUGSTATE     Offset=0000d590H
+    GETSYSTEMDEBUGSTATE
+ 
+SETWINDOWPOS            Offset=0000d5e0H
+    SETWINDOWPOS
+ 
+SETPARENT               Offset=0000d620H
+    SETPARENT
+ 
+UNHOOKWINDOWSHOOK       Offset=0000d660H
+    UNHOOKWINDOWSHOOK
+ 
+DEFHOOKPROC             Offset=0000d6b0H
+    DEFHOOKPROC
+ 
+GETCAPTURE              Offset=0000d6f0H
+    GETCAPTURE
+ 
+GETUPDATERGN            Offset=0000d730H
+    GETUPDATERGN
+ 
+EXCLUDEUPDATERGN        Offset=0000d770H
+    EXCLUDEUPDATERGN
+ 
+DIALOGBOXPARAM          Offset=0000d7c0H
+    DIALOGBOXPARAM
+ 
+DIALOGBOXINDIRECTPARAM  Offset=0000d810H
+    DIALOGBOXINDIRECTPARAM
+ 
+CREATEDIALOGPARAM       Offset=0000d870H
+    CREATEDIALOGPARAM
+ 
+CREATEDIALOGINDIRECTPARAM Offset=0000d8c0H
+    CREATEDIALOGINDIRECTPARAM
+ 
+GETDIALOGBASEUNITS      Offset=0000d920H
+    GETDIALOGBASEUNITS
+ 
+EQUALRECT               Offset=0000d970H
+    EQUALRECT
+ 
+ENABLECOMMNOTIFICATION  Offset=0000d9b0H
+    ENABLECOMMNOTIFICATION
+ 
+EXITWINDOWSEXEC         Offset=0000da10H
+    EXITWINDOWSEXEC
+ 
+GETCURSOR               Offset=0000da60H
+    GETCURSOR
+ 
+GETOPENCLIPBOARDWINDOW  Offset=0000daa0H
+    GETOPENCLIPBOARDWINDOW
+ 
+GETASYNCKEYSTATE        Offset=0000db00H
+    GETASYNCKEYSTATE
+ 
+GETMENUSTATE            Offset=0000db50H
+    GETMENUSTATE
+ 
+SENDDRIVERMESSAGE       Offset=0000db90H
+    SENDDRIVERMESSAGE
+ 
+OPENDRIVER              Offset=0000dbe0H
+    OPENDRIVER
+ 
+CLOSEDRIVER             Offset=0000dc20H
+    CLOSEDRIVER
+ 
+GETDRIVERMODULEHANDLE   Offset=0000dc60H
+    GETDRIVERMODULEHANDLE
+ 
+DEFDRIVERPROC           Offset=0000dcb0H
+    DEFDRIVERPROC
+ 
+GETDRIVERINFO           Offset=0000dcf0H
+    GETDRIVERINFO
+ 
+GETNEXTDRIVER           Offset=0000dd30H
+    GETNEXTDRIVER
+ 
+MAPWINDOWPOINTS         Offset=0000dd70H
+    MAPWINDOWPOINTS
+ 
+BEGINDEFERWINDOWPOS     Offset=0000ddc0H
+    BEGINDEFERWINDOWPOS
+ 
+DEFERWINDOWPOS          Offset=0000de10H
+    DEFERWINDOWPOS
+ 
+ENDDEFERWINDOWPOS       Offset=0000de60H
+    ENDDEFERWINDOWPOS
+ 
+GETWINDOW               Offset=0000deb0H
+    GETWINDOW
+ 
+GETMENUITEMCOUNT        Offset=0000def0H
+    GETMENUITEMCOUNT
+ 
+GETMENUITEMID           Offset=0000df40H
+    GETMENUITEMID
+ 
+SHOWOWNEDPOPUPS         Offset=0000df80H
+    SHOWOWNEDPOPUPS
+ 
+SETMESSAGEQUEUE         Offset=0000dfd0H
+    SETMESSAGEQUEUE
+ 
+SHOWSCROLLBAR           Offset=0000e020H
+    SHOWSCROLLBAR
+ 
+GLOBALADDATOM           Offset=0000e060H
+    GLOBALADDATOM
+ 
+GLOBALDELETEATOM        Offset=0000e0a0H
+    GLOBALDELETEATOM
+ 
+GLOBALFINDATOM          Offset=0000e0f0H
+    GLOBALFINDATOM
+ 
+GLOBALGETATOMNAME       Offset=0000e140H
+    GLOBALGETATOMNAME
+ 
+ISZOOMED                Offset=0000e190H
+    ISZOOMED
+ 
+CONTROLPANELINFO        Offset=0000e1d0H
+    CONTROLPANELINFO
+ 
+GETNEXTQUEUEWINDOW      Offset=0000e220H
+    GETNEXTQUEUEWINDOW
+ 
+REPAINTSCREEN           Offset=0000e270H
+    REPAINTSCREEN
+ 
+LOCKMYTASK              Offset=0000e2b0H
+    LOCKMYTASK
+ 
+GETDLGCTRLID            Offset=0000e2f0H
+    GETDLGCTRLID
+ 
+GETDESKTOPHWND          Offset=0000e330H
+    GETDESKTOPHWND
+ 
+OLDSETDESKPATTERN       Offset=0000e380H
+    OLDSETDESKPATTERN
+ 
+SETSYSTEMMENU           Offset=0000e3d0H
+    SETSYSTEMMENU
+ 
+SELECTPALETTE           Offset=0000e410H
+    SELECTPALETTE
+ 
+REALIZEPALETTE          Offset=0000e450H
+    REALIZEPALETTE
+ 
+GETFREESYSTEMRESOURCES  Offset=0000e4a0H
+    GETFREESYSTEMRESOURCES
+ 
+BEAR285                 Offset=0000e500H
+    BEAR285
+ 
+GETDESKTOPWINDOW        Offset=0000e540H
+    GETDESKTOPWINDOW
+ 
+GETLASTACTIVEPOPUP      Offset=0000e590H
+    GETLASTACTIVEPOPUP
+ 
+GETMESSAGEEXTRAINFO     Offset=0000e5e0H
+    GETMESSAGEEXTRAINFO
+ 
+KEYBD_EVENT             Offset=0000e630H
+    KEYBD_EVENT
+ 
+REDRAWWINDOW            Offset=0000e670H
+    REDRAWWINDOW
+ 
+SETWINDOWSHOOKEX        Offset=0000e6b0H
+    SETWINDOWSHOOKEX
+ 
+UNHOOKWINDOWSHOOKEX     Offset=0000e700H
+    UNHOOKWINDOWSHOOKEX
+ 
+CALLNEXTHOOKEX          Offset=0000e750H
+    CALLNEXTHOOKEX
+ 
+LOCKWINDOWUPDATE        Offset=0000e7a0H
+    LOCKWINDOWUPDATE
+ 
+MOUSE_EVENT             Offset=0000e7f0H
+    MOUSE_EVENT
+ 
+BOZOSLIVEHERE           Offset=0000e830H
+    BOZOSLIVEHERE
+ 
+BEAR306                 Offset=0000e870H
+    BEAR306
+ 
+DEFDLGPROC              Offset=0000e8b0H
+    DEFDLGPROC
+ 
+GETCLIPCURSOR           Offset=0000e8f0H
+    GETCLIPCURSOR
+ 
+SIGNALPROC              Offset=0000e930H
+    SIGNALPROC
+ 
+SCROLLWINDOWEX          Offset=0000e970H
+    SCROLLWINDOWEX
+ 
+SYSERRORBOX             Offset=0000e9c0H
+    SYSERRORBOX
+ 
+SETEVENTHOOK            Offset=0000ea00H
+    SETEVENTHOOK
+ 
+WINOLDAPPHACKOMATIC     Offset=0000ea40H
+    WINOLDAPPHACKOMATIC
+ 
+GETMESSAGE2             Offset=0000ea90H
+    GETMESSAGE2
+ 
+FILLWINDOW              Offset=0000ead0H
+    FILLWINDOW
+ 
+PAINTRECT               Offset=0000eb10H
+    PAINTRECT
+ 
+GETCONTROLBRUSH         Offset=0000eb50H
+    GETCONTROLBRUSH
+ 
+ENABLEHARDWAREINPUT     Offset=0000eba0H
+    ENABLEHARDWAREINPUT
+ 
+USERYIELD               Offset=0000ebf0H
+    USERYIELD
+ 
+ISUSERIDLE              Offset=0000ec30H
+    ISUSERIDLE
+ 
+GETQUEUESTATUS          Offset=0000ec70H
+    GETQUEUESTATUS
+ 
+GETINPUTSTATE           Offset=0000ecc0H
+    GETINPUTSTATE
+ 
+LOADCURSORICONHANDLER   Offset=0000ed00H
+    LOADCURSORICONHANDLER
+ 
+GETMOUSEEVENTPROC       Offset=0000ed50H
+    GETMOUSEEVENTPROC
+ 
+_FFFE_FARFRAME          Offset=0000eda0H
+    _FFFE_FARFRAME
+ 
+GETFILEPORTNAME         Offset=0000edf0H
+    GETFILEPORTNAME
+ 
+LOADDIBCURSORHANDLER    Offset=0000ee40H
+    LOADDIBCURSORHANDLER
+ 
+LOADDIBICONHANDLER      Offset=0000ee90H
+    LOADDIBICONHANDLER
+ 
+ISMENU                  Offset=0000eee0H
+    ISMENU
+ 
+GETDCEX                 Offset=0000ef20H
+    GETDCEX
+ 
+DCHOOK                  Offset=0000ef60H
+    DCHOOK
+ 
+COPYICON                Offset=0000efa0H
+    COPYICON
+ 
+COPYCURSOR              Offset=0000efe0H
+    COPYCURSOR
+ 
+GETWINDOWPLACEMENT      Offset=0000f020H
+    GETWINDOWPLACEMENT
+ 
+SETWINDOWPLACEMENT      Offset=0000f070H
+    SETWINDOWPLACEMENT
+ 
+GETINTERNALICONHEADER   Offset=0000f0c0H
+    GETINTERNALICONHEADER
+ 
+SUBTRACTRECT            Offset=0000f110H
+    SUBTRACTRECT
+ 
+FINALUSERINIT           Offset=0000f150H
+    FINALUSERINIT
+ 
+GETPRIORITYCLIPBOARDFORMAT Offset=0000f190H
+    GETPRIORITYCLIPBOARDFORMAT
+ 
+UNREGISTERCLASS         Offset=0000f1f0H
+    UNREGISTERCLASS
+ 
+GETCLASSINFO            Offset=0000f240H
+    GETCLASSINFO
+ 
+CREATECURSOR            Offset=0000f280H
+    CREATECURSOR
+ 
+CREATEICON              Offset=0000f2c0H
+    CREATEICON
+ 
+CREATECURSORICONINDIRECT Offset=0000f300H
+    CREATECURSORICONINDIRECT
+ 
+INSERTMENU              Offset=0000f360H
+    INSERTMENU
+ 
+APPENDMENU              Offset=0000f3a0H
+    APPENDMENU
+ 
+REMOVEMENU              Offset=0000f3e0H
+    REMOVEMENU
+ 
+DELETEMENU              Offset=0000f420H
+    DELETEMENU
+ 
+MODIFYMENU              Offset=0000f460H
+    MODIFYMENU
+ 
+CREATEPOPUPMENU         Offset=0000f4a0H
+    CREATEPOPUPMENU
+ 
+TRACKPOPUPMENU          Offset=0000f4f0H
+    TRACKPOPUPMENU
+ 
+GETMENUCHECKMARKDIMENSIONS Offset=0000f540H
+    GETMENUCHECKMARKDIMENSIONS
+ 
+SETMENUITEMBITMAPS      Offset=0000f5a0H
+    SETMENUITEMBITMAPS
+ 
+_WSPRINTF               Offset=0000f5f0H
+    _WSPRINTF
+ 
+WVSPRINTF               Offset=0000f670H
+    WVSPRINTF
+ 
+DLGDIRSELECTEX          Offset=0000f6b0H
+    DLGDIRSELECTEX
+ 
+DLGDIRSELECTCOMBOBOXEX  Offset=0000f700H
+    DLGDIRSELECTCOMBOBOXEX
+ 
+LSTRCMP                 Offset=0000f760H
+    LSTRCMP
+ 
+ANSIUPPER               Offset=0000f7a0H
+    ANSIUPPER
+ 
+ANSILOWER               Offset=0000f7e0H
+    ANSILOWER
+ 
+ISCHARALPHA             Offset=0000f820H
+    ISCHARALPHA
+ 
+ISCHARALPHANUMERIC      Offset=0000f860H
+    ISCHARALPHANUMERIC
+ 
+ISCHARUPPER             Offset=0000f8b0H
+    ISCHARUPPER
+ 
+ISCHARLOWER             Offset=0000f8f0H
+    ISCHARLOWER
+ 
+ANSIUPPERBUFF           Offset=0000f930H
+    ANSIUPPERBUFF
+ 
+ANSILOWERBUFF           Offset=0000f970H
+    ANSILOWERBUFF
+ 
+DEFFRAMEPROC            Offset=0000f9b0H
+    DEFFRAMEPROC
+ 
+DEFMDICHILDPROC         Offset=0000f9f0H
+    DEFMDICHILDPROC
+ 
+TRANSLATEMDISYSACCEL    Offset=0000fa40H
+    TRANSLATEMDISYSACCEL
+ 
+CREATEWINDOWEX          Offset=0000fa90H
+    CREATEWINDOWEX
+ 
+ADJUSTWINDOWRECTEX      Offset=0000fae0H
+    ADJUSTWINDOWRECTEX
+ 
+GETICONID               Offset=0000fb30H
+    GETICONID
+ 
+LOADICONHANDLER         Offset=0000fb70H
+    LOADICONHANDLER
+ 
+DESTROYICON             Offset=0000fbc0H
+    DESTROYICON
+ 
+DESTROYCURSOR           Offset=0000fc00H
+    DESTROYCURSOR
+ 
+DUMPICON                Offset=0000fc40H
+    DUMPICON
+ 
+GETINTERNALWINDOWPOS    Offset=0000fc80H
+    GETINTERNALWINDOWPOS
+ 
+SETINTERNALWINDOWPOS    Offset=0000fcd0H
+    SETINTERNALWINDOWPOS
+ 
+CALCCHILDSCROLL         Offset=0000fd20H
+    CALCCHILDSCROLL
+ 
+SCROLLCHILDREN          Offset=0000fd70H
+    SCROLLCHILDREN
+ 
+DRAGOBJECT              Offset=0000fdc0H
+    DRAGOBJECT
+ 
+DRAGDETECT              Offset=0000fe00H
+    DRAGDETECT
+ 
+DRAWFOCUSRECT           Offset=0000fe40H
+    DRAWFOCUSRECT
+ 
+STRINGFUNC              Offset=0000fe80H
+    STRINGFUNC
+ 
+LSTRCMPI                Offset=0000fec0H
+    LSTRCMPI
+ 
+ANSINEXT                Offset=0000ff00H
+    ANSINEXT
+ 
+ANSIPREV                Offset=0000ff40H
+    ANSIPREV
+ 
+GETUSERLOCALOBJTYPE     Offset=0000ff80H
+    GETUSERLOCALOBJTYPE
+ 
+HARDWARE_EVENT          Offset=0000ffd0H
+    HARDWARE_EVENT
+ 
+ENABLESCROLLBAR         Offset=00010020H
+    ENABLESCROLLBAR
+ 
+SYSTEMPARAMETERSINFO    Offset=00010070H
+    SYSTEMPARAMETERSINFO
+ 
+WNETERRORTEXT           Offset=000100c0H
+    WNETERRORTEXT
+ 
+WNETOPENJOB             Offset=00010100H
+    WNETOPENJOB
+ 
+WNETCLOSEJOB            Offset=00010140H
+    WNETCLOSEJOB
+ 
+WNETABORTJOB            Offset=00010180H
+    WNETABORTJOB
+ 
+WNETHOLDJOB             Offset=000101c0H
+    WNETHOLDJOB
+ 
+WNETRELEASEJOB          Offset=00010200H
+    WNETRELEASEJOB
+ 
+WNETCANCELJOB           Offset=00010250H
+    WNETCANCELJOB
+ 
+WNETSETJOBCOPIES        Offset=00010290H
+    WNETSETJOBCOPIES
+ 
+WNETWATCHQUEUE          Offset=000102e0H
+    WNETWATCHQUEUE
+ 
+WNETUNWATCHQUEUE        Offset=00010330H
+    WNETUNWATCHQUEUE
+ 
+WNETLOCKQUEUEDATA       Offset=00010380H
+    WNETLOCKQUEUEDATA
+ 
+WNETUNLOCKQUEUEDATA     Offset=000103d0H
+    WNETUNLOCKQUEUEDATA
+ 
+WNETGETCONNECTION       Offset=00010420H
+    WNETGETCONNECTION
+ 
+WNETGETCAPS             Offset=00010470H
+    WNETGETCAPS
+ 
+WNETDEVICEMODE          Offset=000104b0H
+    WNETDEVICEMODE
+ 
+WNETBROWSEDIALOG        Offset=00010500H
+    WNETBROWSEDIALOG
+ 
+WNETGETUSER             Offset=00010550H
+    WNETGETUSER
+ 
+WNETADDCONNECTION       Offset=00010590H
+    WNETADDCONNECTION
+ 
+WNETCANCELCONNECTION    Offset=000105e0H
+    WNETCANCELCONNECTION
+ 
+WNETGETERROR            Offset=00010630H
+    WNETGETERROR
+ 
+WNETGETERRORTEXT        Offset=00010670H
+    WNETGETERRORTEXT
+ 
+WNETENABLE              Offset=000106c0H
+    WNETENABLE
+ 
+WNETDISABLE             Offset=00010700H
+    WNETDISABLE
+ 
+WNETRESTORECONNECTION   Offset=00010740H
+    WNETRESTORECONNECTION
+ 
+WNETWRITEJOB            Offset=00010790H
+    WNETWRITEJOB
+ 
+WNETCONNECTDIALOG       Offset=000107d0H
+    WNETCONNECTDIALOG
+ 
+WNETDISCONNECTDIALOG    Offset=00010820H
+    WNETDISCONNECTDIALOG
+ 
+WNETCONNECTIONDIALOG    Offset=00010870H
+    WNETCONNECTIONDIALOG
+ 
+WNETVIEWQUEUEDIALOG     Offset=000108c0H
+    WNETVIEWQUEUEDIALOG
+ 
+WNETPROPERTYDIALOG      Offset=00010910H
+    WNETPROPERTYDIALOG
+ 
+WNETGETDIRECTORYTYPE    Offset=00010960H
+    WNETGETDIRECTORYTYPE
+ 
+WNETDIRECTORYNOTIFY     Offset=000109b0H
+    WNETDIRECTORYNOTIFY
+ 
+WNETGETPROPERTYTEXT     Offset=00010a00H
+    WNETGETPROPERTYTEXT
+ 
+__FPMATH                Offset=00010a50H
+    __FPMATH
+ 
+__fpmath                Offset=00010a90H
+    __fpmath
+ 
+__WIN87EMINFO           Offset=00010ad0H
+    __WIN87EMINFO
+ 
+__WIN87EMRESTORE        Offset=00010b20H
+    __WIN87EMRESTORE
+ 
+__WIN87EMSAVE           Offset=00010b70H
+    __WIN87EMSAVE
+ 
+profc.asm               Offset=00010bc0H
+    PROFCLEAR
+    PROFFINISH
+    PROFFLUSH
+    PROFINSCHK
+    PROFSAMPRATE
+    PROFSETUP
+    PROFSTART
+    PROFSTOP
+ 

@@ -276,7 +276,7 @@ static int scan_parts(struct blkdev *d, struct pent *pe, int max, int foreign)
             if (pe[i].start == 0 && pe[i].size == (u32)MIN(dev_sectors512(d), 0xFFFFFFFFUL)) continue;
             pe[i].start *= f;
             /* a FAT volume ends below 2^32 512-byte sectors */
-            pe[i].size = (u64)pe[i].size * f > 0xFFFFFFFFUL ? 0xFFFFFFFFUL : pe[i].size * f;
+            pe[i].size = (u64)pe[i].size * f > (u64)0xFFFFFFFFUL ? 0xFFFFFFFFUL : pe[i].size * f;
         }
     }
     for (i = k = 0; i < n; i++) {

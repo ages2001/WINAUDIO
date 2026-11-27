@@ -1,1 +1,40 @@
+#include <windows.h>
+
 1 ICON speaker.ico
+
+/* The window is a dialog of standard controls: a label and an edit field for every level, so
+   a screen reader has text for each one and Tab reaches them all. */
+500 DIALOG 0, 0, 300, 196
+STYLE WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | DS_MODALFRAME
+CAPTION "WINMIX - Volume Control"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Sound device:", -1, 7, 9, 50, 9
+    COMBOBOX        100, 60, 7, 192, 80, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+
+    LTEXT           "Master", -1, 7, 26, 50, 9
+    EDITTEXT        200, 60, 24, 30, 12, ES_AUTOHSCROLL
+    LTEXT           "Wave", -1, 7, 39, 50, 9
+    EDITTEXT        201, 60, 37, 30, 12, ES_AUTOHSCROLL
+    LTEXT           "Synthesizer", -1, 7, 52, 50, 9
+    EDITTEXT        202, 60, 50, 30, 12, ES_AUTOHSCROLL
+    LTEXT           "Recording level", -1, 7, 65, 50, 9
+    EDITTEXT        203, 60, 63, 30, 12, ES_AUTOHSCROLL
+    LTEXT           "CD", -1, 7, 78, 50, 9
+    EDITTEXT        204, 60, 76, 30, 12, ES_AUTOHSCROLL
+    LTEXT           "Line", -1, 7, 91, 50, 9
+    EDITTEXT        205, 60, 89, 30, 12, ES_AUTOHSCROLL
+
+    CONTROL         "Same level &left and right", 300, "button", BS_AUTOCHECKBOX | WS_TABSTOP, 7, 106, 116, 10
+    CONTROL         "&Mute", 301, "button", BS_AUTOCHECKBOX | WS_TABSTOP, 130, 106, 60, 10
+
+    LTEXT           "&Recording source:", -1, 7, 123, 50, 9
+    COMBOBOX        101, 60, 121, 90, 60, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+
+    LTEXT           "", 400, 7, 143, 286, 9
+    LTEXT           "The arrows change a level by 5, Page Up and Page Down by 10.", -1, 7, 155, 286, 9
+
+    PUSHBUTTON      "&Tone test", 302, 150, 172, 45, 14
+    PUSHBUTTON      "&Report", 303, 199, 172, 45, 14
+    PUSHBUTTON      "Close", IDCANCEL, 248, 172, 45, 14
+END

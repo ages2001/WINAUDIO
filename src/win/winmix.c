@@ -2,6 +2,10 @@
    (master, wave, synthesizer, CD, line, recording level and recording source).
    Windows 3.0 and 3.1. */
 #include <windows.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "winapi.h"
 
 DWORD WINAPI GlobalDosAlloc(DWORD cb);
@@ -11,12 +15,15 @@ UINT WINAPI GlobalDosFree(UINT sel);
 #define NCORE   2
 #define MAXDEV  16
 #define NCTL    6
+#define IDD_MIX 500   /* the dialog template of winmix.rc */
 #define ID_DEV  100
 #define ID_SRC  101
-#define ID_BAR  200
+#define ID_VAL  200   /* the six level fields */
 #define ID_LOCK 300
-#define ID_TXT  400
-#define RANGE   100
+#define ID_MUTE 301
+#define ID_TONE 302
+#define ID_REPORT 303
+#define ID_TXT  400   /* the status line */
 
 struct mdev {
     BYTE core, id, caps, insrcs, insrc, hwvol, type, gone;
@@ -31,7 +38,7 @@ static WORD reqsel, reqseg;
 static struct winapireq FAR *rq;
 static struct mdev devs[MAXDEV], nd2[MAXDEV];
 static int ndev, cur;
-static HWND hmain, hdev, hsrc, hbar[NCTL], htxt[NCTL], hlock;
+static HWND hmain, hdev, hsrc, hval[NCTL], hlock, hmute, hstat;
 static DWORD vals[NCTL];
 static const char *const ctlnames[NCTL] = { "Master", "Wave", "Synth", "Rec level", "CD", "Line" };
 static const char *const srcnames[5] = { "Microphone", "Line in", "CD", "Aux", "Stereo mix" };
@@ -141,7 +148,7 @@ static int list_devs(void)
 static void scan(void)
 {
     int k;
-    DWORD r = GlobalDosAlloc(1024);
+    DWORD r = GlobalDosAlloc(8192);   /* room for the driver log too */
     realmode = !(GetWinFlags() & WF_PMODE);
     if (!r) return;
     reqsel = LOWORD(r);
@@ -194,41 +201,322 @@ static void scan(void)
     list_devs();
 }
 
-static void load_values(void)
+/* ---------------------------------------------------------------- without the window
+
+   WINMIX /UNMUTE            master unmuted (and at 100%), all devices
+   WINMIX /MUTE              master muted
+   WINMIX /MASTER 0..100     master level, all devices
+   WINMIX /TONE              a 2 s 440 Hz tone through the driver itself (not MMSYSTEM)
+   WINMIX /DUMP [file]       the devices, every mixer value, the mute state and the driver
+                             log, as text (C:\\WINMIX.TXT when no file is given)
+
+   A screen reader can read the report and a batch file can set the volumes; nothing of the
+   window is needed. The same API the window uses is called. */
+
+#define RINGDATA 32768UL
+
+static HFILE dumph = HFILE_ERROR;
+static OFSTRUCT dumpof;
+
+static void dwr(const void *p, UINT n)
 {
-    struct mdev *m = &devs[cur];
-    int i, s, sel = -1, idx = 0, ok = ndev > 0 && !m->gone;
-    char t[32];
-    if (!ok) {
-        for (i = 0; i < NCTL; i++) {
-            EnableWindow(hbar[i], FALSE);
-            SetWindowText(htxt[i], "-");
-        }
-        SendMessage(hsrc, CB_RESETCONTENT, 0, 0);
-        EnableWindow(hsrc, FALSE);
+    if (dumph != HFILE_ERROR) _lwrite(dumph, (const void __huge *)p, n);
+}
+
+static void dstr(const char *s) { dwr(s, (UINT)lstrlen(s)); }
+
+static void dfmt(const char *fmt, ...)
+{
+    char b[256];
+    va_list ap;
+    va_start(ap, fmt);
+    vsprintf(b, fmt, ap);
+    va_end(ap);
+    dstr(b);
+}
+
+static int pct(DWORD v) { return (int)((v * 100UL + 32767UL) / 65535UL); }
+
+static void dump_log(int k, const char *name)
+{
+    DWORD len, q;
+    BYTE FAR *p;
+    if (!present[k]) return;
+    dfmt("\r\n%s driver log:\r\n", name);
+    if (api(k, WINF_LOG, 0, 0, 0, ((DWORD)reqseg << 16) | 64, 8192UL - 64)) {
+        dfmt("  (not available)\r\n");
         return;
     }
-    for (i = 0; i < NCTL; i++) {
-        int en = 1;
-        vals[i] = 0;
-        if (api(m->core, WINF_AUD_MIX, m->id, i, 0, 0, 0) == 0) vals[i] = rq->retlen;
-        if ((i == 3 && !(m->caps & WINAC_IN)) || ((i == 4 || i == 5) && m->type != 2)) en = 0;
-        if (i == 0 && !(m->caps & WINAC_OUT)) en = 0;
-        SetScrollPos(hbar[i], SB_CTL, RANGE - (int)((LOWORD(vals[i]) * (DWORD)RANGE + 32767) / 65535), TRUE);
-        EnableWindow(hbar[i], en);
-        wsprintf(t, "%d%%", (int)((LOWORD(vals[i]) * 100UL + 32767) / 65535));
-        SetWindowText(htxt[i], en ? t : "-");
+    len = rq->retlen;
+    p = MK_FP(reqsel, 64);
+    if (!len) {
+        dfmt("  (empty)\r\n");
+        return;
     }
-    SendMessage(hsrc, CB_RESETCONTENT, 0, 0);
-    if (api(m->core, WINF_AUD_MIX, m->id, MX_SRC, 0, 0, 0) == 0) m->insrc = (BYTE)rq->retlen;
-    for (s = 0; s < 5; s++)
-        if (m->insrcs & (1 << s)) {
-            SendMessage(hsrc, CB_ADDSTRING, 0, (LPARAM)(LPSTR)srcnames[s]);
-            if (m->insrc & (1 << s)) sel = idx;
-            idx++;
+    for (q = 0; q < len; q++) {
+        char c = (char)p[q];
+        if (c == '\n') dwr("\r\n", 2);
+        else if (c != '\r') dwr(&c, 1);
+    }
+    dfmt("\r\n");
+}
+
+static void dump_all(void)
+{
+    static const char *const tn[] = { "?", "HD Audio", "AC'97", "USB Audio", "AudioPCI", "EMU10K1" };
+    int k, i, j, n = 0;
+    dfmt("WINMIX 1.2 report\r\n");
+    dfmt("WINAUDIO.SYS: %s\r\n", present[0] ? "loaded" : "not loaded");
+    dfmt("WINUSB.SYS: %s\r\n", present[1] ? "loaded" : "not loaded");
+    for (k = 0; k < NCORE; k++) {
+        if (!present[k]) continue;
+        for (i = 0; i < ndev; i++) {
+            struct mdev *m = &devs[i];
+            if (m->core != k) continue;
+            dfmt("\r\ndevice %d: %s%s\r\n", n++, m->name, m->gone ? " (removed)" : "");
+            dfmt("  type: %s\r\n", m->type < 6 ? tn[m->type] : "?");
+            for (j = 0; j < MX_COUNT; j++)
+                if (!api(k, WINF_AUD_MIX, (DWORD)m->id, (DWORD)j, 0, 0, 0))
+                    dfmt("  %s: left %d%%, right %d%%\r\n", ctlnames[j], pct(rq->retlen & 0xFFFF),
+                         pct(rq->retlen >> 16));
+            if (!api(k, WINF_AUD_MIX, (DWORD)m->id, (DWORD)MX_MUTE, 0, 0, 0))
+                dfmt("  mute: %s\r\n", rq->retlen ? "ON" : "off");
+            if (!api(k, WINF_AUD_MIX, (DWORD)m->id, (DWORD)MX_SRC, 0, 0, 0))
+                for (j = 0; j < 5; j++)
+                    if (rq->retlen & (1UL << j)) dfmt("  recording source: %s\r\n", srcnames[j]);
         }
-    SendMessage(hsrc, CB_SETCURSEL, sel, 0);
-    EnableWindow(hsrc, idx > 1);
+    }
+    dump_log(0, "WINAUDIO");
+    dump_log(1, "WINUSB");
+}
+
+static int set_mute(int on)
+{
+    int k, i, n = 0;
+    for (k = 0; k < NCORE; k++)
+        if (present[k])
+            for (i = 0; i < ndev; i++)
+                if (devs[i].core == k) {
+                    api(k, WINF_AUD_MIX, (DWORD)devs[i].id, (DWORD)MX_MUTE | 0x80000000UL, (DWORD)on, 0, 0);
+                    if (!on) api(k, WINF_AUD_MIX, (DWORD)devs[i].id, (DWORD)MX_MASTER | 0x80000000UL,
+                                 0xFFFFFFFFUL, 0, 0);
+                    n++;
+                }
+    return n;
+}
+
+static int set_master(int pc)
+{
+    DWORD v = (DWORD)pc * 65535UL / 100UL;
+    int k, i, n = 0;
+    for (k = 0; k < NCORE; k++)
+        if (present[k])
+            for (i = 0; i < ndev; i++)
+                if (devs[i].core == k) {
+                    api(k, WINF_AUD_MIX, (DWORD)devs[i].id, (DWORD)MX_MASTER | 0x80000000UL,
+                        (v << 16) | v, 0, 0);
+                    n++;
+                }
+    return n;
+}
+
+static void rput(struct winring FAR *r, const BYTE FAR *p, UINT n)
+{
+    BYTE FAR *d = (BYTE FAR *)r + 32;
+    DWORD sz = r->size;
+    while (n) {
+        UINT off = (UINT)(r->wr % sz), k = (UINT)(sz - off < n ? sz - off : n);
+        _fmemcpy(d + off, p, k);
+        r->wr += k;
+        p += k;
+        n -= k;
+    }
+}
+
+/* the driver's own wave path: a tone that does not go through MMSYSTEM and WINSOUND.DRV */
+static DWORD tone_rd, tone_pos, tone_total;
+
+static int tone(int secs)
+{
+    DWORD r, t0, total, done = 0, devid = 0;
+    WORD sel, seg;
+    struct winring FAR *ring;
+    static short sbuf[1024];
+    unsigned ph = 0, step = (unsigned)((440UL << 16) / 44100UL);
+    MSG msg;
+    int i, k, core = -1, sid, st;
+    for (k = 0; k < NCORE && core < 0; k++)
+        if (present[k])
+            for (i = 0; i < ndev; i++)
+                if (devs[i].core == k) {
+                    devid = devs[i].id;
+                    core = k;
+                    break;
+                }
+    if (core < 0) return -2;
+    r = GlobalDosAlloc(RINGDATA + 32);
+    if (!r) return -1;
+    sel = LOWORD(r);
+    seg = HIWORD(r);
+    ring = MK_FP(sel, 0);
+    fmemset(ring, 0, 32);
+    ring->magic = WINRING_MAGIC;
+    ring->size = RINGDATA;
+    st = api(core, WINF_AUD_OPEN, devid, 44100UL, 16UL | (2UL << 8), (DWORD)seg << 16, 0);
+    if (st) {
+        GlobalDosFree(sel);
+        return st;
+    }
+    sid = (int)rq->retlen;
+    api(core, WINF_AUD_CTL, (DWORD)sid, AC_START, 0, 0, 0);
+    total = 44100UL * (DWORD)secs;
+    t0 = GetTickCount();
+    while (done < total) {
+        if (RINGDATA - (ring->wr - ring->rd) >= sizeof(sbuf)) {
+            k = (int)(total - done < 512 ? total - done : 512);
+            for (i = 0; i < k; i++) {
+                long x = (long)(ph & 0x7FFF) - 16384;
+                long y = 32767L - (x * x) / 8192L;
+                short v = (short)(((ph & 0x8000) ? -y : y) / 4);
+                sbuf[i * 2] = v;
+                sbuf[i * 2 + 1] = v;
+                ph += step;
+            }
+            rput(ring, (const BYTE FAR *)sbuf, (UINT)k * 4);
+            done += k;
+        }
+        if (GetTickCount() - t0 > (DWORD)secs * 1000UL + 3000UL) break;
+        PeekMessage(&msg, NULL, 0, 0, PM_REMOVE);
+    }
+    while (ring->pos != ring->wr && GetTickCount() - t0 < (DWORD)secs * 1000UL + 5000UL)
+        PeekMessage(&msg, NULL, 0, 0, PM_REMOVE);
+    tone_rd = ring->rd;
+    tone_pos = ring->pos;
+    tone_total = done * 4;
+    api(core, WINF_AUD_CTL, (DWORD)sid, AC_CLOSE, 0, 0, 0);
+    GlobalDosFree(sel);
+    return 0;
+}
+
+static int command(LPSTR cmd)
+{
+    char w[16], path[120];
+    int i = 0, n, st;
+    while (*cmd == ' ') cmd++;
+    while (cmd[i] && cmd[i] != ' ' && i < 15) {
+        w[i] = cmd[i];
+        i++;
+    }
+    w[i] = 0;
+    for (n = 0; w[n]; n++) if (w[n] >= 'a' && w[n] <= 'z') w[n] -= 32;
+    cmd += i;
+    while (*cmd == ' ') cmd++;
+    if (!lstrcmp(w, "/HELP") || !lstrcmp(w, "/?")) {
+        MessageBox(NULL, "WINMIX commands:\r\n"
+                   "  /UNMUTE        master unmuted, at 100%\r\n"
+                   "  /MUTE          master muted\r\n"
+                   "  /MASTER 0..100 master level\r\n"
+                   "  /TONE          two seconds of 440 Hz through the driver\r\n"
+                   "  /DUMP file     levels, mute and driver log as text\r\n"
+                   "  /HELP          this list",
+                   "WINMIX", MB_OK | MB_ICONINFORMATION);
+        return 0;
+    }
+    if (!lstrcmp(w, "/UNMUTE")) {
+        n = set_mute(0);
+        MessageBox(NULL, n ? "Master unmuted and set to 100%." : "No sound device.", "WINMIX",
+                   MB_OK | MB_ICONINFORMATION);
+        return 0;
+    }
+    if (!lstrcmp(w, "/MUTE")) {
+        n = set_mute(1);
+        MessageBox(NULL, n ? "Master muted." : "No sound device.", "WINMIX", MB_OK | MB_ICONINFORMATION);
+        return 0;
+    }
+    if (!lstrcmp(w, "/MASTER")) {
+        n = atoi(cmd);
+        if (n < 0) n = 0;
+        if (n > 100) n = 100;
+        n = set_master(n);
+        MessageBox(NULL, n ? "Master volume set." : "No sound device.", "WINMIX", MB_OK | MB_ICONINFORMATION);
+        return 0;
+    }
+    if (!lstrcmp(w, "/TONE")) {
+        st = tone(2);
+        if (st == -1)
+            MessageBox(NULL, "WINMIX: not enough DOS memory for the tone.", "WINMIX", MB_OK | MB_ICONSTOP);
+        else if (st == -2)
+            MessageBox(NULL, "No sound device.", "WINMIX", MB_OK | MB_ICONINFORMATION);
+        else if (st)
+            MessageBox(NULL, "WINMIX: the tone could not be played.", "WINMIX", MB_OK | MB_ICONSTOP);
+        else {
+            char msg[192];
+            wsprintf(msg, "Test tone finished: the card took %lu of %lu bytes (driver %lu).",
+                     tone_pos, tone_total, tone_rd);
+            MessageBox(NULL, msg, "WINMIX", MB_OK | MB_ICONINFORMATION);
+        }
+        return 0;
+    }
+    if (!lstrcmp(w, "/DUMP")) {
+        n = lstrlen(cmd);
+        if (n >= 2 && cmd[0] == '"' && cmd[n - 1] == '"') {
+            cmd++;
+            n -= 2;
+        }
+        if (n <= 0 || n > 110) lstrcpy(path, "C:\\WINMIX.TXT");
+        else {
+            for (i = 0; i < n; i++) path[i] = cmd[i];
+            path[n] = 0;
+        }
+        dumph = OpenFile(path, &dumpof, OF_CREATE | OF_WRITE);
+        if (dumph == HFILE_ERROR) {
+            MessageBox(NULL, "WINMIX: cannot write the report file.", "WINMIX", MB_OK | MB_ICONSTOP);
+            return 1;
+        }
+        dump_all();
+        _lclose(dumph);
+        dumph = HFILE_ERROR;
+        {
+            char msg[160];
+            wsprintf(msg, "The report was written to %s.", path);
+            MessageBox(NULL, msg, "WINMIX", MB_OK | MB_ICONINFORMATION);
+        }
+        return 0;
+    }
+    return -1;                  /* not a command: the window */
+}
+
+/* ---------------------------------------------------------------- the window
+
+   The window is a dialog made of the standard controls. Each level is a label with an edit
+   field beside it, so a screen reader has text to read, Tab reaches every field and the arrows
+   change the value. The window used bare scrollbars before: no text, no focus, no name. */
+
+static void status(const char *s)
+{
+    if (hstat) SetWindowText(hstat, s);
+}
+
+/* the number in a level field, -1 when no number is there */
+static int read_level(int i)
+{
+    char t[24];
+    int n, dig = 0;
+    GetWindowText(hval[i], t, sizeof(t));
+    for (n = 0; t[n]; n++)
+        if (t[n] >= '0' && t[n] <= '9') dig = 1;
+    if (!dig) return -1;
+    n = atoi(t);
+    if (n < 0) n = 0;
+    if (n > 100) n = 100;
+    return n;
+}
+
+static void show_level(int i)
+{
+    char t[16];
+    wsprintf(t, "%d%%", pct(LOWORD(vals[i])));
+    SetWindowText(hval[i], t);
 }
 
 /* the volumes of the device as WINSOUND.DRV keeps them (SYSTEM.INI [winsound.drv]): set again
@@ -249,30 +537,29 @@ static void save(struct mdev *m)
     if (lstrcmp(old, val)) WritePrivateProfileString("winsound.drv", key, val, "SYSTEM.INI");
 }
 
-static void set_value(int i, int pos)
+static void set_level(int i, int pc)
 {
     struct mdev *m = &devs[cur];
-    DWORD l = (DWORD)(RANGE - pos) * 65535 / RANGE, r = l;
-    char t[16];
+    DWORD v = (DWORD)pc * 65535UL / 100UL, l = v, r = v;
+    if (ndev <= 0 || m->gone) return;
     if (!SendMessage(hlock, BM_GETCHECK, 0, 0)) {
         /* keep the balance: scale both sides */
         DWORD ol = LOWORD(vals[i]), or = HIWORD(vals[i]), mx = ol > or ? ol : or;
         if (mx) {
-            l = ol * l / mx;
-            r = or * r / mx;
+            l = ol * v / mx;
+            r = or * v / mx;
         }
     }
+    api(m->core, WINF_AUD_MIX, m->id, (DWORD)i | 0x80000000L, l | (r << 16), 0, 0);
     vals[i] = l | (r << 16);
-    api(m->core, WINF_AUD_MIX, m->id, (DWORD)i | 0x80000000L, vals[i], 0, 0);
     save(m);
-    wsprintf(t, "%d%%", (int)((DWORD)(RANGE - pos) * 100 / RANGE));
-    SetWindowText(htxt[i], t);
 }
 
 static void set_source(void)
 {
     struct mdev *m = &devs[cur];
     int sel = (int)SendMessage(hsrc, CB_GETCURSEL, 0, 0), s, idx = 0;
+    if (ndev <= 0 || m->gone) return;
     for (s = 0; s < 5; s++)
         if (m->insrcs & (1 << s)) {
             if (idx++ == sel) {
@@ -298,43 +585,107 @@ static void fill_devices(void)
     SendMessage(hdev, CB_SETCURSEL, cur, 0);
 }
 
-LRESULT CALLBACK __export WndProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp)
+/* the levels, the mute and the recording source of the device in the list. While the fields
+   are set again, leaving one must not write its old number to the device. */
+static int refreshing;
+
+static void show_values(void)
+{
+    struct mdev *m = ndev > 0 ? &devs[cur] : NULL;
+    int i, s, sel = -1, idx = 0, ok = m != NULL && !m->gone;
+    refreshing = 1;
+    for (i = 0; i < NCTL; i++) {
+        int en = 0;
+        vals[i] = 0;
+        if (ok && !api(m->core, WINF_AUD_MIX, m->id, i, 0, 0, 0)) {
+            vals[i] = rq->retlen;
+            en = 1;
+        }
+        if (en && i == 0 && !(m->caps & WINAC_OUT)) en = 0;
+        if (en && i == 3 && !(m->caps & WINAC_IN)) en = 0;
+        if (en && (i == 4 || i == 5) && m->type != 2) en = 0;
+        EnableWindow(hval[i], en);
+        if (en) show_level(i);
+        else SetWindowText(hval[i], "n/a");
+    }
+    EnableWindow(hlock, ok);
+    EnableWindow(hmute, FALSE);
+    SendMessage(hmute, BM_SETCHECK, 0, 0);
+    if (ok && !api(m->core, WINF_AUD_MIX, m->id, MX_MUTE, 0, 0, 0)) {
+        SendMessage(hmute, BM_SETCHECK, rq->retlen ? 1 : 0, 0);
+        EnableWindow(hmute, TRUE);
+    }
+    SendMessage(hsrc, CB_RESETCONTENT, 0, 0);
+    if (ok && !api(m->core, WINF_AUD_MIX, m->id, MX_SRC, 0, 0, 0)) m->insrc = (BYTE)rq->retlen;
+    if (ok)
+        for (s = 0; s < 5; s++)
+            if (m->insrcs & (1 << s)) {
+                SendMessage(hsrc, CB_ADDSTRING, 0, (LPARAM)(LPSTR)srcnames[s]);
+                if (m->insrc & (1 << s)) sel = idx;
+                idx++;
+            }
+    SendMessage(hsrc, CB_SETCURSEL, sel, 0);
+    EnableWindow(hsrc, idx > 1);
+    refreshing = 0;
+    if (!ndev) status("No sound device.");
+    else if (m && m->gone) status("The sound device was removed.");
+    else if (present[0] && present[1]) status("WINAUDIO.SYS and WINUSB.SYS are loaded.");
+    else status(present[0] ? "WINAUDIO.SYS is loaded." : "WINUSB.SYS is loaded.");
+}
+
+/* a key pressed in a level field: the arrows and Home and End change the level, Enter keeps
+   the number that was typed. Returns 1 when the key was used. */
+static int level_key(HWND hw, int vk)
+{
+    int i, pc;
+    if (!hw) return 0;
+    for (i = 0; i < NCTL; i++)
+        if (hval[i] == hw) break;
+    if (i == NCTL) return 0;
+    pc = read_level(i);
+    if (pc < 0) return 1;       /* an empty field: nothing to change */
+    switch (vk) {
+    case VK_UP: pc += 5; break;
+    case VK_DOWN: pc -= 5; break;
+    case VK_PRIOR: pc += 10; break;
+    case VK_NEXT: pc -= 10; break;
+    case VK_HOME: pc = 0; break;
+    case VK_END: pc = 100; break;
+    case VK_RETURN:
+        set_level(i, pc);
+        show_level(i);
+        return 1;
+    default:
+        return 0;
+    }
+    if (pc < 0) pc = 0;
+    if (pc > 100) pc = 100;
+    set_level(i, pc);
+    show_level(i);
+    return 1;
+}
+
+BOOL CALLBACK __export MixDlgProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp)
 {
     int i;
     switch (msg) {
-    case WM_CREATE:
+    case WM_INITDIALOG:
     {
         HFONT f = GetStockObject(ANSI_VAR_FONT);
-        hdev = CreateWindow("combobox", NULL, WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST | WS_VSCROLL,
-                            8, 8, 368, 150, hw, (HMENU)ID_DEV, hinst, NULL);
-        fill_devices();
-        for (i = 0; i < NCTL; i++) {
-            HWND l = CreateWindow("static", ctlnames[i], WS_CHILD | WS_VISIBLE | SS_CENTER, 8 + i * 62, 40, 60, 16,
-                                  hw, NULL, hinst, NULL);
-            SendMessage(l, WM_SETFONT, (WPARAM)f, 0);
-            hbar[i] = CreateWindow("scrollbar", NULL, WS_CHILD | WS_VISIBLE | SBS_VERT, 26 + i * 62, 60, 22, 150,
-                                   hw, (HMENU)(ID_BAR + i), hinst, NULL);
-            SetScrollRange(hbar[i], SB_CTL, 0, RANGE, FALSE);
-            htxt[i] = CreateWindow("static", "", WS_CHILD | WS_VISIBLE | SS_CENTER, 8 + i * 62, 214, 60, 16, hw,
-                                   (HMENU)(ID_TXT + i), hinst, NULL);
-            SendMessage(htxt[i], WM_SETFONT, (WPARAM)f, 0);
-        }
-        hlock = CreateWindow("button", "Same level left and right", WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX,
-                             8, 238, 220, 18, hw, (HMENU)ID_LOCK, hinst, NULL);
-        SendMessage(hlock, WM_SETFONT, (WPARAM)f, 0);
+        HWND c;
+        hdev = GetDlgItem(hw, ID_DEV);
+        hsrc = GetDlgItem(hw, ID_SRC);
+        hlock = GetDlgItem(hw, ID_LOCK);
+        hmute = GetDlgItem(hw, ID_MUTE);
+        hstat = GetDlgItem(hw, ID_TXT);
+        for (i = 0; i < NCTL; i++) hval[i] = GetDlgItem(hw, ID_VAL + i);
+        for (c = GetWindow(hw, GW_CHILD); c; c = GetWindow(c, GW_HWNDNEXT))
+            SendMessage(c, WM_SETFONT, (WPARAM)f, 0);
         SendMessage(hlock, BM_SETCHECK, 1, 0);
-        {
-            HWND l = CreateWindow("static", "Recording source:", WS_CHILD | WS_VISIBLE, 8, 266, 120, 16, hw, NULL,
-                                  hinst, NULL);
-            SendMessage(l, WM_SETFONT, (WPARAM)f, 0);
-        }
-        hsrc = CreateWindow("combobox", NULL, WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST | WS_VSCROLL, 130, 262,
-                            160, 120, hw, (HMENU)ID_SRC, hinst, NULL);
-        SendMessage(hdev, WM_SETFONT, (WPARAM)f, 0);
-        SendMessage(hsrc, WM_SETFONT, (WPARAM)f, 0);
-        load_values();
+        fill_devices();
+        show_values();
         SetTimer(hw, 1, 2000, NULL);
-        return 0;
+        return TRUE;
     }
     case WM_TIMER:
     {
@@ -345,91 +696,126 @@ LRESULT CALLBACK __export WndProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp)
             for (i = 0; i < ndev; i++)
                 if (devs[i].core == oc && devs[i].id == oi) cur = i;
             fill_devices();
-            load_values();
+            show_values();
         }
-        return 0;
-    }
-    case WM_VSCROLL:
-    {
-        HWND b = (HWND)HIWORD(lp);
-        int pos;
-        for (i = 0; i < NCTL && hbar[i] != b; i++) ;
-        if (i == NCTL) break;
-        pos = GetScrollPos(b, SB_CTL);
-        switch (wp) {
-        case SB_LINEUP: pos -= 2; break;
-        case SB_LINEDOWN: pos += 2; break;
-        case SB_PAGEUP: pos -= 10; break;
-        case SB_PAGEDOWN: pos += 10; break;
-        case SB_TOP: pos = 0; break;
-        case SB_BOTTOM: pos = RANGE; break;
-        case SB_THUMBTRACK:
-        case SB_THUMBPOSITION: pos = LOWORD(lp); break;
-        default: return 0;
-        }
-        if (pos < 0) pos = 0;
-        if (pos > RANGE) pos = RANGE;
-        SetScrollPos(b, SB_CTL, pos, TRUE);
-        set_value(i, pos);
-        return 0;
+        return TRUE;
     }
     case WM_COMMAND:
-        if (wp == ID_DEV && HIWORD(lp) == CBN_SELCHANGE) {
-            cur = (int)SendMessage(hdev, CB_GETCURSEL, 0, 0);
-            if (cur < 0) cur = 0;
-            load_values();
-        } else if (wp == ID_SRC && HIWORD(lp) == CBN_SELCHANGE) {
-            set_source();
+    {
+        int id = (int)LOWORD(wp), ev = (int)HIWORD(wp);
+        if (id >= ID_VAL && id < ID_VAL + NCTL) {
+            if (ev == EN_KILLFOCUS && !refreshing) {
+                int k = id - ID_VAL, n = read_level(k);
+                if (n >= 0) set_level(k, n);
+                show_level(k);
+            }
+            return TRUE;
         }
-        return 0;
+        switch (id) {
+        case ID_DEV:
+            if (ev == CBN_SELCHANGE) {
+                int s = (int)SendMessage(hdev, CB_GETCURSEL, 0, 0);
+                if (s >= 0 && s < ndev) cur = s;
+                show_values();
+            }
+            return TRUE;
+        case ID_SRC:
+            if (ev == CBN_SELCHANGE) set_source();
+            return TRUE;
+        case ID_MUTE:
+            if (ev == BN_CLICKED && ndev > 0 && !devs[cur].gone) {
+                int on = (int)SendMessage(hmute, BM_GETCHECK, 0, 0) == 1;
+                api(devs[cur].core, WINF_AUD_MIX, devs[cur].id, MX_MUTE | 0x80000000UL,
+                    on ? 1UL : 0UL, 0, 0);
+                save(&devs[cur]);
+                status(on ? "The master mute is on: nothing is heard." : "The master mute is off.");
+            }
+            return TRUE;
+        case ID_TONE:
+            if (ev == BN_CLICKED) {
+                int st = tone(2);
+                if (st == -1) status("Not enough DOS memory for the tone.");
+                else if (st == -2) status("No sound device.");
+                else if (st) status("The test tone could not be played.");
+                else {
+                    char t[96];
+                    wsprintf(t, "Tone: %lu of %lu bytes, driver %lu.", tone_pos, tone_total, tone_rd);
+                    status(t);
+                }
+            }
+            return TRUE;
+        case ID_REPORT:
+            if (ev == BN_CLICKED) {
+                dumph = OpenFile("C:\\WINMIX.TXT", &dumpof, OF_CREATE | OF_WRITE);
+                if (dumph == HFILE_ERROR) status("Cannot write C:\\WINMIX.TXT.");
+                else {
+                    dump_all();
+                    _lclose(dumph);
+                    dumph = HFILE_ERROR;
+                    status("The report was written to C:\\WINMIX.TXT.");
+                }
+            }
+            return TRUE;
+        case IDCANCEL:
+            DestroyWindow(hw);
+            return TRUE;
+        }
+        return FALSE;
+    }
     case WM_CTLCOLOR:
         if (HIWORD(lp) == CTLCOLOR_STATIC || HIWORD(lp) == CTLCOLOR_BTN) {
             SetBkColor((HDC)wp, GetSysColor(COLOR_BTNFACE));
             return (LRESULT)hface;
         }
         break;
+    case WM_CLOSE:
+        DestroyWindow(hw);
+        return TRUE;
     case WM_DESTROY:
         KillTimer(hw, 1);
         PostQuitMessage(0);
-        return 0;
+        return TRUE;
     }
-    return DefWindowProc(hw, msg, wp, lp);
+    return FALSE;
 }
 
 int PASCAL WinMain(HINSTANCE hi, HINSTANCE hprev, LPSTR cmd, int show)
 {
-    WNDCLASS wc;
     MSG m;
-    (void)cmd;
+    (void)hprev;
     hinst = hi;
     hface = CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
     scan();
+    if (cmd && *cmd) {
+        int rc = command(cmd);
+        if (rc >= 0) {
+            if (rq) GlobalDosFree(reqsel);
+            DeleteObject(hface);
+            return rc;
+        }
+    }
     if (!present[0] && !present[1]) {
         MessageBox(NULL, "Neither WINAUDIO.SYS nor WINUSB.SYS is loaded.", "WINMIX", MB_OK | MB_ICONINFORMATION);
         if (rq) GlobalDosFree(reqsel);
+        DeleteObject(hface);
         return 0;
     }
-    if (!hprev) {
-        fmemset(&wc, 0, sizeof(wc));
-        wc.lpfnWndProc = WndProc;
-        wc.hInstance = hi;
-        wc.hIcon = LoadIcon(hi, MAKEINTRESOURCE(1));
-        wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-        wc.hbrBackground = (HBRUSH)(COLOR_BTNFACE + 1);
-        wc.lpszClassName = "WINMIX";
-        RegisterClass(&wc);
+    hmain = CreateDialog(hi, MAKEINTRESOURCE(IDD_MIX), NULL, MixDlgProc);
+    if (!hmain) {
+        MessageBox(NULL, "WINMIX: the window could not be created.", "WINMIX", MB_OK | MB_ICONSTOP);
+        if (rq) GlobalDosFree(reqsel);
+        DeleteObject(hface);
+        return 0;
     }
-    hmain = CreateWindow("WINMIX", "WIN Volume Control", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
-                         CW_USEDEFAULT, 0, 392, 320, NULL, NULL, hi, NULL);
     ShowWindow(hmain, show);
-    UpdateWindow(hmain);
     while (GetMessage(&m, NULL, 0, 0)) {
+        if (m.message == WM_KEYDOWN && level_key(GetFocus(), (int)m.wParam)) continue;
         if (!IsDialogMessage(hmain, &m)) {
             TranslateMessage(&m);
             DispatchMessage(&m);
         }
     }
-    GlobalDosFree(reqsel);
+    if (rq) GlobalDosFree(reqsel);
     DeleteObject(hface);
     return m.wParam;
 }

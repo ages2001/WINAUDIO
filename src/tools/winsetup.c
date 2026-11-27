@@ -3413,6 +3413,17 @@ static int w9x_install(const struct winst *w, const char *dir)
            "  Properties, Driver, Change/Update Driver, Have Disk, and give\n"
            "  %s\\INF. A controller Windows has not seen yet gets the\n"
            "  WINDRV driver offered at the next start.\n", w->dir);
+#ifdef WIN_AUDIO
+    /* choosing WINAUDM.INF takes the sound device away from the driver it has now; that driver
+       stays installed next to WINAUDIO's, so Device Manager gives it back without a snapshot */
+    printf("  WINAUDM.INF takes the sound device away from the driver it has now, which stays\n"
+           "  installed: Device Manager, the sound device (its name starts with \"WINAUDIO\"\n"
+           "  after that), Properties, Driver, Change Driver... (Windows 98/ME: Update\n"
+           "  Driver..., \"Display a list of all the drivers in a specific location...\"),\n"
+           "  the card's own entry (Creative / Ensoniq AudioPCI, ...), OK, restart Windows\n"
+           "  gives it back. A card under \"Other devices\" has no driver of its own:\n"
+           "  Remove it and restart.\n");
+#endif
 #endif
     return 0;
 }
@@ -3518,6 +3529,20 @@ static int w9x_remove(const struct winst *w)
 #ifdef WIN_UDF
     if (ini_edit(w->dir, "SYSTEM.INI", dev_remove, WFV))
         return -1;
+#elif defined(WIN_AUDIO)
+    /* the sound device keeps WINAUDIO.VXD until it is given the card's own driver in Device
+       Manager: that driver is still installed, so the files can go without a snapshot */
+    warn("if the sound device still shows \"WINAUDIO\", it is still on WINAUDIO.VXD: Device\n"
+         "  Manager, the sound device, Properties, Driver, Change Driver... (Windows 98/ME:\n"
+         "  Update Driver..., the list of all drivers), the card's own driver, OK, restart\n"
+         "  Windows: that driver is still installed, so it works before " UNINEXE " runs again.\n"
+         "  If the card's driver is not in that list: run the card's own setup program\n"
+         "  again (Creative's AudioPCI), or Have Disk with its disk; the INF Windows used\n"
+         "  last time is in WINDOWS\\INF (Windows 95: OEMxx.INF, 98/ME: its name, or in\n"
+         "  INF\\OTHER). Once the files are gone: select the device, Remove, restart, and\n"
+         "  Windows finds the card again (WINAUDM.INF is out of WINDOWS\\INF, so WINAUDIO\n"
+         "  is not offered) and installs its own driver for it, or Have Disk with the\n"
+         "  card's disk%s", "");
 #else
     printf("  Remove the WINDRV devices in Device Manager first; the files go now.\n");
 #endif
@@ -4445,7 +4470,7 @@ static int uninstall(int argc, char **argv)
 {
     char dir[PMAX] = "", own[PMAX], win[PMAX] = "", f[PMAX], cfg[PMAX];
     static const char *const syss[] = { "WINDISK.SYS", "WINUSB.SYS", "WINAUDIO.SYS", "WINUDF.EXE" };
-    int i, keep = 0, n = 0, kept = 0, inwin, others = 0;
+    int i, keep = 0, n = 0, kept = 0, inwin, others = 0, guessed = 0;
 
     bootdrv = boot_drive();
     _harderr(critical_error);
@@ -4505,8 +4530,12 @@ static int uninstall(int argc, char **argv)
     if (!dir[0]) {
         own_dir(own, argv[0]);
         join(f, own, SYSFILE);
-        if (exists(f))
+        if (exists(f)) {
+            /* CONFIG.SYS does not load the driver: the directory the uninstaller runs in is
+               only a guess, and in the package (bin\DOS) it is the package itself */
             strcpy(dir, own);
+            guessed = 1;
+        }
     }
 #ifdef WIN_AUDIO
     if (blaster_remove(dir))
@@ -4516,7 +4545,10 @@ static int uninstall(int argc, char **argv)
     for (i = 0; i < nwins; i++)
         if (!stricmp(dir, wins[i].dir))
             inwin = 1;
-    if (!keep && dir[0]) {
+    if (!keep && dir[0] && guessed) {
+        printf("  %s is not loaded from CONFIG.SYS: the files in %s are left alone\n"
+               "  (delete the directory by hand if you installed " PKG " there)\n", SYSFILE, dir);
+    } else if (!keep && dir[0]) {
         printf("Removing files from %s\n", dir);
         /* files shared with another package stay while that package is installed here */
         for (i = 0; i < 4; i++) {

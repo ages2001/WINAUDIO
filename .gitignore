@@ -14,3 +14,5 @@ src/tests/host/es1371/gen/
 src/tests/host/es1371/*.o
 src/tests/host/es1371/es1371
 src/tests/host/es1371/*.raw
+.freebuff/
+bin/

@@ -331,10 +331,11 @@ void plat_aux_poll(void)
 
 void plat_kick(void)
 {
-    if (!(ev_pending & EV_POLL)) {
-        ev_pending |= EV_POLL;
-        vmm_global_event((void *)thk_event, 0);
-    }
+    /* schedule the event every time: a global event can be lost (one that never ran), and
+       then EV_POLL stays set and the sound engine would never be polled again; vxd_event
+       coalesces the requests with the flag */
+    ev_pending |= EV_POLL;
+    vmm_global_event((void *)thk_event, 0);
 }
 
 void plat_unit_changed(int unit)

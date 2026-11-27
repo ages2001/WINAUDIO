@@ -683,6 +683,7 @@ static void hw_start(struct adev *a, int dir)
     struct ahw *h = dir ? &a->in : &a->out;
     int i;
     if (h->running || a->gone) return;
+    kprintf("audio %d: %s start\n", a->index, dir ? "record" : "play");
     memset(h->buf, 0, h->size);
     if (!h->noflush) aeng_flush_dma(h->buf, h->size);
     h->fill = h->hwtotal = h->lastpos = 0;
@@ -694,6 +695,7 @@ static void hw_start(struct adev *a, int dir)
     for (i = 0; i < MAXSTREAM; i++)
         if (streams[i].dev == a->index) streams[i].lastfill = 0;
     if (a->ops->start(a, dir) == 0) h->running = 1;
+    else kprintf("audio %d: %s start failed\n", a->index, dir ? "record" : "play");
 }
 
 static void hw_stop(struct adev *a, int dir)
@@ -729,7 +731,9 @@ static void brc_close(void);
 
 void aeng_poll(void)
 {
+    static u32 npoll;
     int i;
+    if (!(++npoll % 100)) kprintf("audio: poll %lu\n", npoll);
 #ifdef WIN_AUDIO
     br_poll();
 #else
@@ -1412,6 +1416,7 @@ static int api_ctl(struct winapireq *rq)
     r = ringp(s);
     switch (rq->arg1) {
     case AC_START:
+        kprintf("audio %d: stream %u start\n", s->dev, n);
         if (a && !a->gone) hw_start(a, s->dir);
         s->running = 1;
         break;

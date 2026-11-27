@@ -11,7 +11,12 @@
 
    The core's sound engine (aeng.c) runs on top: a 440 / 880 Hz stream is played through
    the emulated DAC2, a 1 kHz tone the emulated ADC records is captured. Output: dac2.raw
-   (16-bit stereo at the DAC2 rate), rec.raw (the captured stream), the checks on stdout. */
+   (16-bit stereo at the DAC2 rate), rec.raw (the captured stream), the checks on stdout.
+
+   VMware's virtual ES1371 (1274:1371 revision 2) is run too: its codec (a Cirrus Logic
+   CS4297A) keeps no datasheet defaults and implements no power state and no extended id.
+   A codec that answers without a vendor id at all must be refused without its volumes being
+   changed. */
 #include "audio.h"
 #include <stdio.h>
 #include <stdarg.h>
@@ -71,6 +76,7 @@ void pci_wr8(int b, int d, int f, int o, u8 v) { (void)b; (void)d; (void)f; (voi
 
 static struct {
     u16 devid;
+    int vmw;                /* VMware's codec: no defaults, no power state, no extended id */
     u32 pad0;
     u8 rev;
     u32 ctrl, status, page, serial, legacy, dac2cnt, adccnt;
@@ -87,6 +93,11 @@ static struct {
 static void ac97_defaults(void)
 {
     memset(es.ac97, 0, sizeof(es.ac97));
+    if (es.vmw) {
+        es.ac97[0x7C / 2] = 0x4352;            /* VMware answers with a Cirrus Logic CS4297A */
+        es.ac97[0x7E / 2] = 0x5929;
+        return;
+    }
     es.ac97[0x00 / 2] = 0x0D50;
     es.ac97[0x02 / 2] = 0x8000;
     es.ac97[0x04 / 2] = 0x8000;
@@ -108,6 +119,17 @@ static void ac97_defaults(void)
 static void ac97_write(int reg, u16 v)
 {
     reg &= 0x7E;
+    if (es.vmw) {
+        switch (reg) {
+        case 0x00: return;                          /* the reset does not load the defaults */
+        case 0x26:                                  /* no power state */
+            es.ac97[reg / 2] = (u16)(v & 0xFF00);
+            return;
+        case 0x28: case 0x7C: case 0x7E: return;    /* extended id and vendor id are read only */
+        }
+        es.ac97[reg / 2] = v;
+        return;
+    }
     if (reg == 0x00) {
         ac97_defaults();
         return;
@@ -297,7 +319,7 @@ static void check(int ok, const char *what)
 
 static int nrun;
 
-static int run_chip(u16 devid, u8 rev, int full)
+static int run_chip(u16 devid, u8 rev, int full, int vmw)
 {
     struct pcidev p;
     struct winapireq rq;
@@ -309,6 +331,7 @@ static int run_chip(u16 devid, u8 rev, int full)
     FILE *rec;
     memset(&es, 0, sizeof(es));
     es.devid = devid;
+    es.vmw = vmw;
     ac97_defaults();
     memset(&p, 0, sizeof(p));
     p.vendor = devid == 0x8938 ? 0x1102 : 0x1274;
@@ -317,7 +340,7 @@ static int run_chip(u16 devid, u8 rev, int full)
     p.cls = 4;
     p.sub = 1;
     p.dev = (u8)(5 + nrun++);
-    printf("\n== %04x:%04x rev %u\n", p.vendor, p.device, rev);
+    printf("\n== %04x:%04x rev %u%s\n", p.vendor, p.device, rev, vmw ? ", as VMware answers" : "");
     check(es137x_probe(&p) == 0, "probe");
     a = adev_get(nrun - 1);
     printf("     DAC2 rate %.1f Hz, ADC rate %.1f Hz, codec writes %lu reads %lu, converter writes %lu\n",
@@ -331,13 +354,15 @@ static int run_chip(u16 devid, u8 rev, int full)
     check(fabs(adc_rate() - 48000) < 2, "ADC at 48 kHz");
     check(!(es.srcctl & 0x00780000UL), "converter enabled, no channel frozen");
     check(es.src[0x7E] == 0x1000 && es.src[0x7F] == 0x1000, "DAC2 volume unity in the converter");
-    check(a && a->vid == 0x8384 && a->pid == 0x7608, "codec id read");
+    check(a && (vmw ? (a->vid == 0x4352 && a->pid == 0x5929) : (a->vid == 0x8384 && a->pid == 0x7608)),
+          "codec id read");
     check(!(es.ac97[0x18 / 2] & 0x8000), "PCM out unmuted");
+    check(!(es.ac97[0x02 / 2] & 0x8000) && !(es.ac97[0x02 / 2] & 0x3F3F), "master at 0 dB after start-up");
     if (!full || !a) return 0;
 
     /* master volume at half: about 6 dB down (4 steps of 1.5 dB) */
     memset(&rq, 0, sizeof(rq));
-    rq.fn = WINF_AUD_MIX; rq.arg0 = 0; rq.arg1 = MX_MASTER | 0x80000000UL; rq.arg2 = 0x80008000UL;
+    rq.fn = WINF_AUD_MIX; rq.arg0 = (u32)(nrun - 1); rq.arg1 = MX_MASTER | 0x80000000UL; rq.arg2 = 0x80008000UL;
     aeng_api(&rq, NULL);
     printf("     master register %04x\n", es.ac97[0x02 / 2]);
     check((es.ac97[0x02 / 2] & 0x3F) == 4 && !(es.ac97[0x02 / 2] & 0x8000), "master half volume = 4 steps");
@@ -349,7 +374,7 @@ static int run_chip(u16 devid, u8 rev, int full)
     r = (struct winring *)rings[1];
     r->magic = WINRING_MAGIC; r->size = 32768;
     memset(&rq, 0, sizeof(rq));
-    rq.fn = WINF_AUD_OPEN; rq.arg0 = 0; rq.arg1 = 44100; rq.arg2 = 16 | (2 << 8); rq.buf = 1;
+    rq.fn = WINF_AUD_OPEN; rq.arg0 = (u32)(nrun - 1); rq.arg1 = 44100; rq.arg2 = 16 | (2 << 8); rq.buf = 1;
     check(aeng_api(&rq, NULL) == WINE_OK, "play stream open");
     sid = (int)rq.retlen;
     rq.fn = WINF_AUD_CTL; rq.arg0 = sid; rq.arg1 = AC_START;
@@ -359,7 +384,7 @@ static int run_chip(u16 devid, u8 rev, int full)
     c = (struct winring *)rings[2];
     c->magic = WINRING_MAGIC; c->size = 32768;
     memset(&rq, 0, sizeof(rq));
-    rq.fn = WINF_AUD_OPEN; rq.arg0 = 1 << 8; rq.arg1 = 48000; rq.arg2 = 16 | (2 << 8); rq.buf = 2;
+    rq.fn = WINF_AUD_OPEN; rq.arg0 = (u32)(nrun - 1) | (1 << 8); rq.arg1 = 48000; rq.arg2 = 16 | (2 << 8); rq.buf = 2;
     check(aeng_api(&rq, NULL) == WINE_OK, "record stream open");
     cid = (int)rq.retlen;
     rq.fn = WINF_AUD_CTL; rq.arg0 = cid; rq.arg1 = AC_START;
@@ -396,16 +421,42 @@ static int run_chip(u16 devid, u8 rev, int full)
     return 0;
 }
 
+/* A codec that answers without a vendor id is not taken (some emulations implement only the
+   registers their own driver writes). The probe must not leave the card's volumes changed. */
+static void run_reject(void)
+{
+    struct pcidev p;
+    memset(&es, 0, sizeof(es));
+    es.devid = 0x1371;
+    es.vmw = 1;
+    ac97_defaults();
+    es.ac97[0x7C / 2] = es.ac97[0x7E / 2] = 0;
+    es.ac97[0x02 / 2] = 0x0000;                 /* the levels the driver of Windows left */
+    es.ac97[0x18 / 2] = 0x0808;
+    memset(&p, 0, sizeof(p));
+    p.vendor = 0x1274;
+    p.device = 0x1371;
+    p.rev = 2;
+    p.cls = 4;
+    p.sub = 1;
+    p.dev = 0x0E;
+    printf("\n== %04x:%04x rev %u, no codec identity\n", p.vendor, p.device, p.rev);
+    check(es137x_probe(&p) != 0, "a codec without an identity is not taken");
+    check(es.ac97[0x02 / 2] == 0x0000 && es.ac97[0x18 / 2] == 0x0808,
+          "the volumes of a codec that is not taken are left alone");
+}
+
 int main(void)
 {
     pool = malloc(POOLSIZE);
     memset(pool, 0, POOLSIZE);
     cbs.magic = WIN_MAGIC;
     aeng_init();
-    run_chip(0x1371, 2, 1);         /* ES1371 */
-    run_chip(0x1371, 8, 0);         /* ES1373 rev. 8 */
-    run_chip(0x5880, 2, 0);         /* CT5880 rev. C */
-    run_chip(0x8938, 0, 0);         /* Ectiva EV1938 */
+    run_reject();                   /* takes no slot of the four (MAXES) when it is refused */
+    run_chip(0x1371, 2, 1, 1);      /* ES1371 revision 2, as VMware's virtual card answers */
+    run_chip(0x1371, 8, 0, 0);      /* ES1373 rev. 8 */
+    run_chip(0x5880, 2, 0, 0);      /* CT5880 rev. C */
+    run_chip(0x8938, 0, 0, 0);      /* Ectiva EV1938 */
     printf("\n%s\n", fail ? "FAILED" : "all checks passed");
     return fail != 0;
 }

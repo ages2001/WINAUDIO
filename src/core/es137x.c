@@ -32,6 +32,7 @@
 /* CONTROL */
 #define C_1370_PCLKDIV(d)   (((u32)(d) & 0x1FFF) << 16)
 #define C_1371_SYNC_RES     (1UL << 14)
+#define C_BREQ              (1UL << 7)      /* memory bus request enable: no DMA without it */
 #define C_DAC2_EN           (1UL << 5)
 #define C_ADC_EN            (1UL << 4)
 #define C_1370_CDC_EN       (1UL << 1)
@@ -325,7 +326,7 @@ static int es_start(struct adev *a, int dir)
         es_page(e, ES_PAGE_ADC);
         outl((u16)(e->io + ES_FRAME), vphys(h->buf));
         outl((u16)(e->io + ES_SIZE), frames - 1);
-        e->sctrl = (e->sctrl & ~(SE_R1_MODE(3) | (1UL << 15) | (1UL << 10))) | SE_R1_MODE(3);
+        e->sctrl = (e->sctrl & ~(SE_R1_MODE(3) | (1UL << 15))) | SE_R1_MODE(3) | (1UL << 10);
         outl((u16)(e->io + ES_SERIAL), e->sctrl);
         outl((u16)(e->io + ES_ADC_COUNT), h->period / 4 - 1);
         e->ctrl |= C_ADC_EN;
@@ -335,15 +336,19 @@ static int es_start(struct adev *a, int dir)
         es_page(e, ES_PAGE_DAC);
         outl((u16)(e->io + ES_DAC2_FRAME), vphys(h->buf));
         outl((u16)(e->io + ES_DAC2_SIZE), frames - 1);
-        /* loop mode, play, 16-bit stereo, no interrupt */
+        /* loop mode, play, 16-bit stereo, period interrupt on */
         e->sctrl &= ~(SE_P2_END_INC(7) | SE_P2_ST_INC(7) | SE_P2_MODE(3) | (1UL << 14) | (1UL << 12) |
-                      (1UL << 9) | (1UL << 6));
-        e->sctrl |= SE_P2_MODE(3) | SE_P2_END_INC(2) | SE_P2_ST_INC(0);
+                      (1UL << 6));
+        e->sctrl |= SE_P2_MODE(3) | SE_P2_END_INC(2) | SE_P2_ST_INC(0) | (1UL << 9);
         outl((u16)(e->io + ES_SERIAL), e->sctrl);
         outl((u16)(e->io + ES_DAC2_COUNT), h->period / 4 - 1);
         e->ctrl |= C_DAC2_EN;
     }
     outl((u16)(e->io + ES_CONTROL), e->ctrl);
+    kprintf("es137x: start ctrl %08lx serial %08lx status %08lx dac2 %08lx size %08lx src %08lx\n",
+            inl((u16)(e->io + ES_CONTROL)), inl((u16)(e->io + ES_SERIAL)),
+            inl((u16)(e->io + ES_STATUS)), inl((u16)(e->io + ES_DAC2_FRAME)),
+            inl((u16)(e->io + ES_DAC2_SIZE)), inl((u16)(e->io + ES_1371_SMPRATE)));
     return 0;
 }
 
@@ -360,8 +365,10 @@ static u32 es_pos(struct adev *a, int dir)
     struct es *e = a->priv;
     struct ahw *h = dir ? &a->in : &a->out;
     u32 v;
+    static u32 npos;
     es_page(e, dir ? ES_PAGE_ADC : ES_PAGE_DAC);
     v = inl((u16)(e->io + (dir ? ES_SIZE : ES_DAC2_SIZE)));
+    if (!dir && !(++npos % 200)) kprintf("es137x: pos raw %08lx\n", v);
     v = (v >> 16) * 4;
     return v < h->size ? v : 0;
 }
@@ -423,7 +430,34 @@ static void es_shutdown(struct adev *a)
     outl((u16)(e->io + ES_CONTROL), e->ctrl);
 }
 
-static struct adevops es_ops = { es_start, es_stop, es_pos, es_vol, es_src, NULL, es_shutdown };
+/* Linux acks a channel by toggling its interrupt enable in the serial register */
+static void es_poll(struct adev *a)
+{
+    struct es *e = a->priv;
+    u32 st;
+    static int acked;
+    if (!(e->ctrl & (C_DAC2_EN | C_ADC_EN))) return;
+    st = inl((u16)(e->io + ES_STATUS));
+    if (!(st & 0x80000000UL)) return;                   /* ES_INTR */
+    if ((e->ctrl & C_DAC2_EN) && (st & 0x00000002UL)) {  /* ES_DAC2 */
+        e->sctrl &= ~(1UL << 9);
+        outl((u16)(e->io + ES_SERIAL), e->sctrl);
+        e->sctrl |= 1UL << 9;
+        outl((u16)(e->io + ES_SERIAL), e->sctrl);
+    }
+    if ((e->ctrl & C_ADC_EN) && (st & 0x00000001UL)) {   /* ES_ADC */
+        e->sctrl &= ~(1UL << 10);
+        outl((u16)(e->io + ES_SERIAL), e->sctrl);
+        e->sctrl |= 1UL << 10;
+        outl((u16)(e->io + ES_SERIAL), e->sctrl);
+    }
+    if (!acked) {
+        acked = 1;
+        kprintf("es137x: interrupt serviced\n");
+    }
+}
+
+static struct adevops es_ops = { es_start, es_stop, es_pos, es_vol, es_src, es_poll, es_shutdown };
 
 /* ---------------------------------------------------------------- probe */
 
@@ -446,10 +480,29 @@ static void alloc_ring(struct ahw *h, u8 *buf, u32 rate)
     h->noflush = 1;                 /* PCI bus master, cache snooped */
 }
 
+/* a card this driver cannot start: the entry it took goes, with its rings, so that the slot
+   is there for another card and a later start of Windows begins from nothing */
+static int es_fail(struct es *e, int added)
+{
+    int i;
+    if (added) {
+        for (i = 0; i < nchips && chips[i] != e; i++) ;
+        if (i < nchips) {
+            for (; i + 1 < nchips; i++) chips[i] = chips[i + 1];
+            chips[--nchips] = NULL;
+        }
+        kfree(e->ring[0]);
+        kfree(e->ring[1]);
+        kfree(e->phantom);
+        kfree(e);
+    }
+    return -1;
+}
+
 int es137x_probe(struct pcidev *p)
 {
     struct es *e;
-    int chip = chip_of(p), i;
+    int chip = chip_of(p), i, added = 0;
     const char *name;
     if (chip < 0) return -1;
     for (i = 0; i < nchips && PCI_BDF(&chips[i]->pci) != PCI_BDF(p); i++) ;
@@ -466,17 +519,18 @@ int es137x_probe(struct pcidev *p)
         e->phantom = kmalloc_align(64, 64);
         if (!e->ring[0] || !e->ring[1] || !e->phantom) return -1;
         chips[nchips++] = e;
+        added = 1;
     }
     e->pci = *p;
     e->chip = chip;
     pci_enable(p, 0, 1, 1);
     e->io = (u16)pci_bar_io(p, 0);
-    if (!e->io) return -1;
+    if (!e->io) return es_fail(e, added);
     e->sctrl = 0;
     outl((u16)(e->io + ES_SERIAL), 0);
     if (chip == CHIP_1370) {
         /* DAC2 and ADC at 1411200 / (30 + 2) = 44100 Hz */
-        e->ctrl = C_1370_CDC_EN | C_1370_SERR_DIS | C_1370_PCLKDIV(30);
+        e->ctrl = C_BREQ | C_1370_CDC_EN | C_1370_SERR_DIS | C_1370_PCLKDIV(30);
         outl((u16)(e->io + ES_CONTROL), e->ctrl);
         memset(e->phantom, 0, 64);
         es_page(e, ES_PAGE_ADC);
@@ -490,7 +544,7 @@ int es137x_probe(struct pcidev *p)
         e->a.vid = p->vendor;              /* no AC'97 codec: the PCI IDs */
         e->a.pid = p->device;
     } else {
-        e->ctrl = 0;
+        e->ctrl = C_BREQ;                /* the DAC2/ADC DMA runs only with bus requests enabled */
         outl((u16)(e->io + ES_CONTROL), e->ctrl);
         outl((u16)(e->io + ES_1371_LEGACY), 0);
         if (ac97_reset_hack(p)) {
@@ -506,7 +560,7 @@ int es137x_probe(struct pcidev *p)
         if (!e->codec) e->codec = ac97_ext(e, es_crd, es_cwr);
         if (!e->codec) {
             kprintf("es137x: %02x:%02x.%u no AC'97 codec\n", p->bus, p->dev, p->fn);
-            return -1;
+            return es_fail(e, added);
         }
         alloc_ring(&e->a.out, e->ring[0], 48000);
         alloc_ring(&e->a.in, e->ring[1], 48000);
